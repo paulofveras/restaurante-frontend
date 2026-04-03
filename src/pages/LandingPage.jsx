@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { cardapioService } from '../services/cardapioService';
+import { authService } from '../services/authService'; // ← NOVO
 import { formatCurrency } from '../utils/formatters';
 import logoSolDoCerrado from '../assets/logo-sol-cerrado.png';
 import './LandingPage.css';
@@ -12,6 +13,21 @@ const LandingPage = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
 
+  // ← NOVO: estados do formulário de login
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginSenha, setLoginSenha] = useState('');
+  const [loginErro, setLoginErro] = useState('');
+  const [loginCarregando, setLoginCarregando] = useState(false);
+
+  // ← NOVO: estados do formulário de cadastro
+  const [cadNome, setCadNome] = useState('');
+  const [cadEmail, setCadEmail] = useState('');
+  const [cadSenha, setCadSenha] = useState('');
+  const [cadConfirmar, setCadConfirmar] = useState('');
+  const [cadErro, setCadErro] = useState('');
+  const [cadSucesso, setCadSucesso] = useState('');
+  const [cadCarregando, setCadCarregando] = useState(false);
+
   useEffect(() => {
     carregarItensDestaque();
   }, []);
@@ -19,7 +35,6 @@ const LandingPage = () => {
   const carregarItensDestaque = async () => {
     try {
       const todosItens = await cardapioService.listarTodos();
-      // Pegar 6 itens aleatórios
       const embaralhados = todosItens.sort(() => Math.random() - 0.5);
       setItensDestaque(embaralhados.slice(0, 6));
     } catch (error) {
@@ -30,6 +45,72 @@ const LandingPage = () => {
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     element?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  // ← NOVO: função de login
+  const handleLogin = async (e) => {
+    e.preventDefault(); // impede o formulário de recarregar a página
+    setLoginErro('');
+    setLoginCarregando(true);
+
+    try {
+      const dados = await authService.login(loginEmail, loginSenha);
+
+      // Redireciona dependendo do perfil
+      if (dados.usuario.perfil === 'Administrador') {
+        navigate('/dashboard');
+      } else {
+        navigate('/dashboard'); // você pode criar uma rota /cliente depois
+      }
+    } catch (error) {
+      setLoginErro(error.message || 'Email ou senha incorretos.');
+    } finally {
+      setLoginCarregando(false);
+    }
+  };
+
+  // ← NOVO: função de cadastro
+  const handleCadastro = async (e) => {
+    e.preventDefault();
+    setCadErro('');
+    setCadSucesso('');
+
+    if (cadSenha !== cadConfirmar) {
+      setCadErro('As senhas não coincidem.');
+      return;
+    }
+
+    if (cadSenha.length < 6) {
+      setCadErro('A senha deve ter pelo menos 6 caracteres.');
+      return;
+    }
+
+    setCadCarregando(true);
+
+    try {
+      const resposta = await fetch('http://localhost:5203/api/usuario/cadastrar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userName: cadNome,
+          email: cadEmail,
+          passwordHasher: cadSenha,
+        }),
+      });
+
+      if (!resposta.ok) {
+        const msg = await resposta.text();
+        throw new Error(msg);
+      }
+
+      setCadSucesso('Conta criada! Faça login para continuar.');
+      setCadNome(''); setCadEmail(''); setCadSenha(''); setCadConfirmar('');
+      setTimeout(() => setIsLogin(true), 1500); // vai para aba de login
+    } catch (error) {
+      setCadErro(error.message || 'Erro ao cadastrar. Tente novamente.');
+    } finally {
+      setCadCarregando(false);
+    }
   };
 
   return (
@@ -43,7 +124,7 @@ const LandingPage = () => {
       >
         <div className="header-content">
           <div className="logo-container">
-            <img src={logoSolDoCerrado} alt="Sol do Cerrado" className="logo" 
+            <img src={logoSolDoCerrado} alt="Sol do Cerrado" className="logo"
               onError={(e) => {
                 e.target.style.display = 'none';
                 e.target.nextSibling.style.display = 'flex';
@@ -199,7 +280,7 @@ const LandingPage = () => {
           >
             <h2>Nossa História</h2>
             <p>
-              O <strong>Sol do Cerrado</strong> nasceu da paixão por valorizar os ingredientes e sabores únicos do Tocantins. 
+              O <strong>Sol do Cerrado</strong> nasceu da paixão por valorizar os ingredientes e sabores únicos do Tocantins.
               Nossa cozinha celebra a riqueza do cerrado brasileiro, combinando técnicas contemporâneas com tradições ancestrais.
             </p>
             <p>
@@ -239,7 +320,7 @@ const LandingPage = () => {
         >
           <h2>Reserve sua Mesa</h2>
           <p className="reservas-subtitle">Experiência exclusiva no jantar - Reserve com 1 dia de antecedência</p>
-          
+
           <div className="reservas-info">
             <div className="info-item">
               <span className="info-icon">🌙</span>
@@ -363,38 +444,108 @@ const LandingPage = () => {
             animate={{ scale: 1, opacity: 1 }}
           >
             <button className="modal-close" onClick={() => setShowLoginModal(false)}>×</button>
-            
+
             <div className="modal-tabs">
               <button
                 className={isLogin ? 'active' : ''}
-                onClick={() => setIsLogin(true)}
+                onClick={() => { setIsLogin(true); setLoginErro(''); }}
               >
                 Entrar
               </button>
               <button
                 className={!isLogin ? 'active' : ''}
-                onClick={() => setIsLogin(false)}
+                onClick={() => { setIsLogin(false); setCadErro(''); setCadSucesso(''); }}
               >
                 Cadastrar
               </button>
             </div>
 
             {isLogin ? (
-              <form className="auth-form">
+              // ======= FORMULÁRIO DE LOGIN =======
+              <form className="auth-form" onSubmit={handleLogin}>
                 <h3>Bem-vindo de volta!</h3>
-                <input type="email" placeholder="E-mail" required />
-                <input type="password" placeholder="Senha" required />
-                <button type="submit" className="btn-primary">Entrar</button>
-                <a href="#" className="link-esqueci">Esqueci minha senha</a>
+
+                {loginErro && (
+                  <p style={{ color: '#e53e3e', background: '#fff5f5', padding: '10px', borderRadius: '8px', fontSize: '0.9rem' }}>
+                    ⚠️ {loginErro}
+                  </p>
+                )}
+
+                <input
+                  type="email"
+                  placeholder="E-mail"
+                  required
+                  value={loginEmail}
+                  onChange={(e) => setLoginEmail(e.target.value)}
+                />
+                <input
+                  type="password"
+                  placeholder="Senha"
+                  required
+                  value={loginSenha}
+                  onChange={(e) => setLoginSenha(e.target.value)}
+                  autoComplete="current-password"
+                />
+
+                <button type="submit" className="btn-primary" disabled={loginCarregando}>
+                  {loginCarregando ? 'Entrando...' : 'Entrar'}
+                </button>
+
+                {/* Dica para teste */}
+                <p style={{ fontSize: '0.8rem', color: '#888', textAlign: 'center' }}>
+                  Admin: admin@restaurante.com / admin123
+                </p>
               </form>
             ) : (
-              <form className="auth-form">
+              // ======= FORMULÁRIO DE CADASTRO =======
+              <form className="auth-form" onSubmit={handleCadastro}>
                 <h3>Criar sua conta</h3>
-                <input type="text" placeholder="Nome completo" required />
-                <input type="email" placeholder="E-mail" required />
-                <input type="password" placeholder="Senha" required />
-                <input type="password" placeholder="Confirmar senha" required />
-                <button type="submit" className="btn-primary">Cadastrar</button>
+
+                {cadErro && (
+                  <p style={{ color: '#e53e3e', background: '#fff5f5', padding: '10px', borderRadius: '8px', fontSize: '0.9rem' }}>
+                    ⚠️ {cadErro}
+                  </p>
+                )}
+                {cadSucesso && (
+                  <p style={{ color: '#2f855a', background: '#f0fff4', padding: '10px', borderRadius: '8px', fontSize: '0.9rem' }}>
+                    ✅ {cadSucesso}
+                  </p>
+                )}
+
+                <input
+                  type="text"
+                  placeholder="Nome de usuário"
+                  required
+                  value={cadNome}
+                  onChange={(e) => setCadNome(e.target.value)}
+                />
+                <input
+                  type="email"
+                  placeholder="E-mail"
+                  required
+                  value={cadEmail}
+                  onChange={(e) => setCadEmail(e.target.value)}
+                />
+                <input
+                  type="password"
+                  placeholder="Senha (mínimo 6 caracteres)"
+                  required
+                  value={cadSenha}
+                  onChange={(e) => setCadSenha(e.target.value)}
+                  autoComplete="current-password"
+                />
+                <input
+                  type="password"
+                  placeholder="Confirmar senha"
+                  required
+                  value={cadConfirmar}
+                  onChange={(e) => setCadConfirmar(e.target.value)}
+                  autoComplete="current-password"
+                />
+
+                <button type="submit" className="btn-primary" disabled={cadCarregando}>
+                  {cadCarregando ? 'Cadastrando...' : 'Cadastrar'}
+                </button>
               </form>
             )}
           </motion.div>

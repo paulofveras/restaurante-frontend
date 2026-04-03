@@ -142,7 +142,7 @@ const Cardapio = () => {
             <span className="filtro-count">({itens.length})</span>
           </span>
         </motion.button>
-        
+
         <motion.button
           className={filtro === 'Almoco' ? 'active' : ''}
           onClick={() => handleFiltroClick('Almoco')}
@@ -155,7 +155,7 @@ const Cardapio = () => {
             <span className="filtro-count">({itens.filter(i => i.periodo === 'Almoco').length})</span>
           </span>
         </motion.button>
-        
+
         <motion.button
           className={filtro === 'Jantar' ? 'active' : ''}
           onClick={() => handleFiltroClick('Jantar')}
@@ -185,6 +185,15 @@ const Cardapio = () => {
               whileHover={{ y: -6 }}
               layout
             >
+              <div className="item-imagem-container">
+                <img
+                  src={item.imagemUrl || '/img/prato-padrao.jpg'}
+                  alt={`Foto de ${item.nome}`}
+                  className="item-imagem"
+                  // Se a imagem der erro ou o link quebrar, ele mostra uma imagem padrão
+                  onError={(e) => { e.target.src = '/img/prato-padrao.jpg'; }}
+                />
+              </div>
               <div className="item-content">
                 <div className="item-header">
                   <h3>{item.nome}</h3>
@@ -192,9 +201,9 @@ const Cardapio = () => {
                     {item.periodo === 'Almoco' ? '☀️ Almoço' : '🌙 Jantar'}
                   </span>
                 </div>
-                
+
                 <p className="item-descricao">{item.descricao}</p>
-                
+
                 <div className="item-footer">
                   <span className="item-preco">
                     {formatCurrency(item.preco)}

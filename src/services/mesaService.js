@@ -1,28 +1,31 @@
-import api from '../api/api';
+import { apiFetch } from '../api/api';
 
 export const mesaService = {
   listarTodas: async () => {
-    const response = await api.get('/Mesa');
-    return response.data;
+    const res = await apiFetch('/Mesa');
+    return res.json();
   },
 
   buscarPorId: async (id) => {
-    const response = await api.get(`/Mesa/${id}`);
-    return response.data;
+    const res = await apiFetch(`/Mesa/${id}`);
+    return res.json();
+  },
+
+  listarDisponiveis: async (data) => {
+    const res = await apiFetch(`/Mesa/disponiveis?data=${data}`);
+    return res.json();
   },
 
   criar: async (mesa) => {
-    const response = await api.post('/Mesa', mesa);
-    return response.data;
-  },
-
-  atualizar: async (id, mesa) => {
-    const response = await api.put(`/Mesa/${id}`, mesa);
-    return response.data;
+    const res = await apiFetch('/Mesa', {
+      method: 'POST',
+      body: JSON.stringify(mesa),
+    });
+    return res.json();
   },
 
   deletar: async (id) => {
-    const response = await api.delete(`/Mesa/${id}`);
-    return response.data;
-  }
+    const res = await apiFetch(`/Mesa/${id}`, { method: 'DELETE' });
+    return res.json();
+  },
 };

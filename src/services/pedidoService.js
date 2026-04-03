@@ -1,28 +1,34 @@
-import api from '../api/api';
+import { apiFetch } from '../api/api';
 
 export const pedidoService = {
   listarTodos: async () => {
-    const response = await api.get('/Pedido');
-    return response.data;
+    const res = await apiFetch('/Pedido');
+    return res.json();
   },
 
   buscarPorId: async (id) => {
-    const response = await api.get(`/Pedido/${id}`);
-    return response.data;
+    const res = await apiFetch(`/Pedido/${id}`);
+    return res.json();
   },
 
   criar: async (pedido) => {
-    const response = await api.post('/Pedido', pedido);
-    return response.data;
+    const res = await apiFetch('/Pedido', {
+      method: 'POST',
+      body: JSON.stringify(pedido),
+    });
+    return res.json();
   },
 
   atualizar: async (id, pedido) => {
-    const response = await api.put(`/Pedido/${id}`, pedido);
-    return response.data;
+    const res = await apiFetch(`/Pedido/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(pedido),
+    });
+    return res.json();
   },
 
   deletar: async (id) => {
-    const response = await api.delete(`/Pedido/${id}`);
-    return response.data;
-  }
+    const res = await apiFetch(`/Pedido/${id}`, { method: 'DELETE' });
+    return res.json();
+  },
 };

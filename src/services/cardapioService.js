@@ -1,29 +1,34 @@
-import api from '../api/api';
+import { apiFetch } from '../api/api';
 
 export const cardapioService = {
-  listarTodos: async (periodo = null) => {
-    const url = periodo !== null ? `/ItemCardapio?periodo=${periodo}` : '/ItemCardapio';
-    const response = await api.get(url);
-    return response.data;
+  listarTodos: async () => {
+    const res = await apiFetch('/Cardapio');
+    return res.json();
   },
 
   buscarPorId: async (id) => {
-    const response = await api.get(`/ItemCardapio/${id}`);
-    return response.data;
+    const res = await apiFetch(`/Cardapio/${id}`);
+    return res.json();
   },
 
   criar: async (item) => {
-    const response = await api.post('/ItemCardapio', item);
-    return response.data;
+    const res = await apiFetch('/Cardapio', {
+      method: 'POST',
+      body: JSON.stringify(item),
+    });
+    return res.json();
   },
 
   atualizar: async (id, item) => {
-    const response = await api.put(`/ItemCardapio/${id}`, item);
-    return response.data;
+    const res = await apiFetch(`/Cardapio/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(item),
+    });
+    return res.json();
   },
 
   deletar: async (id) => {
-    const response = await api.delete(`/ItemCardapio/${id}`);
-    return response.data;
-  }
+    const res = await apiFetch(`/Cardapio/${id}`, { method: 'DELETE' });
+    return res.json();
+  },
 };
