@@ -3,6 +3,7 @@ import { salvarToken, removerToken } from '../api/api';
 const BASE_URL = 'http://localhost:5203/api';
 
 export const authService = {
+
   async login(email, password) {
     const resposta = await fetch(`${BASE_URL}/usuario/login`, {
       method: 'POST',
@@ -18,7 +19,8 @@ export const authService = {
     const dados = await resposta.json();
     salvarToken(dados.token);
 
-    // Salva os dados do usuário no localStorage também
+    // O backend serializa o enum como string por causa do JsonStringEnumConverter.
+    // dados.usuario.perfil chega como "Usuario" ou "Administrador"
     localStorage.setItem('usuario', JSON.stringify(dados.usuario));
 
     return dados;
@@ -34,8 +36,19 @@ export const authService = {
     return dados ? JSON.parse(dados) : null;
   },
 
+  // Verdadeiro apenas se o perfil for exatamente "Administrador"
   isAdmin() {
     const usuario = this.getUsuarioLogado();
     return usuario?.perfil === 'Administrador';
+  },
+
+  // Verdadeiro se for o perfil padrão de cliente ("Usuario" = enum 0)
+  isCliente() {
+    const usuario = this.getUsuarioLogado();
+    return usuario?.perfil === 'Usuario';
+  },
+
+  isLogado() {
+    return this.getUsuarioLogado() !== null;
   },
 };

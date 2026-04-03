@@ -1,0 +1,318 @@
+/* ── OVERLAY ───────────────────────────────────── */
+.checkout-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: co-fade 0.2s ease;
+}
+
+@keyframes co-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── MODAL ─────────────────────────────────────── */
+.checkout-modal {
+  background: #fffdf5;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.25);
+  animation: co-slide 0.25s ease;
+}
+
+@keyframes co-slide {
+  from { transform: translateY(24px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ── CABEÇALHO ─────────────────────────────────── */
+.checkout-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem 0;
+}
+
+.checkout-steps {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+}
+
+.step {
+  color: #bbb;
+  font-weight: 600;
+}
+
+.step.ativo {
+  color: #d4af37;
+  font-weight: 800;
+}
+
+.step.concluido {
+  color: #4caf50;
+  font-weight: 700;
+}
+
+.step-divider { color: #ddd; }
+
+.checkout-fechar {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  color: #aaa;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+.checkout-fechar:hover { background: rgba(0,0,0,0.06); }
+
+/* ── CORPO ─────────────────────────────────────── */
+.checkout-corpo {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.checkout-corpo h2 {
+  font-size: 1.375rem;
+  font-weight: 800;
+  color: #1a2332;
+  margin: 0;
+}
+
+.checkout-subtitulo {
+  font-size: 0.9375rem;
+  color: #666;
+  margin: -0.75rem 0 0;
+}
+
+/* ── OPÇÕES (Atendimento / Pagamento) ──────────── */
+.checkout-opcoes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.checkout-opcao {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: #fff;
+  border: 2px solid #e8dcc8;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  font-family: inherit;
+  width: 100%;
+}
+
+.checkout-opcao:hover {
+  border-color: #d4af37;
+  box-shadow: 0 2px 12px rgba(212,175,55,0.15);
+}
+
+.checkout-opcao.selecionado {
+  border-color: #d4af37;
+  background: rgba(212,175,55,0.06);
+  box-shadow: 0 2px 16px rgba(212,175,55,0.2);
+}
+
+.opcao-icone { font-size: 1.75rem; flex-shrink: 0; }
+
+.opcao-texto {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.opcao-texto strong { font-size: 1rem; color: #1a2332; }
+.opcao-texto small  { font-size: 0.8125rem; color: #888; line-height: 1.4; }
+
+.opcao-check {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #d4af37;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.checkout-opcao.selecionado .opcao-check { opacity: 1; }
+
+/* ── RESUMO DE VALORES ─────────────────────────── */
+.checkout-resumo {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #f0e8d8;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.checkout-linha {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9375rem;
+  color: #555;
+}
+
+.checkout-linha.taxa { color: #888; font-size: 0.875rem; }
+
+.checkout-linha.total {
+  padding-top: 0.5rem;
+  border-top: 1px solid #e8dcc8;
+  font-size: 1.0625rem;
+  color: #1a2332;
+}
+
+.checkout-linha.total strong {
+  font-size: 1.375rem;
+  color: #d4af37;
+}
+
+/* ── ERRO ──────────────────────────────────────── */
+.checkout-erro {
+  background: rgba(231, 76, 60, 0.08);
+  border: 1px solid rgba(231, 76, 60, 0.3);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  color: #c0392b;
+  font-size: 0.9375rem;
+}
+
+/* ── BOTÕES ────────────────────────────────────── */
+.checkout-btn-primario {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, #D4AF37, #C97458);
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 1.0625rem;
+  font-weight: 800;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.checkout-btn-primario:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.checkout-btn-primario:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.checkout-acoes {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.checkout-btn-voltar {
+  padding: 1rem 1.5rem;
+  background: none;
+  border: 2px solid #e0d5c5;
+  border-radius: 12px;
+  color: #888;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.15s;
+  white-space: nowrap;
+}
+
+.checkout-btn-voltar:hover { border-color: #d4af37; color: #d4af37; }
+
+/* ── AVISO LOGIN / CARRINHO VAZIO ──────────────── */
+.checkout-aviso-login {
+  padding: 3rem 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.checkout-aviso-login span { font-size: 3rem; }
+.checkout-aviso-login h3   { font-size: 1.25rem; color: #1a2332; margin: 0; }
+.checkout-aviso-login p    { color: #888; margin: 0; }
+
+/* ── ETAPA 3: SUCESSO ──────────────────────────── */
+.checkout-sucesso {
+  padding: 2.5rem 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.sucesso-icone { font-size: 4rem; animation: sucesso-pop 0.4s ease; }
+
+@keyframes sucesso-pop {
+  0%   { transform: scale(0.5); opacity: 0; }
+  70%  { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.checkout-sucesso h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1a2332;
+  margin: 0;
+}
+
+.checkout-sucesso p { color: #666; margin: 0; }
+
+.sucesso-detalhes {
+  width: 100%;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #f0e8d8;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.sucesso-linha {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9375rem;
+  color: #555;
+}
+
+.sucesso-status {
+  background: #e8f5e9;
+  color: #2e7d32;
+  font-weight: 700;
+  padding: 0.15rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+}

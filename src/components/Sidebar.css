@@ -231,3 +231,57 @@
     transform: translateX(0);
   }
 }
+
+/* ========== LOGO: DICA DE CLICÁVEL ========== */
+
+.logo {
+  /* já tem cursor: pointer no CSS existente */
+  transition: opacity var(--transicao-normal);
+}
+
+.logo:hover {
+  opacity: 0.85;
+}
+
+.logo-hint {
+  font-size: 0.7rem;
+  color: var(--cinza-medio);
+  text-align: center;
+  margin-top: var(--espacamento-xs);
+  opacity: 0;
+  transition: opacity var(--transicao-normal);
+  letter-spacing: 0.02em;
+}
+
+.sidebar-header:hover .logo-hint {
+  opacity: 1;
+}
+
+/* ── BOTÃO SAIR ── */
+.btn-sair-sidebar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 0.7rem 1rem;
+  margin-top: var(--espacamento-md);
+  background: transparent;
+  border: 2px solid rgba(220, 60, 60, 0.3);
+  border-radius: var(--raio-md);
+  color: #c0392b;
+  font-size: 0.9375rem;
+  font-weight: var(--peso-bold);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--fonte-principal);
+}
+.btn-sair-sidebar:hover {
+  background: rgba(220, 60, 60, 0.08);
+  border-color: #e74c3c;
+}
+
+/* ── LOGO CLICÁVEL ── */
+.logo { cursor: pointer; }
+.logo-text p { color: var(--cinza-medio); font-size: 0.7rem; }
+.logo:hover .logo-text p { color: var(--dourado-escuro); }

@@ -6,12 +6,18 @@ import { authService } from '../services/authService'; // ← NOVO
 import { formatCurrency } from '../utils/formatters';
 import logoSolDoCerrado from '../assets/logo-sol-cerrado.png';
 import './LandingPage.css';
+import { useCarrinho } from '../contexts/CarrinhoContext';
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const { adicionarItem } = useCarrinho(); // ← NOVO: Adicionado aqui
   const [itensDestaque, setItensDestaque] = useState([]);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
+  const [loginSucesso, setLoginSucesso] = useState(''); // ← NOVO
+
+  // Adicione estas duas linhas junto aos outros estados
+  const [usuarioLogado, setUsuarioLogado] = useState(() => authService.getUsuarioLogado()); // ← NOVO
 
   // ← NOVO: estados do formulário de login
   const [loginEmail, setLoginEmail] = useState('');
@@ -27,6 +33,34 @@ const LandingPage = () => {
   const [cadErro, setCadErro] = useState('');
   const [cadSucesso, setCadSucesso] = useState('');
   const [cadCarregando, setCadCarregando] = useState(false);
+
+  const [sugestoesChef, setSugestoesChef] = useState([]);
+
+  useEffect(() => {
+    carregarSugestoesChef();
+  }, []);
+
+  const carregarSugestoesChef = async () => {
+    try {
+      // Tenta buscar as sugestões do dia
+      const resposta = await fetch('http://localhost:5203/api/SugestaoDoChef/hoje');
+      if (resposta.ok) {
+        const dados = await resposta.json();
+        // Para cada sugestão, busca o prato completo
+        const pratos = await Promise.all(
+          dados.map(s => cardapioService.buscarPorId(s.itemCardapioId))
+        );
+        setSugestoesChef(pratos.filter(Boolean));
+      } else {
+        // 404 = sem sugestão hoje → mostra 2 pratos aleatórios como vitrine
+        const todos = await cardapioService.listarTodos();
+        const embaralhados = todos.sort(() => Math.random() - 0.5);
+        setSugestoesChef(embaralhados.slice(0, 2));
+      }
+    } catch {
+      // Silencia o erro — a seção simplesmente não aparece
+    }
+  };
 
   useEffect(() => {
     carregarItensDestaque();
@@ -49,24 +83,44 @@ const LandingPage = () => {
 
   // ← NOVO: função de login
   const handleLogin = async (e) => {
-    e.preventDefault(); // impede o formulário de recarregar a página
+    e.preventDefault();
     setLoginErro('');
+    setLoginSucesso('');
     setLoginCarregando(true);
 
     try {
       const dados = await authService.login(loginEmail, loginSenha);
+      const usuario = dados.usuario;
 
-      // Redireciona dependendo do perfil
-      if (dados.usuario.perfil === 'Administrador') {
+      // Atualiza o estado do usuário logado na navbar imediatamente
+      setUsuarioLogado(usuario);
+
+      if (usuario.perfil === 'Administrador') {
+        // Admin vai para o painel de gestão
         navigate('/dashboard');
       } else {
-        navigate('/dashboard'); // você pode criar uma rota /cliente depois
+        // Cliente permanece na Landing Page
+        // Fecha o modal e exibe mensagem de boas-vindas
+        setShowLoginModal(false);
+        setLoginSucesso(`Bem-vindo, ${usuario.userName}! 🎉`);
+
+        // Limpa o formulário
+        setLoginEmail('');
+        setLoginSenha('');
+
+        // Remove a mensagem após 4 segundos
+        setTimeout(() => setLoginSucesso(''), 4000);
       }
     } catch (error) {
       setLoginErro(error.message || 'Email ou senha incorretos.');
     } finally {
       setLoginCarregando(false);
     }
+  };
+
+  const handleLogout = () => {
+    authService.logout();
+    setUsuarioLogado(null);
   };
 
   // ← NOVO: função de cadastro
@@ -113,8 +167,18 @@ const LandingPage = () => {
     }
   };
 
+
+
   return (
     <div className="landing-page">
+
+      {/* Toast de boas-vindas para cliente recém-logado */}
+      {loginSucesso && (
+        <div className="toast-sucesso">
+          {loginSucesso}
+        </div>
+      )}
+
       {/* HEADER */}
       <motion.header
         className="landing-header"
@@ -171,9 +235,34 @@ const LandingPage = () => {
             <button onClick={() => scrollToSection('contato')}>Contato</button>
           </nav>
 
-          <button className="btn-entrar" onClick={() => setShowLoginModal(true)}>
-            Entrar / Cadastrar
-          </button>
+          {/* ── ÁREA DE AUTENTICAÇÃO DO HEADER ── */}
+          {usuarioLogado ? (
+            <div className="usuario-logado-area">
+              {/* Bolinha + nome → clica para ir ao dashboard */}
+              <div className="usuario-card" onClick={() => navigate('/dashboard')}
+                style={{ cursor: 'pointer' }} title="Ir para o dashboard">
+                <div className="usuario-avatar">
+                  {usuarioLogado.userName.charAt(0).toUpperCase()}
+                </div>
+                <div className="usuario-info">
+                  <span className="usuario-saudacao">
+                    Olá, <strong>{usuarioLogado.userName.split(' ')[0]}</strong>
+                  </span>
+                  <span className={`usuario-perfil-tag ${usuarioLogado.perfil === 'Administrador' ? 'tag-admin' : 'tag-cliente'}`}>
+                    {usuarioLogado.perfil === 'Administrador' ? '⚙️ Gerente/Admin' : '🍽️ Cliente'}
+                  </span>
+                </div>
+              </div>
+              {/* Botão Sair — separado do card para não conflitar o clique */}
+              <button className="btn-sair" onClick={handleLogout}>
+                Sair
+              </button>
+            </div>
+          ) : (
+            <button className="btn-entrar" onClick={() => setShowLoginModal(true)}>
+              Entrar / Cadastrar
+            </button>
+          )}
         </div>
       </motion.header>
 
@@ -231,15 +320,38 @@ const LandingPage = () => {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ y: -8 }}
+              transition={{ delay: 0.05, duration: 0.3 }}
             >
-              <div className="item-badge">
-                {item.periodo === 'Almoco' ? '☀️ Almoço' : '🌙 Jantar'}
+              {/* ── IMAGEM DO PRATO ── */}
+              <div className="item-destaque-imagem-wrapper">
+                <img
+                  src={item.imagemUrl || '/img/prato-padrao.jpg'}
+                  alt={item.nome}
+                  className="item-destaque-imagem"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = '/img/prato-padrao.jpg';
+                  }}
+                />
               </div>
-              <h3>{item.nome}</h3>
-              <p>{item.descricao}</p>
-              <div className="item-preco">{formatCurrency(item.preco)}</div>
+
+              {/* ── CONTEÚDO DO CARD ── */}
+              <div className="item-destaque-corpo">
+                <div className="item-badge">
+                  {item.periodo === 'Almoco' ? '☀️ Almoço' : '🌙 Jantar'}
+                </div>
+                <h3>{item.nome}</h3>
+                <p>{item.descricao}</p>
+                <span className="item-preco">{formatCurrency(item.preco)}</span>
+                
+                {/* ← NOVO: Botão Adicionar ao Carrinho */}
+                <button
+                  className="btn-adicionar-carrinho"
+                  onClick={() => adicionarItem(item, false)}
+                >
+                  + Adicionar
+                </button>
+              </div>
             </motion.div>
           ))}
         </div>
@@ -249,25 +361,52 @@ const LandingPage = () => {
         </button>
       </section>
 
-      {/* SUGESTÃO DO CHEFE */}
-      <section className="sugestao-section">
-        <motion.div
-          className="sugestao-content"
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-        >
-          <div className="sugestao-badge">
-            <span className="estrela">⭐</span>
-            <span>Sugestão do Chefe</span>
+      {/* SUGESTÃO DO CHEF */}
+      {sugestoesChef.length > 0 && (
+        <section className="sugestao-section">
+          <div className="sugestao-content">
+            <div className="sugestao-badge">
+              <span className="estrela">⭐</span>
+              <span>Sugestão do Chef</span>
+            </div>
+            <h2>Pratos em Destaque</h2>
+            <p>Seleção especial com <strong style={{ color: '#D4AF37' }}>20% de desconto</strong> — válido hoje</p>
+
+            <div className="sugestao-cards-grid">
+              {sugestoesChef.map((prato, index) => (
+                <div key={prato.id ?? index} className="sugestao-mini-card">
+                  <div className="sugestao-mini-imagem">
+                    <img
+                      src={prato.imagemUrl || '/img/prato-padrao.jpg'}
+                      alt={prato.nome}
+                      onError={(e) => { e.target.onerror = null; e.target.src = '/img/prato-padrao.jpg'; }}
+                    />
+                  </div>
+                  <div className="sugestao-mini-corpo">
+                    <span className="sugestao-mini-periodo">
+                      {prato.periodo === 'Almoco' ? '☀️ Almoço' : '🌙 Jantar'}
+                    </span>
+                    <h4>{prato.nome}</h4>
+                    <div className="sugestao-mini-precos">
+                      <span className="sugestao-preco-riscado">
+                        {formatCurrency(prato.preco)}
+                      </span>
+                      <span className="sugestao-preco-final">
+                        {formatCurrency(prato.preco * 0.8)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <button className="btn-primary" onClick={() => navigate('/sugestao-chef')}
+              style={{ marginTop: '2rem' }}>
+              Ver Sugestão Completa ✨
+            </button>
           </div>
-          <h2>Pratos Especiais com 20% de Desconto</h2>
-          <p>Todos os dias, selecionamos um prato de almoço e um de jantar para receber desconto exclusivo</p>
-          <button className="btn-primary" onClick={() => navigate('/sugestao-chef')}>
-            Ver Sugestões de Hoje
-          </button>
-        </motion.div>
-      </section>
+        </section>
+      )}
 
       {/* SOBRE */}
       <section id="sobre" className="sobre-section">

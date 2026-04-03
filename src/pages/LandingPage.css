@@ -177,12 +177,10 @@
   width: 400px;
   height: 400px;
   border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(212, 175, 55, 0.15) 0%,
-    rgba(201, 116, 88, 0.05) 50%,
-    transparent 100%
-  );
+  background: radial-gradient(circle,
+      rgba(212, 175, 55, 0.15) 0%,
+      rgba(201, 116, 88, 0.05) 50%,
+      transparent 100%);
 }
 
 /* ========== SEÇÕES ========== */
@@ -198,7 +196,7 @@ section {
 }
 
 .section-header h2,
-section > h2 {
+section>h2 {
   font-family: var(--fonte-display);
   font-size: 2.75rem;
   font-weight: var(--peso-extrabold);
@@ -216,12 +214,10 @@ section > h2 {
 
 /* ========== CARDÁPIO DESTAQUE ========== */
 .cardapio-section {
-  background: linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgba(255, 255, 255, 0.5) 50%,
-    transparent 100%
-  );
+  background: linear-gradient(to bottom,
+      transparent 0%,
+      rgba(255, 255, 255, 0.5) 50%,
+      transparent 100%);
 }
 
 .itens-destaque {
@@ -330,11 +326,9 @@ section > h2 {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    circle at top right,
-    rgba(212, 175, 55, 0.1) 0%,
-    transparent 60%
-  );
+  background: radial-gradient(circle at top right,
+      rgba(212, 175, 55, 0.1) 0%,
+      transparent 60%);
 }
 
 .sugestao-content {
@@ -733,4 +727,236 @@ section > h2 {
   .atendimento-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* ========== IMAGEM NOS CARDS DE DESTAQUE ========== */
+
+/* Remove o padding-top do card para a imagem encostar na borda */
+.item-destaque-card {
+  padding: 0;
+  /* sobrescreve o padding geral do card */
+  overflow: hidden;
+  /* garante que a imagem respeite o border-radius */
+}
+
+.item-destaque-imagem-wrapper {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  border-radius: var(--raio-xl) var(--raio-xl) 0 0;
+}
+
+.item-destaque-imagem {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform var(--transicao-normal);
+}
+
+/* Zoom suave na imagem ao passar o mouse no card */
+.item-destaque-card:hover .item-destaque-imagem {
+  transform: scale(1.05);
+}
+
+/* Corpo do card (badge + nome + descrição + preço) */
+.item-destaque-corpo {
+  padding: var(--espacamento-xl);
+}
+
+/* ========== NAVBAR: USUÁRIO LOGADO ========== */
+
+.usuario-logado-area {
+  display: flex;
+  align-items: center;
+  gap: var(--espacamento-md);
+}
+
+.usuario-card {
+  display: flex;
+  align-items: center;
+  gap: var(--espacamento-sm);
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid var(--dourado-claro);
+  border-radius: var(--raio-full);
+  padding: 0.4rem 1rem 0.4rem 0.4rem;
+  backdrop-filter: blur(8px);
+  box-shadow: var(--sombra-sm);
+}
+
+.usuario-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--gradiente-luxo);
+  color: var(--branco-puro);
+  font-weight: var(--peso-bold);
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.usuario-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.usuario-saudacao {
+  font-size: 0.875rem;
+  color: var(--marrom-cafe);
+}
+
+.usuario-saudacao strong {
+  color: var(--azul-noite);
+}
+
+.usuario-perfil-tag {
+  font-size: 0.75rem;
+  font-weight: var(--peso-bold);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--raio-sm);
+  width: fit-content;
+}
+
+.tag-admin {
+  background: rgba(212, 175, 55, 0.15);
+  color: var(--dourado-escuro);
+  border: 1px solid var(--dourado-claro);
+}
+
+.tag-cliente {
+  background: rgba(201, 116, 88, 0.12);
+  color: var(--terracota-medio, #c97458);
+  border: 1px solid rgba(201, 116, 88, 0.3);
+}
+
+.btn-sair {
+  padding: 0.5rem 1.25rem;
+  background: transparent;
+  border: 2px solid var(--terracota-medio, #c97458);
+  border-radius: var(--raio-full);
+  color: var(--terracota-medio, #c97458);
+  font-weight: var(--peso-bold);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all var(--transicao-normal);
+}
+
+.btn-sair:hover {
+  background: var(--terracota-medio, #c97458);
+  color: var(--branco-puro);
+}
+
+/* ── SUGESTÃO DO CHEF: MINI CARDS ── */
+.sugestao-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--espacamento-lg);
+  margin-top: var(--espacamento-xl);
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.sugestao-mini-card {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: var(--raio-xl);
+  overflow: hidden;
+  transition: transform 0.2s ease;
+}
+
+.sugestao-mini-card:hover {
+  transform: translateY(-4px);
+}
+
+.sugestao-mini-imagem {
+  height: 150px;
+  overflow: hidden;
+}
+
+.sugestao-mini-imagem img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sugestao-mini-corpo {
+  padding: var(--espacamento-md);
+  text-align: left;
+}
+
+.sugestao-mini-periodo {
+  font-size: 0.8rem;
+  font-weight: var(--peso-bold);
+  color: var(--dourado-champagne);
+}
+
+.sugestao-mini-corpo h4 {
+  font-family: var(--fonte-display);
+  color: var(--creme-premium);
+  font-size: 1.1rem;
+  margin: 4px 0 8px;
+}
+
+.sugestao-mini-precos {
+  display: flex;
+  align-items: center;
+  gap: var(--espacamento-sm);
+}
+
+.sugestao-preco-riscado {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: line-through;
+}
+
+.sugestao-preco-final {
+  font-size: 1.25rem;
+  font-weight: var(--peso-extrabold);
+  color: #D4AF37;
+}
+
+/* ── TOAST DE BOAS-VINDAS ── */
+.toast-sucesso {
+  position: fixed;
+  top: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--gradiente-luxo);
+  color: var(--branco-puro);
+  padding: 1rem 2rem;
+  border-radius: var(--raio-full);
+  font-weight: var(--peso-bold);
+  font-size: 1rem;
+  box-shadow: 0 8px 32px rgba(212, 175, 55, 0.4);
+  z-index: 9999;
+  animation: toast-entrar 0.3s ease;
+  white-space: nowrap;
+}
+
+@keyframes toast-entrar {
+  from { opacity: 0; transform: translateX(-50%) translateY(-12px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.btn-adicionar-carrinho {
+  margin-top: 0.75rem;
+  width: 100%;
+  padding: 0.6rem;
+  background: var(--gradiente-luxo);
+  border: none;
+  border-radius: var(--raio-md);
+  color: white;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.btn-adicionar-carrinho:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
 }

@@ -1,43 +1,59 @@
-.sugestao-chef {
+/* ═══════════════════════════════════════════════
+   SUGESTÃO DO CHEF — Tema Sol do Cerrado
+   Fundo claro, quente e solar
+═══════════════════════════════════════════════ */
+
+.sc-pagina {
+  min-height: 100vh;
+  background: linear-gradient(160deg, #fffdf5 0%, #fff8eb 50%, #fff3e0 100%);
   padding: var(--espacamento-2xl) var(--espacamento-3xl);
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
-/* ========== HEADER ========== */
-.sugestao-chef .page-header {
+/* ── BOTÃO VOLTAR ─────────────────────────────── */
+.sc-btn-voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacamento-xs);
+  padding: 0.6rem 1.25rem;
+  background: var(--branco-puro);
+  border: 2px solid var(--dourado-claro);
+  border-radius: var(--raio-full);
+  color: var(--dourado-escuro);
+  font-weight: var(--peso-semibold);
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: all var(--transicao-normal);
+  margin-bottom: var(--espacamento-2xl);
+}
+
+.sc-btn-voltar:hover {
+  background: var(--gradiente-luxo);
+  color: var(--branco-puro);
+  border-color: transparent;
+  transform: translateX(-3px);
+}
+
+/* ── HEADER ───────────────────────────────────── */
+.sc-header {
   text-align: center;
   margin-bottom: var(--espacamento-3xl);
 }
 
-.header-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--espacamento-sm);
-  padding: 0.75rem 1.75rem;
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(201, 116, 88, 0.1));
+.sc-header-badge {
+  display: inline-block;
+  padding: 0.6rem 1.5rem;
+  background: rgba(212, 175, 55, 0.15);
   border: 2px solid var(--dourado-champagne);
   border-radius: var(--raio-full);
-  margin-bottom: var(--espacamento-lg);
   font-weight: var(--peso-bold);
   color: var(--dourado-escuro);
+  font-size: 1rem;
+  margin-bottom: var(--espacamento-lg);
 }
 
-.estrela-grande {
-  font-size: 1.5rem;
-  animation: pulse-star 2s ease-in-out infinite;
-}
-
-@keyframes pulse-star {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.15);
-  }
-}
-
-.sugestao-chef .page-header h1 {
+.sc-header h1 {
   font-family: var(--fonte-display);
   font-size: 3rem;
   font-weight: var(--peso-extrabold);
@@ -49,406 +65,284 @@
   letter-spacing: -0.02em;
 }
 
-.sugestao-chef .page-header p {
+.sc-header p {
   font-size: 1.125rem;
   color: var(--marrom-cafe);
-  font-weight: var(--peso-medium);
 }
 
-/* ========== GRID DE SUGESTÕES ========== */
-.sugestoes-grid {
+/* ── LOADING ──────────────────────────────────── */
+.sc-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  gap: var(--espacamento-lg);
+  color: var(--marrom-cafe);
+  font-size: 1.125rem;
+}
+
+.sc-loading-spinner {
+  font-size: 3rem;
+  animation: sc-girar 2s linear infinite;
+}
+
+@keyframes sc-girar {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── ERRO ─────────────────────────────────────── */
+.sc-erro {
+  text-align: center;
+  padding: var(--espacamento-xl);
+  background: rgba(201, 116, 88, 0.1);
+  border: 1px solid rgba(201, 116, 88, 0.3);
+  border-radius: var(--raio-lg);
+  color: var(--marrom-cafe);
+  font-size: 1rem;
+  margin-bottom: var(--espacamento-xl);
+}
+
+/* ── ESTADO VAZIO ─────────────────────────────── */
+.sc-vazio {
+  text-align: center;
+  padding: var(--espacamento-3xl);
+}
+
+.sc-vazio-icone {
+  font-size: 4rem;
+  margin-bottom: var(--espacamento-lg);
+}
+
+.sc-vazio h2 {
+  font-family: var(--fonte-display);
+  font-size: 2rem;
+  color: var(--azul-noite);
+  margin-bottom: var(--espacamento-md);
+}
+
+.sc-vazio p {
+  color: var(--marrom-cafe);
+  font-size: 1.0625rem;
+  margin-bottom: var(--espacamento-xl);
+}
+
+.sc-btn-cardapio {
+  padding: 0.9rem 2.25rem;
+  background: var(--gradiente-luxo);
+  border: none;
+  border-radius: var(--raio-lg);
+  color: var(--branco-puro);
+  font-weight: var(--peso-bold);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all var(--transicao-normal);
+}
+
+.sc-btn-cardapio:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: var(--sombra-dourada);
+}
+
+/* ── GRID DE CARDS ────────────────────────────── */
+.sc-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
   gap: var(--espacamento-2xl);
   margin-bottom: var(--espacamento-3xl);
 }
 
-/* ========== CARD DE SUGESTÃO ========== */
-.sugestao-card {
+/* ── CARD ─────────────────────────────────────── */
+.sc-card {
   background: var(--branco-puro);
   border-radius: var(--raio-xl);
   overflow: hidden;
-  box-shadow: var(--sombra-lg);
+  box-shadow: 0 4px 24px rgba(180, 120, 60, 0.1);
   border: 2px solid var(--cinza-platina);
   transition: all var(--transicao-normal);
-  position: relative;
 }
 
-.sugestao-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 5px;
-  background: var(--gradiente-luxo);
-}
-
-.sugestao-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 50px rgba(107, 78, 61, 0.2);
-  border-color: var(--dourado-champagne);
-}
-
-/* ========== RIBBON (FITA) ========== */
-.ribbon {
-  position: absolute;
-  top: 20px;
-  right: -35px;
-  background: var(--gradiente-luxo);
-  color: var(--branco-puro);
-  padding: 0.5rem 3rem;
-  transform: rotate(45deg);
-  box-shadow: var(--sombra-md);
-  font-weight: var(--peso-extrabold);
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
-  z-index: 10;
-}
-
-/* ========== HEADER DO CARD ========== */
-.sugestao-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--espacamento-xl);
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(201, 116, 88, 0.05));
-  border-bottom: 1px solid var(--cinza-platina);
-}
-
-.periodo-badge {
-  display: flex;
-  align-items: center;
-  gap: var(--espacamento-sm);
-  padding: 0.625rem 1.25rem;
-  background: var(--branco-puro);
-  border: 2px solid var(--cinza-platina);
-  border-radius: var(--raio-lg);
-  font-weight: var(--peso-bold);
-  font-size: 0.9375rem;
-  color: var(--azul-noite);
-  box-shadow: var(--sombra-xs);
-}
-
-.sugestao-card.almoco .periodo-badge {
-  border-color: #F59E0B;
-  color: #92400E;
-  background: linear-gradient(135deg, #FEF3C7, #FDE68A);
-}
-
-.sugestao-card.jantar .periodo-badge {
-  border-color: var(--dourado-champagne);
-  color: var(--azul-noite);
-  background: linear-gradient(135deg, #E0E7FF, #C7D2FE);
-}
-
-.periodo-icon {
-  font-size: 1.25rem;
-}
-
-.desconto-badge {
-  padding: 0.625rem 1.25rem;
-  background: var(--erro);
-  color: var(--branco-puro);
-  border-radius: var(--raio-lg);
-  font-weight: var(--peso-extrabold);
-  font-size: 1.125rem;
-  box-shadow: var(--sombra-sm);
-  animation: pulse-desconto 2s ease-in-out infinite;
-}
-
-@keyframes pulse-desconto {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-}
-
-/* ========== CONTEÚDO DO CARD ========== */
-.sugestao-content {
-  padding: var(--espacamento-2xl);
-}
-
-.sugestao-content h2 {
-  font-family: var(--fonte-display);
-  font-size: 1.875rem;
-  font-weight: var(--peso-extrabold);
-  color: var(--azul-noite);
-  margin-bottom: var(--espacamento-md);
-  line-height: 1.2;
-}
-
-.descricao {
-  font-size: 1rem;
-  line-height: 1.7;
-  color: var(--marrom-cafe);
-  margin-bottom: var(--espacamento-xl);
-}
-
-/* ========== PREÇOS ========== */
-.preco-container {
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(201, 116, 88, 0.05));
-  border-radius: var(--raio-lg);
-  padding: var(--espacamento-lg);
-  margin-bottom: var(--espacamento-md);
-}
-
-.preco-original {
-  font-size: 0.9375rem;
-  color: var(--cinza-grafite);
-  margin-bottom: var(--espacamento-xs);
-}
-
-.preco-original span {
-  text-decoration: line-through;
-  font-family: var(--fonte-numeros);
-  font-weight: var(--peso-semibold);
-}
-
-.preco-desconto {
-  font-size: 1.125rem;
-  color: var(--azul-noite);
-  font-weight: var(--peso-bold);
-}
-
-.preco-desconto span {
-  font-family: var(--fonte-numeros);
-  font-size: 2.5rem;
-  font-weight: var(--peso-extrabold);
-  background: var(--gradiente-luxo);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-left: var(--espacamento-xs);
-}
-
-.economia {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--espacamento-xs);
-  padding: 0.625rem 1.25rem;
-  background: var(--sucesso-claro);
-  color: var(--sucesso);
-  border: 1.5px solid var(--sucesso-borda);
-  border-radius: var(--raio-md);
-  font-weight: var(--peso-bold);
-  font-size: 0.9375rem;
-  margin-bottom: var(--espacamento-xl);
-}
-
-/* ========== BOTÃO PEDIR ========== */
-.btn-pedir {
-  width: 100%;
-  padding: 1.125rem;
-  background: var(--gradiente-luxo);
-  color: var(--branco-puro);
-  border: none;
-  border-radius: var(--raio-lg);
-  font-weight: var(--peso-bold);
-  font-size: 1.0625rem;
-  cursor: pointer;
-  transition: all var(--transicao-normal);
-  box-shadow: var(--sombra-dourada);
-  font-family: var(--fonte-principal);
-}
-
-.btn-pedir:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(212, 175, 55, 0.4);
-}
-
-/* ========== SEÇÃO DE INFORMAÇÕES ========== */
-.info-section {
-  text-align: center;
-  margin-bottom: var(--espacamento-3xl);
-}
-
-.info-section h3 {
-  font-family: var(--fonte-display);
-  font-size: 2rem;
-  font-weight: var(--peso-extrabold);
-  color: var(--azul-noite);
-  margin-bottom: var(--espacamento-2xl);
-}
-
-.info-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: var(--espacamento-lg);
-}
-
-.info-card {
-  background: var(--branco-puro);
-  border-radius: var(--raio-lg);
-  padding: var(--espacamento-xl);
-  box-shadow: var(--sombra-sm);
-  border: 1px solid var(--cinza-platina);
-  transition: all var(--transicao-normal);
-  text-align: center;
-}
-
-.info-card:hover {
-  box-shadow: var(--sombra-md);
-  transform: translateY(-4px);
+.sc-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(180, 120, 60, 0.18);
   border-color: var(--dourado-claro);
 }
 
-.info-icon {
-  font-size: 2.5rem;
-  margin-bottom: var(--espacamento-md);
+/* Faixa colorida no topo: dourada=almoço, noite=jantar */
+.sc-card-almoco {
+  border-top: 5px solid #D4AF37;
 }
 
-.info-card h4 {
+.sc-card-jantar {
+  border-top: 5px solid #2C3E6B;
+}
+
+/* ── IMAGEM DO CARD ───────────────────────────── */
+.sc-card-imagem-wrapper {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+}
+
+.sc-card-imagem {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform var(--transicao-normal);
+}
+
+.sc-card:hover .sc-card-imagem {
+  transform: scale(1.04);
+}
+
+/* Badge de período (canto inferior esquerdo da imagem) */
+.sc-periodo-badge {
+  position: absolute;
+  bottom: var(--espacamento-md);
+  left: var(--espacamento-md);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(6px);
+  border-radius: var(--raio-full);
+  padding: 0.35rem 0.9rem;
+  font-size: 0.875rem;
+  font-weight: var(--peso-bold);
+  color: var(--azul-noite);
+  border: 1px solid rgba(255,255,255,0.6);
+}
+
+/* Badge -20% (canto superior direito da imagem) */
+.sc-desconto-badge {
+  position: absolute;
+  top: var(--espacamento-md);
+  right: var(--espacamento-md);
+  background: #e84444;
+  color: white;
+  font-weight: var(--peso-extrabold);
+  font-size: 1rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--raio-md);
+  box-shadow: 0 2px 8px rgba(232, 68, 68, 0.4);
+}
+
+/* ── CORPO DO CARD ────────────────────────────── */
+.sc-card-corpo {
+  padding: var(--espacamento-xl);
+}
+
+.sc-card-corpo h2 {
   font-family: var(--fonte-display);
-  font-size: 1.125rem;
+  font-size: 1.5rem;
   font-weight: var(--peso-bold);
   color: var(--azul-noite);
   margin-bottom: var(--espacamento-sm);
 }
 
-.info-card p {
+.sc-descricao {
+  color: var(--marrom-cafe);
   font-size: 0.9375rem;
   line-height: 1.6;
-  color: var(--marrom-cafe);
+  margin-bottom: var(--espacamento-lg);
 }
 
-/* ========== CTA SECTION ========== */
-.cta-section {
-  background: linear-gradient(135deg, var(--azul-noite) 0%, var(--azul-crepusculo) 100%);
-  border-radius: var(--raio-xl);
-  padding: var(--espacamento-3xl);
-  text-align: center;
-  margin-bottom: var(--espacamento-3xl);
-  position: relative;
-  overflow: hidden;
-}
-
-.cta-section::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    circle at top right,
-    rgba(212, 175, 55, 0.1) 0%,
-    transparent 60%
-  );
-}
-
-.cta-section h3 {
-  font-family: var(--fonte-display);
-  font-size: 2.25rem;
-  font-weight: var(--peso-extrabold);
-  color: var(--creme-premium);
-  margin-bottom: var(--espacamento-md);
-  position: relative;
-  z-index: 1;
-}
-
-.cta-section p {
-  font-size: 1.125rem;
-  color: var(--creme-escuro);
-  margin-bottom: var(--espacamento-2xl);
-  position: relative;
-  z-index: 1;
-}
-
-.cta-buttons {
+/* ── PREÇOS ───────────────────────────────────── */
+.sc-precos {
   display: flex;
-  gap: var(--espacamento-md);
-  justify-content: center;
-  flex-wrap: wrap;
-  position: relative;
-  z-index: 1;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--espacamento-md);
+  border-top: 1px solid var(--cinza-platina);
 }
 
-.cta-buttons .btn-primary,
-.cta-buttons .btn-secondary {
-  padding: 1rem 2rem;
-  font-size: 1.0625rem;
+.sc-preco-original {
+  font-size: 0.9375rem;
+  color: #999;
+  text-decoration: line-through;
 }
 
-.cta-buttons .btn-secondary {
-  background: var(--branco-puro);
-  color: var(--azul-noite);
-  border: 2px solid var(--branco-puro);
+.sc-preco-final {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
-.cta-buttons .btn-secondary:hover {
-  background: transparent;
-  color: var(--branco-puro);
-  border-color: var(--branco-puro);
-}
-
-/* ========== HISTÓRICO ========== */
-.historico-section {
-  text-align: center;
-  padding: var(--espacamento-2xl);
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.05), rgba(201, 116, 88, 0.03));
-  border-radius: var(--raio-xl);
-  border: 1px solid var(--cinza-platina);
-}
-
-.historico-section h3 {
-  font-family: var(--fonte-display);
-  font-size: 1.75rem;
-  font-weight: var(--peso-bold);
-  color: var(--azul-noite);
-  margin-bottom: var(--espacamento-md);
-}
-
-.historico-subtitle {
-  font-size: 1.0625rem;
-  line-height: 1.7;
+.sc-preco-label {
+  font-size: 0.75rem;
   color: var(--marrom-cafe);
-  max-width: 700px;
-  margin: 0 auto;
+  font-weight: var(--peso-medium);
 }
 
-/* ========== LOADING ========== */
-.sugestao-chef .loading-container {
-  min-height: 60vh;
+.sc-preco-valor {
+  font-family: var(--fonte-numeros);
+  font-size: 2rem;
+  font-weight: var(--peso-extrabold);
+  background: var(--gradiente-luxo);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
 }
 
-/* ========== RESPONSIVO ========== */
-@media (max-width: 1024px) {
-  .sugestoes-grid {
-    grid-template-columns: 1fr;
-  }
+/* ── INFO CARDS ───────────────────────────────── */
+.sc-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--espacamento-lg);
+  margin-top: var(--espacamento-xl);
 }
 
+.sc-info-card {
+  background: var(--branco-puro);
+  border-radius: var(--raio-lg);
+  padding: var(--espacamento-xl);
+  text-align: center;
+  border: 1px solid var(--cinza-platina);
+  box-shadow: var(--sombra-sm);
+}
+
+.sc-info-icone {
+  font-size: 2rem;
+  margin-bottom: var(--espacamento-sm);
+}
+
+.sc-info-card h4 {
+  font-family: var(--fonte-display);
+  font-size: 1rem;
+  color: var(--azul-noite);
+  margin-bottom: var(--espacamento-xs);
+  font-weight: var(--peso-bold);
+}
+
+.sc-info-card p {
+  font-size: 0.875rem;
+  color: var(--marrom-cafe);
+  line-height: 1.5;
+}
+
+/* ── RESPONSIVO ───────────────────────────────── */
 @media (max-width: 768px) {
-  .sugestao-chef {
-    padding: var(--espacamento-xl) var(--espacamento-lg);
+  .sc-pagina {
+    padding: var(--espacamento-lg);
   }
 
-  .sugestao-chef .page-header h1 {
+  .sc-header h1 {
     font-size: 2.25rem;
   }
 
-  .sugestao-content {
-    padding: var(--espacamento-xl);
-  }
-
-  .sugestao-content h2 {
-    font-size: 1.5rem;
-  }
-
-  .preco-desconto span {
-    font-size: 2rem;
-  }
-
-  .info-cards {
+  .sc-grid {
     grid-template-columns: 1fr;
   }
 
-  .cta-buttons {
+  .sc-precos {
     flex-direction: column;
+    align-items: flex-start;
+    gap: var(--espacamento-sm);
   }
 
-  .cta-buttons .btn-primary,
-  .cta-buttons .btn-secondary {
-    width: 100%;
+  .sc-preco-final {
+    align-items: flex-start;
   }
 }

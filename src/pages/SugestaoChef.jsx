@@ -1,270 +1,196 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { apiFetch } from '../api/api';
 import { cardapioService } from '../services/cardapioService';
 import { formatCurrency } from '../utils/formatters';
 import './SugestaoChef.css';
 
 const SugestaoChef = () => {
-  const [itensAlmoco, setItensAlmoco] = useState([]);
-  const [itensJantar, setItensJantar] = useState([]);
-  const [sugestaoAlmoco, setSugestaoAlmoco] = useState(null);
-  const [sugestaoJantar, setSugestaoJantar] = useState(null);
+  const navigate = useNavigate();
+  const [sugestoes, setSugestoes] = useState([]);   // [{prato, periodo}]
   const [loading, setLoading] = useState(true);
+  const [erro, setErro] = useState(null);
 
   useEffect(() => {
-    carregarItens();
+    carregarSugestoes();
   }, []);
 
-  const carregarItens = async () => {
+  const carregarSugestoes = async () => {
     try {
       setLoading(true);
-      const todosItens = await cardapioService.listarTodos();
-      
-      const almoco = todosItens.filter(item => item.periodo === 'Almoco');
-      const jantar = todosItens.filter(item => item.periodo === 'Jantar');
-      
-      setItensAlmoco(almoco);
-      setItensJantar(jantar);
+      setErro(null);
 
-      // Simular sugestões aleatórias (em produção, viria da API)
-      if (almoco.length > 0) {
-        const randomAlmoco = almoco[Math.floor(Math.random() * almoco.length)];
-        setSugestaoAlmoco(randomAlmoco);
+      // 1️⃣ Busca as sugestões do dia (retorna array com itemCardapioId)
+      const resposta = await apiFetch('/SugestaoDoChef/hoje');
+
+      // Se não houver sugestões hoje, o backend retorna 404
+      if (resposta.status === 404) {
+        setSugestoes([]);
+        return;
       }
-      
-      if (jantar.length > 0) {
-        const randomJantar = jantar[Math.floor(Math.random() * jantar.length)];
-        setSugestaoJantar(randomJantar);
-      }
+
+      if (!resposta.ok) throw new Error('Erro ao buscar sugestões.');
+
+      const dadosSugestoes = await resposta.json();
+
+      // 2️⃣ Para cada sugestão, busca os dados completos do prato
+      const pratosCompletos = await Promise.all(
+        dadosSugestoes.map(async (sugestao) => {
+          const prato = await cardapioService.buscarPorId(sugestao.itemCardapioId);
+          return {
+            sugestaoId: sugestao.id,
+            periodo: sugestao.periodo,
+            prato,
+          };
+        })
+      );
+
+      setSugestoes(pratosCompletos);
     } catch (error) {
-      console.error('Erro ao carregar itens:', error);
+      console.error('Erro ao carregar sugestões:', error);
+      setErro('Não foi possível carregar as sugestões de hoje.');
     } finally {
       setLoading(false);
     }
   };
 
-  const calcularPrecoComDesconto = (preco) => {
-    return preco * 0.8; // 20% de desconto
-  };
+  // Calcula o preço com 20% de desconto
+  const calcularDesconto = (preco) => preco * 0.8;
 
+  // ── LOADING ──────────────────────────────────────────────────────
   if (loading) {
     return (
-      <div className="sugestao-chef">
-        <div className="loading-container">
-          <motion.div
-            className="loading-spinner"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-          >
-            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="spinnerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#D4AF37" />
-                  <stop offset="50%" stopColor="#C97458" />
-                  <stop offset="100%" stopColor="#6B4E3D" />
-                </linearGradient>
-              </defs>
-              <circle
-                cx="50" cy="50" r="40"
-                stroke="url(#spinnerGradient)"
-                strokeWidth="6"
-                strokeLinecap="round"
-                fill="none"
-                strokeDasharray="200"
-                strokeDashoffset="50"
-              />
-            </svg>
-          </motion.div>
-          <p>Carregando sugestões...</p>
+      <div className="sc-pagina">
+        <div className="sc-loading">
+          <div className="sc-loading-spinner">☀️</div>
+          <p>Consultando o chef...</p>
         </div>
       </div>
     );
   }
 
+  // ── RENDER ───────────────────────────────────────────────────────
   return (
-    <motion.div
-      className="sugestao-chef"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.6 }}
-    >
-      {/* Header */}
-      <motion.header
-        className="page-header"
+    <div className="sc-pagina">
+
+      {/* BOTÃO VOLTAR */}
+      <button className="sc-btn-voltar" onClick={() => navigate('/')}>
+        ← Voltar para o Início
+      </button>
+
+      {/* HEADER */}
+      <motion.div
+        className="sc-header"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
       >
-        <div className="header-badge">
-          <span className="estrela-grande">⭐</span>
-          <span>Sugestão do Chefe</span>
-        </div>
+        <div className="sc-header-badge">⭐ Sugestão do Chef</div>
         <h1>Pratos Especiais de Hoje</h1>
-        <p>Seleção exclusiva com 20% de desconto - Válido apenas hoje</p>
-      </motion.header>
-
-      {/* Sugestões do Dia */}
-      <div className="sugestoes-grid">
-        {/* Sugestão de Almoço */}
-        {sugestaoAlmoco && (
-          <motion.div
-            className="sugestao-card almoco"
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <div className="sugestao-header">
-              <div className="periodo-badge">
-                <span className="periodo-icon">☀️</span>
-                <span>Almoço</span>
-              </div>
-              <div className="desconto-badge">
-                <span>-20%</span>
-              </div>
-            </div>
-
-            <div className="sugestao-content">
-              <h2>{sugestaoAlmoco.nome}</h2>
-              <p className="descricao">{sugestaoAlmoco.descricao}</p>
-
-              <div className="preco-container">
-                <div className="preco-original">
-                  De: <span>{formatCurrency(sugestaoAlmoco.preco)}</span>
-                </div>
-                <div className="preco-desconto">
-                  Por: <span>{formatCurrency(calcularPrecoComDesconto(sugestaoAlmoco.preco))}</span>
-                </div>
-              </div>
-
-              <div className="economia">
-                💰 Você economiza {formatCurrency(sugestaoAlmoco.preco * 0.2)}
-              </div>
-
-              <button className="btn-pedir">
-                Fazer Pedido
-              </button>
-            </div>
-
-            <div className="ribbon">
-              <span>PROMOÇÃO</span>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Sugestão de Jantar */}
-        {sugestaoJantar && (
-          <motion.div
-            className="sugestao-card jantar"
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4 }}
-          >
-            <div className="sugestao-header">
-              <div className="periodo-badge">
-                <span className="periodo-icon">🌙</span>
-                <span>Jantar</span>
-              </div>
-              <div className="desconto-badge">
-                <span>-20%</span>
-              </div>
-            </div>
-
-            <div className="sugestao-content">
-              <h2>{sugestaoJantar.nome}</h2>
-              <p className="descricao">{sugestaoJantar.descricao}</p>
-
-              <div className="preco-container">
-                <div className="preco-original">
-                  De: <span>{formatCurrency(sugestaoJantar.preco)}</span>
-                </div>
-                <div className="preco-desconto">
-                  Por: <span>{formatCurrency(calcularPrecoComDesconto(sugestaoJantar.preco))}</span>
-                </div>
-              </div>
-
-              <div className="economia">
-                💰 Você economiza {formatCurrency(sugestaoJantar.preco * 0.2)}
-              </div>
-
-              <button className="btn-pedir">
-                Fazer Pedido
-              </button>
-            </div>
-
-            <div className="ribbon">
-              <span>PROMOÇÃO</span>
-            </div>
-          </motion.div>
-        )}
-      </div>
-
-      {/* Informações Importantes */}
-      <motion.div
-        className="info-section"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6 }}
-      >
-        <h3>Como Funciona?</h3>
-        <div className="info-cards">
-          <div className="info-card">
-            <div className="info-icon">🎯</div>
-            <h4>Seleção Diária</h4>
-            <p>Nosso chef seleciona 1 prato de almoço e 1 de jantar todos os dias</p>
-          </div>
-
-          <div className="info-card">
-            <div className="info-icon">💰</div>
-            <h4>20% de Desconto</h4>
-            <p>Desconto automático aplicado no pedido do dia</p>
-          </div>
-
-          <div className="info-card">
-            <div className="info-icon">⏰</div>
-            <h4>Válido Hoje</h4>
-            <p>A promoção é válida apenas no dia em que o prato está em destaque</p>
-          </div>
-
-          <div className="info-card">
-            <div className="info-icon">🍽️</div>
-            <h4>Todos os Pedidos</h4>
-            <p>Válido para presencial, delivery próprio e apps</p>
-          </div>
-        </div>
+        <p>Seleção exclusiva com <strong>20% de desconto</strong> — válido apenas hoje</p>
       </motion.div>
 
-      {/* Call to Action */}
-      <motion.div
-        className="cta-section"
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.8 }}
-      >
-        <h3>Aproveite Enquanto é Tempo!</h3>
-        <p>Os pratos em destaque mudam todos os dias às 00h</p>
-        <div className="cta-buttons">
-          <button className="btn-primary" onClick={() => window.location.href = '/cardapio'}>
+      {/* ERRO */}
+      {erro && (
+        <div className="sc-erro">
+          <span>⚠️</span> {erro}
+        </div>
+      )}
+
+      {/* SEM SUGESTÕES */}
+      {!erro && sugestoes.length === 0 && (
+        <motion.div
+          className="sc-vazio"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <div className="sc-vazio-icone">🍽️</div>
+          <h2>Nenhuma sugestão para hoje</h2>
+          <p>O chef ainda não definiu os pratos em destaque. Volte mais tarde!</p>
+          <button className="sc-btn-cardapio" onClick={() => navigate('/cardapio')}>
             Ver Cardápio Completo
           </button>
-          <button className="btn-secondary" onClick={() => window.location.href = '/pedidos'}>
-            Meus Pedidos
-          </button>
-        </div>
-      </motion.div>
+        </motion.div>
+      )}
 
-      {/* Histórico de Sugestões (Opcional - para admin) */}
-      <motion.div
-        className="historico-section"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1 }}
-      >
-        <h3>✨ Fique de Olho nas Próximas Sugestões</h3>
-        <p className="historico-subtitle">
-          Nosso chef está sempre criando experiências gastronômicas únicas. 
-          Acompanhe diariamente para não perder nenhuma promoção!
-        </p>
-      </motion.div>
-    </motion.div>
+      {/* CARDS DAS SUGESTÕES */}
+      {sugestoes.length > 0 && (
+        <div className="sc-grid">
+          {sugestoes.map(({ sugestaoId, periodo, prato }, index) => (
+            <motion.div
+              key={sugestaoId}
+              className={`sc-card ${periodo === 'Almoco' ? 'sc-card-almoco' : 'sc-card-jantar'}`}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.15 }}
+            >
+              {/* Imagem */}
+              <div className="sc-card-imagem-wrapper">
+                <img
+                  src={prato.imagemUrl || '/img/prato-padrao.jpg'}
+                  alt={prato.nome}
+                  className="sc-card-imagem"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = '/img/prato-padrao.jpg';
+                  }}
+                />
+                {/* Badge de período sobre a imagem */}
+                <div className="sc-periodo-badge">
+                  {periodo === 'Almoco' ? '☀️ Almoço' : '🌙 Jantar'}
+                </div>
+                {/* Badge de desconto sobre a imagem */}
+                <div className="sc-desconto-badge">-20%</div>
+              </div>
+
+              {/* Corpo do card */}
+              <div className="sc-card-corpo">
+                <h2>{prato.nome}</h2>
+                <p className="sc-descricao">{prato.descricao}</p>
+
+                {/* Preços */}
+                <div className="sc-precos">
+                  <span className="sc-preco-original">
+                    De: {formatCurrency(prato.preco)}
+                  </span>
+                  <div className="sc-preco-final">
+                    <span className="sc-preco-label">Por apenas</span>
+                    <span className="sc-preco-valor">
+                      {formatCurrency(calcularDesconto(prato.preco))}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      )}
+
+      {/* INFORMAÇÕES SOBRE A PROMOÇÃO */}
+      {sugestoes.length > 0 && (
+        <motion.div
+          className="sc-info-grid"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+        >
+          {[
+            { icone: '🎯', titulo: 'Seleção Diária', texto: 'Nosso chef escolhe 1 prato de almoço e 1 de jantar todo dia' },
+            { icone: '💰', titulo: '20% de Desconto', texto: 'Aplicado automaticamente no pedido' },
+            { icone: '⏰', titulo: 'Só Hoje', texto: 'A promoção muda à meia-noite' },
+            { icone: '🍽️', titulo: 'Todos os Canais', texto: 'Presencial, delivery próprio e apps' },
+          ].map((info) => (
+            <div key={info.titulo} className="sc-info-card">
+              <div className="sc-info-icone">{info.icone}</div>
+              <h4>{info.titulo}</h4>
+              <p>{info.texto}</p>
+            </div>
+          ))}
+        </motion.div>
+      )}
+
+    </div>
   );
 };
 
