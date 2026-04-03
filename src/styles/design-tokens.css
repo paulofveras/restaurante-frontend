@@ -1,0 +1,197 @@
+/* ==========================================
+   🌟 SOL DO CERRADO - PALETA LUXUOSA E REFINADA
+   Design de Alto Padrão | Legibilidade Premium
+   ========================================== */
+
+:root {
+  /* ========== PALETA PRINCIPAL (Luxo e Sofisticação) ========== */
+  
+  /* Dourado Champagne - Elegância */
+  --dourado-champagne: #D4AF37;
+  --dourado-claro: #E8D4A0;
+  --dourado-escuro: #B8941F;
+  
+  /* Azul Noite - Profundidade */
+  --azul-noite: #1A2332;
+  --azul-meia-noite: #0F1419;
+  --azul-crepusculo: #2D3E50;
+  
+  /* Creme Premium - Sofisticação */
+  --creme-premium: #FAF8F5;
+  --creme-escuro: #F5F1EB;
+  --creme-suave: #FEFDFB;
+  
+  /* Terracota Sunset - Pôr do Sol Tocantins */
+  --terracota-sunset: #C97458;
+  --terracota-claro: #E09F8A;
+  --terracota-escuro: #A85A3F;
+  
+  /* Marrom Café - Requinte */
+  --marrom-cafe: #6B4E3D;
+  --marrom-cafe-claro: #8B6F5C;
+  --marrom-cafe-escuro: #4A3428;
+  
+  /* Verde Cerrado - Natureza Luxuosa */
+  --verde-cerrado: #5A7B5C;
+  --verde-cerrado-claro: #7A9B7C;
+  --verde-cerrado-escuro: #3D5A3F;
+  
+  /* ========== GRADIENTES SOFISTICADOS ========== */
+  
+  /* Gradiente Principal - Sol do Cerrado Luxo */
+  --gradiente-luxo: linear-gradient(
+    135deg,
+    #D4AF37 0%,      /* Dourado Champagne */
+    #C97458 50%,     /* Terracota Sunset */
+    #6B4E3D 100%     /* Marrom Café */
+  );
+  
+  /* Gradiente Sutil - Para fundos */
+  --gradiente-fundo: linear-gradient(
+    to bottom,
+    #FEFDFB 0%,      /* Creme muito claro */
+    #FAF8F5 50%,     /* Creme Premium */
+    #F5F1EB 100%     /* Creme Escuro */
+  );
+  
+  /* Gradiente Card - Efeito Premium */
+  --gradiente-card: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.08) 0%,
+    rgba(201, 116, 88, 0.05) 100%
+  );
+  
+  /* ========== CORES NEUTRAS REFINADAS ========== */
+  --branco-puro: #FFFFFF;
+  --cinza-platina: #E8E6E3;
+  --cinza-prata: #C4C2BF;
+  --cinza-grafite: #6B6B6B;
+  --preto-elegante: #1A1A1A;
+  
+  /* ========== CORES FUNCIONAIS (Sutis e Elegantes) ========== */
+  
+  /* Sucesso - Verde Esmeralda */
+  --sucesso: #2E7D5E;
+  --sucesso-claro: #E8F5EF;
+  --sucesso-borda: #4A9F7A;
+  
+  /* Alerta - Âmbar Dourado */
+  --alerta: #D4991A;
+  --alerta-claro: #FBF4E8;
+  --alerta-borda: #E5A933;
+  
+  /* Erro - Vermelho Borgonha */
+  --erro: #A83228;
+  --erro-claro: #FBEAE8;
+  --erro-borda: #C94840;
+  
+  /* Info - Azul Safira */
+  --info: #2C5F8D;
+  --info-claro: #E8F1F7;
+  --info-borda: #4A7DAD;
+  
+  /* ========== TIPOGRAFIA PREMIUM ========== */
+  --fonte-display: 'Playfair Display', 'Georgia', serif;  /* Títulos elegantes */
+  --fonte-principal: 'Inter', -apple-system, sans-serif;   /* Corpo de texto */
+  --fonte-numeros: 'Lora', 'Georgia', serif;               /* Preços e números */
+  
+  --peso-light: 300;
+  --peso-normal: 400;
+  --peso-medium: 500;
+  --peso-semibold: 600;
+  --peso-bold: 700;
+  --peso-extrabold: 800;
+  
+  /* ========== ESPAÇAMENTOS HARMÔNICOS ========== */
+  --espacamento-xs: 0.25rem;   /* 4px */
+  --espacamento-sm: 0.5rem;    /* 8px */
+  --espacamento-md: 1rem;      /* 16px */
+  --espacamento-lg: 1.5rem;    /* 24px */
+  --espacamento-xl: 2rem;      /* 32px */
+  --espacamento-2xl: 3rem;     /* 48px */
+  --espacamento-3xl: 4rem;     /* 64px */
+  
+  /* ========== BORDAS REFINADAS ========== */
+  --raio-sm: 6px;
+  --raio-md: 10px;
+  --raio-lg: 14px;
+  --raio-xl: 18px;
+  --raio-full: 9999px;
+  
+  /* ========== SOMBRAS SUTIS E ELEGANTES ========== */
+  
+  /* Sombras com tom dourado-terracota */
+  --sombra-xs: 0 1px 3px rgba(107, 78, 61, 0.08);
+  --sombra-sm: 0 2px 8px rgba(107, 78, 61, 0.10);
+  --sombra-md: 0 4px 16px rgba(107, 78, 61, 0.12);
+  --sombra-lg: 0 8px 24px rgba(107, 78, 61, 0.14);
+  --sombra-xl: 0 16px 32px rgba(107, 78, 61, 0.16);
+  
+  /* Sombra Premium - Efeito Dourado */
+  --sombra-dourada: 0 8px 32px rgba(212, 175, 55, 0.25);
+  
+  /* Sombra Azul Noite */
+  --sombra-noite: 0 8px 24px rgba(26, 35, 50, 0.20);
+  
+  /* ========== TRANSIÇÕES SUAVES ========== */
+  --transicao-rapida: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transicao-normal: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transicao-suave: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* ========== Z-INDEX ========== */
+  --z-base: 1;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-sidebar: 300;
+  --z-header: 400;
+  --z-modal: 500;
+  --z-tooltip: 600;
+}
+
+/* ========== TOKENS SEMÂNTICOS ========== */
+
+:root {
+  /* Backgrounds */
+  --bg-principal: var(--creme-premium);
+  --bg-card: var(--branco-puro);
+  --bg-hover: var(--creme-escuro);
+  
+  /* Textos */
+  --texto-principal: var(--azul-noite);
+  --texto-secundario: var(--marrom-cafe);
+  --texto-terciario: var(--cinza-grafite);
+  --texto-claro: var(--cinza-prata);
+  
+  /* Acentos */
+  --acento-primario: var(--dourado-champagne);
+  --acento-secundario: var(--terracota-sunset);
+  --acento-terciario: var(--verde-cerrado);
+  
+  /* Bordas */
+  --borda-sutil: var(--cinza-platina);
+  --borda-media: var(--cinza-prata);
+  --borda-forte: var(--dourado-claro);
+}
+
+/* ========== CLASSES UTILITÁRIAS ========== */
+
+.texto-dourado {
+  background: var(--gradiente-luxo);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.borda-dourada {
+  border: 1px solid var(--dourado-champagne);
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.15);
+}
+
+.fundo-premium {
+  background: var(--gradiente-card);
+  backdrop-filter: blur(10px);
+}
+
+.sombra-premium {
+  box-shadow: var(--sombra-dourada);
+}

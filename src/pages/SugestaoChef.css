@@ -1,0 +1,454 @@
+.sugestao-chef {
+  padding: var(--espacamento-2xl) var(--espacamento-3xl);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ========== HEADER ========== */
+.sugestao-chef .page-header {
+  text-align: center;
+  margin-bottom: var(--espacamento-3xl);
+}
+
+.header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacamento-sm);
+  padding: 0.75rem 1.75rem;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(201, 116, 88, 0.1));
+  border: 2px solid var(--dourado-champagne);
+  border-radius: var(--raio-full);
+  margin-bottom: var(--espacamento-lg);
+  font-weight: var(--peso-bold);
+  color: var(--dourado-escuro);
+}
+
+.estrela-grande {
+  font-size: 1.5rem;
+  animation: pulse-star 2s ease-in-out infinite;
+}
+
+@keyframes pulse-star {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+.sugestao-chef .page-header h1 {
+  font-family: var(--fonte-display);
+  font-size: 3rem;
+  font-weight: var(--peso-extrabold);
+  background: var(--gradiente-luxo);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: var(--espacamento-md);
+  letter-spacing: -0.02em;
+}
+
+.sugestao-chef .page-header p {
+  font-size: 1.125rem;
+  color: var(--marrom-cafe);
+  font-weight: var(--peso-medium);
+}
+
+/* ========== GRID DE SUGESTÕES ========== */
+.sugestoes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: var(--espacamento-2xl);
+  margin-bottom: var(--espacamento-3xl);
+}
+
+/* ========== CARD DE SUGESTÃO ========== */
+.sugestao-card {
+  background: var(--branco-puro);
+  border-radius: var(--raio-xl);
+  overflow: hidden;
+  box-shadow: var(--sombra-lg);
+  border: 2px solid var(--cinza-platina);
+  transition: all var(--transicao-normal);
+  position: relative;
+}
+
+.sugestao-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: var(--gradiente-luxo);
+}
+
+.sugestao-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 50px rgba(107, 78, 61, 0.2);
+  border-color: var(--dourado-champagne);
+}
+
+/* ========== RIBBON (FITA) ========== */
+.ribbon {
+  position: absolute;
+  top: 20px;
+  right: -35px;
+  background: var(--gradiente-luxo);
+  color: var(--branco-puro);
+  padding: 0.5rem 3rem;
+  transform: rotate(45deg);
+  box-shadow: var(--sombra-md);
+  font-weight: var(--peso-extrabold);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  z-index: 10;
+}
+
+/* ========== HEADER DO CARD ========== */
+.sugestao-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--espacamento-xl);
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(201, 116, 88, 0.05));
+  border-bottom: 1px solid var(--cinza-platina);
+}
+
+.periodo-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--espacamento-sm);
+  padding: 0.625rem 1.25rem;
+  background: var(--branco-puro);
+  border: 2px solid var(--cinza-platina);
+  border-radius: var(--raio-lg);
+  font-weight: var(--peso-bold);
+  font-size: 0.9375rem;
+  color: var(--azul-noite);
+  box-shadow: var(--sombra-xs);
+}
+
+.sugestao-card.almoco .periodo-badge {
+  border-color: #F59E0B;
+  color: #92400E;
+  background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+}
+
+.sugestao-card.jantar .periodo-badge {
+  border-color: var(--dourado-champagne);
+  color: var(--azul-noite);
+  background: linear-gradient(135deg, #E0E7FF, #C7D2FE);
+}
+
+.periodo-icon {
+  font-size: 1.25rem;
+}
+
+.desconto-badge {
+  padding: 0.625rem 1.25rem;
+  background: var(--erro);
+  color: var(--branco-puro);
+  border-radius: var(--raio-lg);
+  font-weight: var(--peso-extrabold);
+  font-size: 1.125rem;
+  box-shadow: var(--sombra-sm);
+  animation: pulse-desconto 2s ease-in-out infinite;
+}
+
+@keyframes pulse-desconto {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* ========== CONTEÚDO DO CARD ========== */
+.sugestao-content {
+  padding: var(--espacamento-2xl);
+}
+
+.sugestao-content h2 {
+  font-family: var(--fonte-display);
+  font-size: 1.875rem;
+  font-weight: var(--peso-extrabold);
+  color: var(--azul-noite);
+  margin-bottom: var(--espacamento-md);
+  line-height: 1.2;
+}
+
+.descricao {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--marrom-cafe);
+  margin-bottom: var(--espacamento-xl);
+}
+
+/* ========== PREÇOS ========== */
+.preco-container {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(201, 116, 88, 0.05));
+  border-radius: var(--raio-lg);
+  padding: var(--espacamento-lg);
+  margin-bottom: var(--espacamento-md);
+}
+
+.preco-original {
+  font-size: 0.9375rem;
+  color: var(--cinza-grafite);
+  margin-bottom: var(--espacamento-xs);
+}
+
+.preco-original span {
+  text-decoration: line-through;
+  font-family: var(--fonte-numeros);
+  font-weight: var(--peso-semibold);
+}
+
+.preco-desconto {
+  font-size: 1.125rem;
+  color: var(--azul-noite);
+  font-weight: var(--peso-bold);
+}
+
+.preco-desconto span {
+  font-family: var(--fonte-numeros);
+  font-size: 2.5rem;
+  font-weight: var(--peso-extrabold);
+  background: var(--gradiente-luxo);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-left: var(--espacamento-xs);
+}
+
+.economia {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacamento-xs);
+  padding: 0.625rem 1.25rem;
+  background: var(--sucesso-claro);
+  color: var(--sucesso);
+  border: 1.5px solid var(--sucesso-borda);
+  border-radius: var(--raio-md);
+  font-weight: var(--peso-bold);
+  font-size: 0.9375rem;
+  margin-bottom: var(--espacamento-xl);
+}
+
+/* ========== BOTÃO PEDIR ========== */
+.btn-pedir {
+  width: 100%;
+  padding: 1.125rem;
+  background: var(--gradiente-luxo);
+  color: var(--branco-puro);
+  border: none;
+  border-radius: var(--raio-lg);
+  font-weight: var(--peso-bold);
+  font-size: 1.0625rem;
+  cursor: pointer;
+  transition: all var(--transicao-normal);
+  box-shadow: var(--sombra-dourada);
+  font-family: var(--fonte-principal);
+}
+
+.btn-pedir:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(212, 175, 55, 0.4);
+}
+
+/* ========== SEÇÃO DE INFORMAÇÕES ========== */
+.info-section {
+  text-align: center;
+  margin-bottom: var(--espacamento-3xl);
+}
+
+.info-section h3 {
+  font-family: var(--fonte-display);
+  font-size: 2rem;
+  font-weight: var(--peso-extrabold);
+  color: var(--azul-noite);
+  margin-bottom: var(--espacamento-2xl);
+}
+
+.info-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--espacamento-lg);
+}
+
+.info-card {
+  background: var(--branco-puro);
+  border-radius: var(--raio-lg);
+  padding: var(--espacamento-xl);
+  box-shadow: var(--sombra-sm);
+  border: 1px solid var(--cinza-platina);
+  transition: all var(--transicao-normal);
+  text-align: center;
+}
+
+.info-card:hover {
+  box-shadow: var(--sombra-md);
+  transform: translateY(-4px);
+  border-color: var(--dourado-claro);
+}
+
+.info-icon {
+  font-size: 2.5rem;
+  margin-bottom: var(--espacamento-md);
+}
+
+.info-card h4 {
+  font-family: var(--fonte-display);
+  font-size: 1.125rem;
+  font-weight: var(--peso-bold);
+  color: var(--azul-noite);
+  margin-bottom: var(--espacamento-sm);
+}
+
+.info-card p {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--marrom-cafe);
+}
+
+/* ========== CTA SECTION ========== */
+.cta-section {
+  background: linear-gradient(135deg, var(--azul-noite) 0%, var(--azul-crepusculo) 100%);
+  border-radius: var(--raio-xl);
+  padding: var(--espacamento-3xl);
+  text-align: center;
+  margin-bottom: var(--espacamento-3xl);
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at top right,
+    rgba(212, 175, 55, 0.1) 0%,
+    transparent 60%
+  );
+}
+
+.cta-section h3 {
+  font-family: var(--fonte-display);
+  font-size: 2.25rem;
+  font-weight: var(--peso-extrabold);
+  color: var(--creme-premium);
+  margin-bottom: var(--espacamento-md);
+  position: relative;
+  z-index: 1;
+}
+
+.cta-section p {
+  font-size: 1.125rem;
+  color: var(--creme-escuro);
+  margin-bottom: var(--espacamento-2xl);
+  position: relative;
+  z-index: 1;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: var(--espacamento-md);
+  justify-content: center;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+.cta-buttons .btn-primary,
+.cta-buttons .btn-secondary {
+  padding: 1rem 2rem;
+  font-size: 1.0625rem;
+}
+
+.cta-buttons .btn-secondary {
+  background: var(--branco-puro);
+  color: var(--azul-noite);
+  border: 2px solid var(--branco-puro);
+}
+
+.cta-buttons .btn-secondary:hover {
+  background: transparent;
+  color: var(--branco-puro);
+  border-color: var(--branco-puro);
+}
+
+/* ========== HISTÓRICO ========== */
+.historico-section {
+  text-align: center;
+  padding: var(--espacamento-2xl);
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.05), rgba(201, 116, 88, 0.03));
+  border-radius: var(--raio-xl);
+  border: 1px solid var(--cinza-platina);
+}
+
+.historico-section h3 {
+  font-family: var(--fonte-display);
+  font-size: 1.75rem;
+  font-weight: var(--peso-bold);
+  color: var(--azul-noite);
+  margin-bottom: var(--espacamento-md);
+}
+
+.historico-subtitle {
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  color: var(--marrom-cafe);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* ========== LOADING ========== */
+.sugestao-chef .loading-container {
+  min-height: 60vh;
+}
+
+/* ========== RESPONSIVO ========== */
+@media (max-width: 1024px) {
+  .sugestoes-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .sugestao-chef {
+    padding: var(--espacamento-xl) var(--espacamento-lg);
+  }
+
+  .sugestao-chef .page-header h1 {
+    font-size: 2.25rem;
+  }
+
+  .sugestao-content {
+    padding: var(--espacamento-xl);
+  }
+
+  .sugestao-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .preco-desconto span {
+    font-size: 2rem;
+  }
+
+  .info-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+  }
+
+  .cta-buttons .btn-primary,
+  .cta-buttons .btn-secondary {
+    width: 100%;
+  }
+}

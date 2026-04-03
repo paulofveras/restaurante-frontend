@@ -1,0 +1,398 @@
+.cardapio {
+  padding: var(--espacamento-2xl) var(--espacamento-3xl);
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+/* ========== HEADER ========== */
+.page-header {
+  margin-bottom: var(--espacamento-2xl);
+}
+
+.page-header h1 {
+  font-family: var(--fonte-display);
+  font-size: 2.75rem;
+  font-weight: var(--peso-extrabold);
+  color: var(--azul-noite);
+  margin-bottom: var(--espacamento-sm);
+  letter-spacing: -0.02em;
+}
+
+.page-header p {
+  font-size: 1.125rem;
+  color: var(--marrom-cafe);
+  font-weight: var(--peso-medium);
+}
+
+/* ========== FILTROS LUXUOSOS ========== */
+.filters {
+  display: flex;
+  gap: var(--espacamento-md);
+  margin-bottom: var(--espacamento-2xl);
+  flex-wrap: wrap;
+}
+
+.filters button {
+  display: flex;
+  align-items: center;
+  gap: var(--espacamento-sm);
+  padding: 1rem 1.75rem;
+  background: var(--branco-puro);
+  border: 2px solid var(--cinza-platina);
+  border-radius: var(--raio-lg);
+  font-family: var(--fonte-principal);
+  font-size: 1rem;
+  font-weight: var(--peso-semibold);
+  color: var(--azul-noite);
+  cursor: pointer;
+  transition: all var(--transicao-normal);
+  box-shadow: var(--sombra-xs);
+  position: relative;
+  overflow: hidden;
+}
+
+.filters button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradiente-luxo);
+  opacity: 0;
+  transition: opacity var(--transicao-normal);
+  z-index: 0;
+}
+
+.filters button > * {
+  position: relative;
+  z-index: 1;
+}
+
+.filters button:hover {
+  border-color: var(--dourado-champagne);
+  box-shadow: var(--sombra-sm);
+  transform: translateY(-2px);
+}
+
+.filters button.active {
+  border-color: transparent;
+  box-shadow: var(--sombra-dourada);
+}
+
+.filters button.active::before {
+  opacity: 1;
+}
+
+.filters button.active .filtro-texto,
+.filters button.active .filtro-count {
+  color: var(--branco-puro);
+}
+
+.filtro-icon {
+  font-size: 1.25rem;
+}
+
+.filtro-texto {
+  display: flex;
+  align-items: center;
+  gap: var(--espacamento-xs);
+}
+
+.filtro-count {
+  font-size: 0.875rem;
+  opacity: 0.8;
+}
+
+/* ========== GRID DE ITENS ========== */
+.itens-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: var(--espacamento-xl);
+  margin-bottom: var(--espacamento-3xl);
+}
+
+/* ========== CARDS LUXUOSOS ========== */
+.item-card {
+  background: var(--branco-puro);
+  border-radius: var(--raio-xl);
+  overflow: hidden;
+  box-shadow: var(--sombra-sm);
+  border: 1px solid var(--cinza-platina);
+  transition: all var(--transicao-normal);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.item-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradiente-luxo);
+  opacity: 0;
+  transition: opacity var(--transicao-normal);
+}
+
+.item-card:hover {
+  box-shadow: var(--sombra-lg);
+  border-color: var(--dourado-claro);
+  transform: translateY(-4px);
+}
+
+.item-card:hover::before {
+  opacity: 1;
+}
+
+.item-content {
+  padding: var(--espacamento-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacamento-md);
+  flex: 1;
+}
+
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--espacamento-md);
+  margin-bottom: var(--espacamento-sm);
+}
+
+.item-header h3 {
+  font-family: var(--fonte-display);
+  font-size: 1.375rem;
+  font-weight: var(--peso-bold);
+  color: var(--azul-noite);
+  line-height: 1.3;
+  flex: 1;
+  margin: 0;
+}
+
+/* ========== BADGES ELEGANTES ========== */
+.badge-periodo {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: var(--raio-md);
+  font-size: 0.75rem;
+  font-weight: var(--peso-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.badge-periodo.almoco {
+  background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+  color: #92400E;
+  border: 1.5px solid #F59E0B;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
+}
+
+.badge-periodo.jantar {
+  background: linear-gradient(135deg, #1A2332, #2D3E50);
+  color: #E8D4A0;
+  border: 1.5px solid #D4AF37;
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.25);
+}
+
+/* ========== DESCRIÇÃO ========== */
+.item-descricao {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--marrom-cafe);
+  margin: 0;
+  flex: 1;
+}
+
+/* ========== FOOTER DO CARD ========== */
+.item-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: var(--espacamento-md);
+  border-top: 1px solid var(--cinza-platina);
+}
+
+.item-preco {
+  font-family: var(--fonte-numeros);
+  font-size: 2rem;
+  font-weight: var(--peso-extrabold);
+  background: var(--gradiente-luxo);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+}
+
+/* ========== PAGINAÇÃO REFINADA ========== */
+.paginacao {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espacamento-md);
+  padding: var(--espacamento-xl);
+  background: var(--branco-puro);
+  border-radius: var(--raio-xl);
+  box-shadow: var(--sombra-sm);
+  border: 1px solid var(--cinza-platina);
+}
+
+.btn-nav {
+  padding: 0.75rem 1.5rem;
+  background: var(--branco-puro);
+  border: 2px solid var(--cinza-platina);
+  border-radius: var(--raio-md);
+  font-weight: var(--peso-semibold);
+  color: var(--azul-noite);
+  cursor: pointer;
+  transition: all var(--transicao-normal);
+  font-size: 0.9375rem;
+}
+
+.btn-nav:hover:not(:disabled) {
+  border-color: var(--dourado-champagne);
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(201, 116, 88, 0.05));
+  transform: translateY(-2px);
+  box-shadow: var(--sombra-sm);
+}
+
+.btn-nav:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.paginas-numeros {
+  display: flex;
+  gap: var(--espacamento-xs);
+}
+
+.btn-numero {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--raio-md);
+  border: 2px solid var(--cinza-platina);
+  background: var(--branco-puro);
+  color: var(--azul-noite);
+  font-weight: var(--peso-semibold);
+  cursor: pointer;
+  transition: all var(--transicao-normal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--fonte-numeros);
+}
+
+.btn-numero:hover {
+  border-color: var(--dourado-champagne);
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(201, 116, 88, 0.05));
+  transform: scale(1.08);
+}
+
+.btn-numero.active {
+  background: var(--gradiente-luxo);
+  border-color: transparent;
+  color: var(--branco-puro);
+  box-shadow: var(--sombra-dourada);
+}
+
+/* ========== SEM ITENS ========== */
+.sem-itens {
+  text-align: center;
+  padding: var(--espacamento-3xl);
+  background: var(--branco-puro);
+  border-radius: var(--raio-xl);
+  box-shadow: var(--sombra-sm);
+  border: 1px solid var(--cinza-platina);
+}
+
+.sem-itens p {
+  font-size: 1.125rem;
+  color: var(--marrom-cafe);
+  font-weight: var(--peso-medium);
+}
+
+/* ========== LOADING ========== */
+.cardapio .loading-container {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espacamento-lg);
+}
+
+.loading-spinner {
+  width: 80px;
+  height: 80px;
+}
+
+.loading-container p {
+  font-size: 1.125rem;
+  color: var(--marrom-cafe);
+  font-weight: var(--peso-semibold);
+}
+
+/* ========== RESPONSIVO ========== */
+@media (max-width: 1024px) {
+  .cardapio {
+    padding: var(--espacamento-xl) var(--espacamento-lg);
+  }
+
+  .itens-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--espacamento-lg);
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header h1 {
+    font-size: 2.25rem;
+  }
+
+  .itens-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filters {
+    flex-direction: column;
+  }
+
+  .filters button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .paginacao {
+    flex-direction: column;
+    gap: var(--espacamento-sm);
+  }
+
+  .btn-nav {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .cardapio {
+    padding: var(--espacamento-lg) var(--espacamento-md);
+  }
+
+  .item-content {
+    padding: var(--espacamento-lg);
+  }
+
+  .item-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .paginas-numeros {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
