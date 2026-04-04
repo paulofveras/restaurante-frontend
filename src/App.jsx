@@ -16,6 +16,8 @@ import Mesas from './pages/Mesas';
 import Relatorios from './pages/Relatorios';
 import LandingPage from './pages/LandingPage';
 import SugestaoChef from './pages/SugestaoChef';
+import PainelCliente from './pages/PainelCliente';
+import GestaoReservas from './pages/GestaoReservas';
 import './App.css';
 
 // ─────────────────────────────────────────────────────────
@@ -25,7 +27,7 @@ import './App.css';
 // ─────────────────────────────────────────────────────────
 const ProtectedRoute = ({ children }) => {
   const logado = authService.isLogado();
-  const admin  = authService.isAdmin();
+  const admin = authService.isAdmin();
 
   if (!logado || !admin) {
     return <Navigate to="/" replace />;
@@ -46,6 +48,12 @@ const AdminLayout = ({ children }) => (
   </div>
 );
 
+const ProtectedClienteRoute = ({ children }) => {
+  const logado = authService.isLogado();
+  if (!logado) return <Navigate to="/" replace />;
+  return children;
+};
+
 function App() {
   // ← NOVO: Estado para controlar a abertura do Checkout
   const [checkoutAberto, setCheckoutAberto] = useState(false);
@@ -64,6 +72,7 @@ function App() {
           {/* ── Rotas públicas e de Cliente ── */}
           <Route path="/" element={<LandingPage />} />
           <Route path="/sugestao-chef" element={<SugestaoChef />} />
+          <Route path="/minha-conta" element={<ProtectedClienteRoute><PainelCliente /></ProtectedClienteRoute>} />
 
           {/* ── Rotas administrativas protegidas (Apenas Perfil 1 - Admin) ── */}
           <Route path="/dashboard" element={
@@ -96,10 +105,16 @@ function App() {
             </ProtectedRoute>
           } />
 
+          <Route path="/reservas" element={
+            <ProtectedRoute>
+              <AdminLayout><GestaoReservas /></AdminLayout>
+            </ProtectedRoute>
+          } />
+
           {/* Qualquer rota desconhecida volta para a raiz */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-        
+
         {/* Drawer e botão flutuante aparecem em qualquer lugar para o cliente */}
         <CarrinhoDrawer />
         <CarrinhoBotao />

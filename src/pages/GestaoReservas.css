@@ -1,0 +1,159 @@
+/* src/pages/GestaoReservas.css */
+.gr-pagina {
+    padding: 2rem;
+}
+
+.gr-filtros {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.gr-filtro-btn {
+    padding: 0.5rem 1.25rem;
+    border: 2px solid #e0d5c5;
+    border-radius: 999px;
+    background: white;
+    color: #6b5b45;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.gr-filtro-btn.ativo {
+    border-color: #d4af37;
+    background: rgba(212, 175, 55, 0.1);
+    color: #b8860b;
+}
+
+.gr-btn-atualizar {
+    padding: 0.5rem 1.25rem;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #D4AF37, #C97458);
+    color: white;
+    font-weight: 700;
+    font-size: 0.875rem;
+    cursor: pointer;
+    margin-left: auto;
+    transition: opacity 0.15s;
+}
+
+.gr-btn-atualizar:hover {
+    opacity: 0.88;
+}
+
+.gr-contagem {
+    font-size: 0.9rem;
+    color: #8a7560;
+    margin-bottom: 1rem;
+}
+
+.gr-loading {
+    color: #8a7560;
+    padding: 2rem 0;
+}
+
+.gr-erro {
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #dc2626;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.gr-vazio {
+    text-align: center;
+    padding: 3rem;
+    color: #8a7560;
+}
+
+.gr-vazio span {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 0.75rem;
+}
+
+.gr-tabela-wrapper {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid #e8e0d0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    overflow-x: auto;
+}
+
+.gr-tabela {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+}
+
+.gr-tabela thead tr {
+    background: #f9f6f0;
+    border-bottom: 2px solid #e8dcc8;
+}
+
+.gr-tabela th {
+    padding: 1rem 1.25rem;
+    text-align: left;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #8a7560;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.gr-tabela tbody tr {
+    border-bottom: 1px solid #f0ebe0;
+    transition: background 0.15s;
+}
+
+.gr-tabela tbody tr:last-child {
+    border-bottom: none;
+}
+
+.gr-tabela tbody tr:hover {
+    background: #fdf9f3;
+}
+
+.gr-tabela td {
+    padding: 1rem 1.25rem;
+    color: #2c1a0e;
+}
+
+.gr-id {
+    font-weight: 700;
+    color: #8a7560;
+}
+
+.gr-codigo {
+    font-family: monospace;
+    font-size: 0.875rem;
+    background: #f0ebe0;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    color: #2c1a0e;
+}
+
+.gr-status {
+    padding: 0.3rem 0.875rem;
+    border-radius: 999px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+}
+
+.gr-status.futura {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.gr-status.passada {
+    background: rgba(107, 114, 128, 0.08);
+    color: #6b7280;
+    border: 1px solid rgba(107, 114, 128, 0.2);
+}

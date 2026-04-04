@@ -7,6 +7,8 @@ import { formatCurrency } from '../utils/formatters';
 import logoSolDoCerrado from '../assets/logo-sol-cerrado.png';
 import './LandingPage.css';
 import { useCarrinho } from '../contexts/CarrinhoContext';
+import ReservaModal from '../components/ReservaModal';
+
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -15,6 +17,8 @@ const LandingPage = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const [loginSucesso, setLoginSucesso] = useState(''); // ← NOVO
+  const [showReservaModal, setShowReservaModal] = useState(false); // ← NOVO
+
 
   // Adicione estas duas linhas junto aos outros estados
   const [usuarioLogado, setUsuarioLogado] = useState(() => authService.getUsuarioLogado()); // ← NOVO
@@ -239,8 +243,18 @@ const LandingPage = () => {
           {usuarioLogado ? (
             <div className="usuario-logado-area">
               {/* Bolinha + nome → clica para ir ao dashboard */}
-              <div className="usuario-card" onClick={() => navigate('/dashboard')}
-                style={{ cursor: 'pointer' }} title="Ir para o dashboard">
+              <div
+                className="usuario-card"
+                style={{ cursor: 'pointer' }}
+                title="Ir para minha área"
+                onClick={() => {
+                  if (usuarioLogado.perfil === 'Administrador') {
+                    navigate('/dashboard');
+                  } else {
+                    navigate('/minha-conta');
+                  }
+                }}
+              >
                 <div className="usuario-avatar">
                   {usuarioLogado.userName.charAt(0).toUpperCase()}
                 </div>
@@ -343,7 +357,7 @@ const LandingPage = () => {
                 <h3>{item.nome}</h3>
                 <p>{item.descricao}</p>
                 <span className="item-preco">{formatCurrency(item.preco)}</span>
-                
+
                 {/* ← NOVO: Botão Adicionar ao Carrinho */}
                 <button
                   className="btn-adicionar-carrinho"
@@ -395,6 +409,12 @@ const LandingPage = () => {
                         {formatCurrency(prato.preco * 0.8)}
                       </span>
                     </div>
+                    <button
+                      className="btn-adicionar-carrinho"
+                      onClick={() => adicionarItem(prato, true)}
+                    >
+                      Adicionar com Desconto
+                    </button>
                   </div>
                 </div>
               ))}
@@ -484,10 +504,16 @@ const LandingPage = () => {
             </div>
           </div>
 
-          <button className="btn-primary" onClick={() => {
-            setShowLoginModal(true);
-            setIsLogin(false);
-          }}>
+          <button
+            className="btn-primary"
+            onClick={() => {
+              if (usuarioLogado) {
+                setShowReservaModal(true);  // abre o modal
+              } else {
+                setShowLoginModal(true);
+              }
+            }}
+          >
             Fazer Reserva
           </button>
         </motion.div>
@@ -690,6 +716,11 @@ const LandingPage = () => {
           </motion.div>
         </div>
       )}
+
+      <ReservaModal
+        visivel={showReservaModal}
+        onFechar={() => setShowReservaModal(false)}
+      />
     </div>
   );
 };

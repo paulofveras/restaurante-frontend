@@ -316,3 +316,148 @@
   border-radius: 20px;
   font-size: 0.875rem;
 }
+
+/* ── PAINEL DINÂMICO DE PAGAMENTO ──────────────── */
+.checkout-painel-pagamento {
+  background: #fff;
+  border: 1.5px solid #e8dcc8;
+  border-radius: 14px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.painel-titulo {
+  font-weight: 700;
+  font-size: 0.9375rem;
+  color: #1a2332;
+  margin: 0;
+}
+
+/* Campos do cartão */
+.checkout-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.checkout-campo label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.checkout-campo input {
+  padding: 0.7rem 0.875rem;
+  border: 1.5px solid #e0d5c5;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-family: inherit;
+  color: #1a2332;
+  background: #fffdf8;
+  transition: border-color 0.15s;
+  outline: none;
+}
+
+.checkout-campo input:focus {
+  border-color: #d4af37;
+  box-shadow: 0 0 0 3px rgba(212,175,55,0.15);
+}
+
+.checkout-campo-linha {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+/* PIX */
+.painel-pix {
+  align-items: center;
+  text-align: center;
+}
+
+.pix-qrcode {
+  background: white;
+  border: 2px solid #e0d5c5;
+  border-radius: 12px;
+  padding: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pix-instrucao {
+  font-size: 0.875rem;
+  color: #666;
+  margin: 0;
+}
+
+.pix-copia-cola {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.pix-input {
+  flex: 1;
+  padding: 0.6rem 0.875rem;
+  border: 1.5px solid #e0d5c5;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-family: monospace;
+  color: #555;
+  background: #f9f6f0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  outline: none;
+}
+
+.pix-btn-copiar {
+  padding: 0.6rem 1rem;
+  background: #32BCAD;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.875rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+.pix-btn-copiar:hover { opacity: 0.85; }
+
+.pix-validade {
+  font-size: 0.8125rem;
+  color: #888;
+  margin: 0;
+}
+
+/* Pagar na Entrega */
+.painel-entrega {
+  align-items: center;
+  text-align: center;
+  gap: 0.625rem;
+}
+
+.entrega-icone { font-size: 2.5rem; }
+
+.entrega-msg {
+  font-size: 0.9375rem;
+  color: #4a3728;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.entrega-aviso {
+  font-size: 0.8125rem;
+  color: #888;
+  background: #fdf8ec;
+  border: 1px solid #e8dcc8;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  margin: 0;
+}

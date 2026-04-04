@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { apiFetch } from '../api/api';
 import { cardapioService } from '../services/cardapioService';
 import { formatCurrency } from '../utils/formatters';
 import './SugestaoChef.css';
@@ -21,12 +20,18 @@ const SugestaoChef = () => {
       setLoading(true);
       setErro(null);
 
-      // 1️⃣ Busca as sugestões do dia (retorna array com itemCardapioId)
-      const resposta = await apiFetch('/SugestaoDoChef/hoje');
+      const resposta = await fetch('http://localhost:5203/api/SugestaoDoChef/hoje');
 
-      // Se não houver sugestões hoje, o backend retorna 404
+      // 404 = nenhuma sugestão cadastrada hoje → fallback com pratos aleatórios
       if (resposta.status === 404) {
-        setSugestoes([]);
+        const todos = await cardapioService.listarTodos();
+        const embaralhados = todos.sort(() => Math.random() - 0.5).slice(0, 2);
+        const fallback = embaralhados.map((prato, i) => ({
+          sugestaoId: i,
+          periodo: prato.periodo,
+          prato,
+        }));
+        setSugestoes(fallback);
         return;
       }
 
@@ -34,7 +39,7 @@ const SugestaoChef = () => {
 
       const dadosSugestoes = await resposta.json();
 
-      // 2️⃣ Para cada sugestão, busca os dados completos do prato
+      // Para cada sugestão, busca os dados completos do prato
       const pratosCompletos = await Promise.all(
         dadosSugestoes.map(async (sugestao) => {
           const prato = await cardapioService.buscarPorId(sugestao.itemCardapioId);
@@ -46,7 +51,7 @@ const SugestaoChef = () => {
         })
       );
 
-      setSugestoes(pratosCompletos);
+      setSugestoes(pratosCompletos.filter(s => s.prato != null));
     } catch (error) {
       console.error('Erro ao carregar sugestões:', error);
       setErro('Não foi possível carregar as sugestões de hoje.');

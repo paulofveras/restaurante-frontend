@@ -11,11 +11,12 @@ const Sidebar = () => {
   const usuario = authService.getUsuarioLogado();
 
   const menuItems = [
-    { path: '/dashboard',     label: 'Dashboard',       icon: '📊' },
-    { path: '/pedidos',       label: 'Pedidos',          icon: '📝' },
-    { path: '/cardapio',      label: 'Cardápio',         icon: '🍽️' },
-    { path: '/mesas',         label: 'Mesas',            icon: '🪑' },
-    { path: '/relatorios',    label: 'Relatórios',       icon: '📈' },
+    { path: '/dashboard', label: 'Dashboard', icon: '📊' },
+    { path: '/pedidos', label: 'Pedidos', icon: '📝' },
+    { path: '/cardapio', label: 'Cardápio', icon: '🍽️' },
+    { path: '/mesas', label: 'Mesas', icon: '🪑' },
+    { path: '/reservas', label: 'Reservas', icon: '📅' },
+    { path: '/relatorios', label: 'Relatórios', icon: '📈' },
     { path: '/sugestao-chef', label: 'Sugestão do Chef', icon: '⭐' },
   ];
 
@@ -99,8 +100,18 @@ const Sidebar = () => {
       {/* ── RODAPÉ: PERFIL + SAIR ── */}
       <div className="sidebar-footer">
         {/* Card do usuário → clica para ir ao dashboard */}
-        <div className="user-profile" onClick={() => navigate('/dashboard')}
-          title="Ir para o Dashboard" style={{ cursor: 'pointer' }}>
+        <div
+          className="user-profile"
+          title="Ir para minha área"
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            if (usuario?.perfil === 'Administrador') {
+              navigate('/dashboard');
+            } else {
+              navigate('/minha-conta');
+            }
+          }}
+        >
           <div className="user-avatar">
             <span>{usuario?.userName?.charAt(0).toUpperCase() ?? '👤'}</span>
           </div>

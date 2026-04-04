@@ -8,7 +8,7 @@ import './CheckoutModal.css';
 // ── Espelha a lógica do backend (AtendimentoDeliveryApp.CalcularTaxa) ──
 const calcularTaxaLocal = (tipoAtendimento, subtotal) => {
   switch (tipoAtendimento) {
-    case 'Presencial':    return 0;
+    case 'Presencial': return 0;
     case 'DeliveryProprio': return 5.00;           // TaxaFixa do seed
     case 'DeliveryApp':
       const hora = new Date().getHours();
@@ -34,32 +34,45 @@ const TIPOS_ATENDIMENTO = [
     valor: 'DeliveryApp',
     label: 'Delivery por App',
     icone: '📱',
-    descricao: `Entregue via parceiro (iFood, etc.). Taxa: ${
-      new Date().getHours() < 18 ? '4% (diurno)' : '6% (noturno)'
-    } sobre o subtotal.`,
+    descricao: `Entregue via parceiro (iFood, etc.). Taxa: ${new Date().getHours() < 18 ? '4% (diurno)' : '6% (noturno)'
+      } sobre o subtotal.`,
   },
 ];
 
 const METODOS_PAGAMENTO = [
-  { valor: 'Dinheiro',       label: 'Dinheiro',        icone: '💵' },
-  { valor: 'CartaoDebito',   label: 'Cartão de Débito', icone: '💳' },
-  { valor: 'CartaoCredito',  label: 'Cartão de Crédito',icone: '💳' },
-  { valor: 'Pix',            label: 'Pix',              icone: '⚡' },
+  { valor: 'CartaoCredito',  label: 'Cartão de Crédito', icone: '💳', descricao: 'Crédito à vista ou parcelado' },
+  { valor: 'CartaoDebito',   label: 'Cartão de Débito',  icone: '💳', descricao: 'Débito em conta corrente'      },
+  { valor: 'Pix',            label: 'PIX',               icone: '⚡', descricao: 'Aprovação instantânea'         },
+  { valor: 'PagarEntrega',   label: 'Pagar na Entrega',  icone: '🤝', descricao: 'Pague ao garçom ou entregador' },
 ];
+
+// ─────────────────────────────────────────────────────────
+// Modal de Checkout
 
 const CheckoutModal = ({ visivel, onFechar }) => {
   const { itens, subtotal, periodoAtual, limparCarrinho } = useCarrinho();
   const usuario = authService.getUsuarioLogado();
 
   const [tipoAtendimento, setTipoAtendimento]   = useState('Presencial');
-  const [metodoPagamento, setMetodoPagamento]   = useState('Pix');
-  const [etapa, setEtapa]                       = useState(1); // 1=atendimento, 2=pagamento, 3=confirmado
-  const [enviando, setEnviando]                 = useState(false);
-  const [erro, setErro]                         = useState('');
+  const [metodoPagamento, setMetodoPagamento]   = useState('CartaoCredito');
+
+  // Campos do cartão (fictícios)
+  const [numCartao, setNumCartao]   = useState('');
+  const [nomeCartao, setNomeCartao] = useState('');
+  const [validade, setValidade]     = useState('');
+  const [cvv, setCvv]               = useState('');
+  const [copiado, setCopiado]       = useState(false);
+
+  // Código PIX simulado (fixo para demonstração)
+  const CODIGO_PIX = '00020126580014BR.GOV.BCB.PIX0136sol-do-cerrado@restaurante.com.br5204000053039865802BR5925Sol do Cerrado Restaurante6009SAO PAULO62140510pagamento63041D3E';
+
+  const [etapa, setEtapa] = useState(1); // 1=atendimento, 2=pagamento, 3=confirmado
+  const [enviando, setEnviando] = useState(false);
+  const [erro, setErro] = useState('');
   const [pedidoFinalizado, setPedidoFinalizado] = useState(null);
 
   // Recalcula taxa ao vivo quando o tipo muda
-  const taxa       = calcularTaxaLocal(tipoAtendimento, subtotal);
+  const taxa = calcularTaxaLocal(tipoAtendimento, subtotal);
   const totalFinal = subtotal + taxa;
 
   // Escuta o evento disparado pelo botão "Finalizar Pedido" do CarrinhoDrawer
@@ -77,7 +90,11 @@ const CheckoutModal = ({ visivel, onFechar }) => {
         setErro('');
         setPedidoFinalizado(null);
         setTipoAtendimento('Presencial');
-        setMetodoPagamento('Pix');
+        setMetodoPagamento('CartaoCredito');
+        setNumCartao('');
+        setNomeCartao('');
+        setValidade('');
+        setCvv('');
       }, 300);
     }
   }, [visivel]);
@@ -122,14 +139,14 @@ const CheckoutModal = ({ visivel, onFechar }) => {
 
     // Monta o body exatamente como o PedidoRequestDTO espera
     const body = {
-      usuarioId:       usuario.id,
-      periodo:         periodoAtual,          // 'Almoco' ou 'Jantar'
+      usuarioId: usuario.id,
+      periodo: periodoAtual,          // 'Almoco' ou 'Jantar'
       tipoAtendimento: tipoAtendimento,        // 'Presencial' | 'DeliveryProprio' | 'DeliveryApp'
-      metodoPagamento: metodoPagamento,        // 'Pix' | 'Dinheiro' | etc
+      metodoPagamento: metodoPagamento,        // 'Pix' | 'CartaoCredito' | 'CartaoDebito' | 'PagarEntrega'
       itens: itens.map(i => ({
         itemCardapioId: i.id,
-        quantidade:     i.quantidade,
-        observacao:     i.observacao || '',
+        quantidade: i.quantidade,
+        observacao: i.observacao || '',
       })),
     };
 
@@ -154,6 +171,134 @@ const CheckoutModal = ({ visivel, onFechar }) => {
     } finally {
       setEnviando(false);
     }
+  };
+
+  // Formata número do cartão com espaços a cada 4 dígitos
+  const formatarCartao = (valor) =>
+    valor.replace(/\D/g, '').slice(0, 16).replace(/(.{4})/g, '$1 ').trim();
+
+  // Formata validade MM/AA
+  const formatarValidade = (valor) =>
+    valor.replace(/\D/g, '').slice(0, 4).replace(/^(\d{2})(\d)/, '$1/$2');
+
+  const copiarPix = () => {
+    navigator.clipboard.writeText(CODIGO_PIX);
+    setCopiado(true);
+    setTimeout(() => setCopiado(false), 2500);
+  };
+
+  // Renderização condicional do painel de pagamento
+  const renderPainelPagamento = () => {
+    if (metodoPagamento === 'CartaoCredito' || metodoPagamento === 'CartaoDebito') {
+      return (
+        <div className="checkout-painel-pagamento">
+          <p className="painel-titulo">
+            💳 Dados do {metodoPagamento === 'CartaoCredito' ? 'Crédito' : 'Débito'}
+          </p>
+          <div className="checkout-campo">
+            <label>Número do Cartão</label>
+            <input
+              type="text"
+              placeholder="0000 0000 0000 0000"
+              value={numCartao}
+              onChange={e => setNumCartao(formatarCartao(e.target.value))}
+              maxLength={19}
+            />
+          </div>
+          <div className="checkout-campo">
+            <label>Nome no Cartão</label>
+            <input
+              type="text"
+              placeholder="Como impresso no cartão"
+              value={nomeCartao}
+              onChange={e => setNomeCartao(e.target.value.toUpperCase())}
+              maxLength={26}
+            />
+          </div>
+          <div className="checkout-campo-linha">
+            <div className="checkout-campo">
+              <label>Validade</label>
+              <input
+                type="text"
+                placeholder="MM/AA"
+                value={validade}
+                onChange={e => setValidade(formatarValidade(e.target.value))}
+                maxLength={5}
+              />
+            </div>
+            <div className="checkout-campo">
+              <label>CVV</label>
+              <input
+                type="text"
+                placeholder="•••"
+                value={cvv}
+                onChange={e => setCvv(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                maxLength={4}
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (metodoPagamento === 'Pix') {
+      return (
+        <div className="checkout-painel-pagamento painel-pix">
+          <p className="painel-titulo">⚡ Pague via PIX</p>
+          {/* QR Code simulado com SVG */}
+          <div className="pix-qrcode">
+            <svg viewBox="0 0 100 100" width="120" height="120" xmlns="http://www.w3.org/2000/svg">
+              <rect width="100" height="100" fill="white"/>
+              {/* Bordas dos cantos */}
+              <rect x="5" y="5" width="25" height="25" rx="3" fill="none" stroke="#1a2332" strokeWidth="4"/>
+              <rect x="10" y="10" width="15" height="15" rx="1" fill="#1a2332"/>
+              <rect x="70" y="5" width="25" height="25" rx="3" fill="none" stroke="#1a2332" strokeWidth="4"/>
+              <rect x="75" y="10" width="15" height="15" rx="1" fill="#1a2332"/>
+              <rect x="5" y="70" width="25" height="25" rx="3" fill="none" stroke="#1a2332" strokeWidth="4"/>
+              <rect x="10" y="75" width="15" height="15" rx="1" fill="#1a2332"/>
+              {/* Padrão interno */}
+              {[20,25,30,35,40,45,50,55,60,65,70,75,80].map((x, i) =>
+                [20,30,40,50,60,70,80].map((y, j) =>
+                  (i + j) % 2 === 0 && !(x < 35 && y < 35) && !(x > 65 && y < 35) && !(x < 35 && y > 65)
+                    ? <rect key={`${x}-${y}`} x={x} y={y} width="5" height="5" fill="#1a2332"/>
+                    : null
+                )
+              )}
+              {/* Logo PIX no centro */}
+              <circle cx="50" cy="50" r="10" fill="#32BCAD"/>
+              <text x="50" y="54" textAnchor="middle" fill="white" fontSize="8" fontWeight="bold">PIX</text>
+            </svg>
+          </div>
+          <p className="pix-instrucao">Escaneie o QR Code ou copie o código abaixo:</p>
+          <div className="pix-copia-cola">
+            <input type="text" readOnly value={CODIGO_PIX} className="pix-input" />
+            <button className="pix-btn-copiar" onClick={copiarPix}>
+              {copiado ? '✔ Copiado!' : '📋 Copiar'}
+            </button>
+          </div>
+          <p className="pix-validade">⏱️ Código válido por <strong>15 minutos</strong></p>
+        </div>
+      );
+    }
+
+    if (metodoPagamento === 'PagarEntrega') {
+      return (
+        <div className="checkout-painel-pagamento painel-entrega">
+          <div className="entrega-icone">🤝</div>
+          <p className="painel-titulo">Pagar na Entrega</p>
+          <p className="entrega-msg">
+            Você pagará <strong>{formatCurrency(totalFinal)}</strong> diretamente ao
+            {tipoAtendimento === 'Presencial' ? ' garçom' : ' entregador'} no momento do
+            {tipoAtendimento === 'Presencial' ? ' atendimento' : ' recebimento'}.
+          </p>
+          <p className="entrega-aviso">
+            💡 Tenha o troco se for pagar em dinheiro.
+          </p>
+        </div>
+      );
+    }
+
+    return null;
   };
 
   // ── Renderização por etapa ─────────────────────────────────────
@@ -246,6 +391,7 @@ const CheckoutModal = ({ visivel, onFechar }) => {
                   <span className="opcao-icone">{mp.icone}</span>
                   <div className="opcao-texto">
                     <strong>{mp.label}</strong>
+                    <small>{mp.descricao}</small>
                   </div>
                   <span className="opcao-check">
                     {metodoPagamento === mp.valor ? '✔' : ''}
@@ -253,6 +399,9 @@ const CheckoutModal = ({ visivel, onFechar }) => {
                 </button>
               ))}
             </div>
+
+            {/* Painel dinâmico de acordo com o método selecionado */}
+            {renderPainelPagamento()}
 
             {/* Resumo compacto */}
             <div className="checkout-resumo">
@@ -262,9 +411,9 @@ const CheckoutModal = ({ visivel, onFechar }) => {
               </div>
               <div className="checkout-linha taxa">
                 <span>
-                  {tipoAtendimento === 'Presencial'    && '🏪 Presencial'}
+                  {tipoAtendimento === 'Presencial'      && '🏪 Presencial'}
                   {tipoAtendimento === 'DeliveryProprio' && '🛵 Taxa de entrega'}
-                  {tipoAtendimento === 'DeliveryApp'   && `📱 Taxa app (${new Date().getHours() < 18 ? '4%' : '6%'})`}
+                  {tipoAtendimento === 'DeliveryApp'     && `📱 Taxa app (${new Date().getHours() < 18 ? '4%' : '6%'})`}
                 </span>
                 <span>{taxa === 0 ? 'Grátis' : formatCurrency(taxa)}</span>
               </div>

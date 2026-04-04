@@ -1,0 +1,464 @@
+.painel-cliente {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #faf8f4 0%, #f5f0e8 100%);
+  font-family: var(--fonte-corpo, 'Inter', sans-serif);
+}
+
+/* ── HEADER ── */
+.pc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 2rem;
+  background: white;
+  border-bottom: 1px solid #e8e0d0;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.pc-header-esquerda {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.pc-btn-voltar {
+  background: none;
+  border: 1px solid #d0c4b0;
+  border-radius: 999px;
+  padding: 0.4rem 1rem;
+  font-size: 0.875rem;
+  color: #6b5b45;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.pc-btn-voltar:hover {
+  background: #f5f0e8;
+}
+
+.pc-titulo h1 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2c1a0e;
+  margin: 0;
+  line-height: 1.2;
+}
+.pc-titulo p {
+  font-size: 0.875rem;
+  color: #8a7560;
+  margin: 0;
+}
+
+.pc-btn-sair {
+  background: transparent;
+  border: 2px solid #c97458;
+  color: #c97458;
+  border-radius: 999px;
+  padding: 0.45rem 1.25rem;
+  font-weight: 700;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.pc-btn-sair:hover {
+  background: #c97458;
+  color: white;
+}
+
+/* ── ABAS ── */
+.pc-abas {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1.5rem 2rem 0;
+  border-bottom: 2px solid #e8e0d0;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.pc-aba {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #8a7560;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 8px 8px 0 0;
+}
+.pc-aba:hover {
+  color: #2c1a0e;
+  background: rgba(212,175,55,0.06);
+}
+.pc-aba.ativa {
+  color: #b8860b;
+  border-bottom-color: #D4AF37;
+  background: rgba(212,175,55,0.08);
+}
+
+.pc-aba-badge {
+  background: #D4AF37;
+  color: white;
+  border-radius: 999px;
+  padding: 0.1rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* ── CONTEÚDO ── */
+.pc-conteudo {
+  max-width: 860px;
+  margin: 2rem auto;
+  padding: 0 2rem 4rem;
+}
+
+/* Loading */
+.pc-loading {
+  text-align: center;
+  padding: 4rem 0;
+  color: #8a7560;
+}
+.pc-spinner {
+  font-size: 2.5rem;
+  animation: girar 1.5s linear infinite;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+@keyframes girar {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Erro */
+.pc-erro {
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.3);
+  color: #dc2626;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.pc-erro button {
+  margin-left: auto;
+  background: #dc2626;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.4rem 1rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* Vazio */
+.pc-vazio {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #8a7560;
+}
+.pc-vazio span { font-size: 3rem; }
+.pc-vazio h3 {
+  font-size: 1.25rem;
+  color: #2c1a0e;
+  margin: 1rem 0 0.5rem;
+}
+.pc-vazio p { margin-bottom: 1.5rem; }
+
+.pc-btn-acao {
+  background: linear-gradient(135deg, #D4AF37, #C97458);
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 0.75rem 2rem;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.pc-btn-acao:hover {
+  opacity: 0.88;
+  transform: translateY(-2px);
+}
+
+/* Lista de cards */
+.pc-lista {
+  display: grid;
+  gap: 1rem;
+}
+
+.pc-card {
+  background: white;
+  border: 1px solid #e8e0d0;
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.pc-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  transform: translateY(-2px);
+}
+
+.pc-card-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+.pc-card-id {
+  font-weight: 700;
+  color: #2c1a0e;
+  font-size: 1rem;
+}
+
+.pc-card-info {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.875rem;
+  color: #6b5b45;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.pc-card-rodape {
+  border-top: 1px solid #f0ebe0;
+  padding-top: 0.75rem;
+}
+.pc-card-total {
+  font-size: 0.9375rem;
+  color: #4a3728;
+}
+.pc-card-total strong {
+  color: #b8860b;
+  font-size: 1.1rem;
+}
+
+.pc-badge-reserva {
+  background: rgba(16,185,129,0.12);
+  color: #059669;
+  border: 1px solid rgba(16,185,129,0.3);
+  border-radius: 999px;
+  padding: 0.2rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.pc-codigo {
+  font-size: 0.875rem;
+  color: #6b5b45;
+}
+.pc-codigo strong {
+  font-family: monospace;
+  font-size: 1rem;
+  color: #2c1a0e;
+  letter-spacing: 1px;
+}
+
+/* Responsivo */
+@media (max-width: 600px) {
+  .pc-header { padding: 1rem; }
+  .pc-abas { padding: 1rem 1rem 0; }
+  .pc-conteudo { padding: 0 1rem 3rem; }
+  .pc-card-info { flex-direction: column; gap: 0.4rem; }
+}
+
+/* ── CARD CLICÁVEL ── */
+.pc-card-clicavel {
+  cursor: pointer;
+}
+.pc-card-clicavel:hover .pc-ver-detalhes {
+  opacity: 1;
+}
+.pc-ver-detalhes {
+  font-size: 0.8125rem;
+  color: #b8860b;
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity 0.2s;
+  margin-left: auto;
+}
+
+/* ── MODAL DE DETALHES ── */
+.pd-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: pd-fade 0.2s ease;
+}
+@keyframes pd-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.pd-modal {
+  background: #fffdf8;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.2);
+  animation: pd-slide 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.5rem;
+}
+@keyframes pd-slide {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.pd-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.pd-header h3 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #2c1a0e;
+  margin: 0 0 0.25rem;
+}
+.pd-header p {
+  font-size: 0.875rem;
+  color: #8a7560;
+  margin: 0;
+}
+.pd-fechar {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: #aaa;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+.pd-fechar:hover { background: rgba(0,0,0,0.06); }
+
+.pd-status-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.pd-periodo {
+  font-size: 0.9rem;
+  color: #6b5b45;
+  font-weight: 600;
+}
+
+.pd-secao {
+  border-top: 1px solid #f0ebe0;
+  padding-top: 1rem;
+}
+.pd-secao-titulo {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #8a7560;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 0.75rem;
+}
+
+.pd-itens {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+.pd-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #f9f6f0;
+  border-radius: 10px;
+  padding: 0.625rem 0.875rem;
+}
+.pd-item-img {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.pd-item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.pd-item-nome {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #2c1a0e;
+}
+.pd-item-qtd {
+  font-size: 0.8125rem;
+  color: #8a7560;
+}
+.pd-item-preco {
+  font-weight: 700;
+  color: #b8860b;
+  font-size: 0.9375rem;
+  white-space: nowrap;
+}
+.pd-sem-itens {
+  font-size: 0.875rem;
+  color: #aaa;
+  font-style: italic;
+}
+
+/* Pagamento */
+.pd-pagamento {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #f9f6f0;
+  border-radius: 12px;
+  padding: 0.875rem 1rem;
+}
+.pd-pagamento-icone { font-size: 1.75rem; }
+.pd-pagamento-tipo {
+  font-weight: 700;
+  color: #2c1a0e;
+  margin: 0 0 0.2rem;
+  font-size: 0.9375rem;
+}
+.pd-pagamento-detalhe {
+  font-size: 0.875rem;
+  color: #6b5b45;
+  font-family: monospace;
+  margin: 0;
+}
+
+/* Total */
+.pd-total {
+  border-top: 2px solid #e8dcc8;
+  padding-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.pd-total span {
+  font-size: 1rem;
+  color: #6b5b45;
+  font-weight: 600;
+}
+.pd-total strong {
+  font-size: 1.375rem;
+  color: #b8860b;
+  font-weight: 800;
+}

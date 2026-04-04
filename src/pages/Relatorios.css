@@ -1,28 +1,337 @@
+/* ── LAYOUT GERAL ── */
 .relatorios {
   padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
 }
 
-.relatorios-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
+/* ── HEADER ── */
+.relatorios .page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
-.periodo-badge {
+/* ── FILTROS DE PERÍODO ── */
+.rel-filtros {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.rel-filtro-btn {
+  padding: 0.4rem 1rem;
+  border: 2px solid #e0d5c5;
+  border-radius: 999px;
+  background: white;
+  color: #6b5b45;
+  font-weight: 700;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.rel-filtro-btn.ativo {
+  border-color: #D4AF37;
+  background: rgba(212, 175, 55, 0.1);
+  color: #b8860b;
+}
+
+/* ── LOADING ── */
+.rel-loading {
+  text-align: center;
+  padding: 4rem;
+  color: #8a7560;
+}
+
+.rel-spinner {
+  font-size: 2.5rem;
+  animation: spin 1.5s linear infinite;
   display: inline-block;
-  padding: 0.375rem 0.75rem;
-  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── KPIs ── */
+.rel-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.rel-kpi {
+  background: white;
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f0ebe0;
+}
+
+.rel-kpi-icone {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.rel-kpi-corpo {
+  flex: 1;
+  min-width: 0;
+}
+
+.rel-kpi-titulo {
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #8a7560;
+  margin: 0 0 0.3rem;
+}
+
+.rel-kpi-valor {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin: 0 0 0.15rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rel-kpi-sub {
+  font-size: 0.8125rem;
+  color: #8a7560;
+  margin: 0;
+}
+
+/* ── CARDS ── */
+.rel-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f0ebe0;
+}
+
+.rel-card-largo {
+  /* sem estilo extra, já ocupa 100% da coluna */
+}
+
+.rel-card-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.rel-card-header h2 {
+  font-size: 1.0625rem;
+  font-weight: 800;
+  color: #2c1a0e;
+  margin: 0;
+}
+
+.rel-card-sub {
+  font-size: 0.8125rem;
+  color: #8a7560;
+}
+
+/* ── LINHA 2 (pizza + tabela) ── */
+.rel-linha-2 {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 1.75rem;
+}
+
+/* ── PIZZA LEGENDA ── */
+.rel-pizza-legenda {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.rel-legenda-item {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: 0.875rem;
+}
+
+.rel-legenda-bolinha {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.rel-legenda-nome {
+  flex: 1;
+  color: #4a3728;
+}
+
+.rel-legenda-valor {
+  font-weight: 700;
+  color: #2c1a0e;
+}
+
+/* ── TABELA ── */
+.rel-tabela {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.rel-tabela thead tr {
+  background: #f9f6f0;
+  border-bottom: 2px solid #e8dcc8;
+}
+
+.rel-tabela th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #8a7560;
+}
+
+.rel-tabela tbody tr {
+  border-bottom: 1px solid #f5f0e8;
+  transition: background 0.12s;
+}
+
+.rel-tabela tbody tr:hover {
+  background: #fdf9f3;
+}
+
+.rel-tabela td {
+  padding: 0.75rem 1rem;
+  color: #2c1a0e;
+}
+
+.rel-tabela tfoot .rel-total-row {
+  border-top: 2px solid #e8dcc8;
+  background: #faf6ec;
+}
+
+.rel-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.rel-destaque {
+  color: #b8860b !important;
+  font-weight: 700;
+}
+
+.rel-item-nome {
+  font-weight: 600;
+  max-width: 260px;
+}
+
+.rel-canal-label {
+  white-space: nowrap;
+}
+
+.rel-rank {
+  font-size: 1rem;
+}
+
+.rel-rank-top {
+  font-size: 1.15rem;
+}
+
+.rel-sem-dados {
+  text-align: center;
+  color: #aaa;
+  padding: 2rem;
+  font-style: italic;
+}
+
+/* ── TOOLTIP ── */
+.rel-tooltip {
+  background: #fff;
+  border: 1px solid #e8dcc8;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  font-size: 0.875rem;
+}
+
+.rel-tooltip-label {
+  font-weight: 700;
+  color: #2c1a0e;
+  margin: 0 0 0.4rem;
+  border-bottom: 1px solid #f0ebe0;
+  padding-bottom: 0.4rem;
+}
+
+.rel-tooltip p {
+  margin: 0.2rem 0;
+}
+
+/* ── BADGES ── */
+.periodo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0.25rem 0.625rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
 }
 
 .periodo-badge.almoco {
-  background: #fff3e0;
-  color: #F57C00;
+  background: rgba(245, 158, 11, 0.12);
+  color: #92400e;
+  border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
 .periodo-badge.jantar {
-  background: #e8eaf6;
-  color: #5E35B1;
+  background: rgba(44, 62, 107, 0.1);
+  color: #2C3E6B;
+  border: 1px solid rgba(44, 62, 107, 0.25);
+}
+
+/* ── RESPONSIVO ── */
+@media (max-width: 1200px) {
+  .rel-kpis {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .rel-linha-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .relatorios {
+    padding: 1rem;
+  }
+
+  .rel-kpis {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .relatorios .page-header {
+    flex-direction: column;
+  }
 }
