@@ -124,46 +124,53 @@
   position: relative;
   overflow: hidden;
   padding: var(--espacamento-3xl) var(--espacamento-xl);
+  /* Carrossel: imagem de fundo com transição suave */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: background-image 0.8s ease-in-out;
+}
+
+/* Overlay escuro sobre a imagem — garante legibilidade do texto */
+.hero-section::before {
+  content: '';
+  position: absolute;
+  inset: 0; /* equivale a top/right/bottom/left: 0 */
+  background-color: rgba(0, 0, 0, 0.58);
+  z-index: 1;
 }
 
 .hero-content {
   max-width: 800px;
   text-align: center;
-  z-index: 2;
+  z-index: 2; /* fica acima do overlay */
+  position: relative;
 }
 
 .hero-content h1 {
   font-family: var(--fonte-display);
   font-size: 4rem;
   font-weight: var(--peso-extrabold);
-  background: var(--gradiente-luxo);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #ffffff;
+  /* Remove o gradiente-no-texto que tornava o h1 invisível sobre a imagem */
+  background: none;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: unset;
+  background-clip: unset;
   margin-bottom: var(--espacamento-lg);
   line-height: 1.1;
   letter-spacing: -0.02em;
+  /* Sombra no texto para máxima legibilidade */
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 0, 0, 0.4);
 }
 
 .hero-subtitle {
   font-size: 1.375rem;
-  color: var(--marrom-cafe);
+  color: rgba(255, 255, 255, 0.92);
   font-weight: var(--peso-medium);
   margin-bottom: var(--espacamento-2xl);
   line-height: 1.6;
-}
-
-.hero-buttons {
-  display: flex;
-  gap: var(--espacamento-md);
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.hero-buttons .btn-primary,
-.hero-buttons .btn-secondary {
-  padding: 1.125rem 2.5rem;
-  font-size: 1.0625rem;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.55);
 }
 
 .hero-decoracao {
@@ -181,6 +188,73 @@
       rgba(212, 175, 55, 0.15) 0%,
       rgba(201, 116, 88, 0.05) 50%,
       transparent 100%);
+}
+
+/* ========== BOTÕES GLOBAIS DO TEMA ========== */
+/* Reset do Bootstrap e definição do estilo base */
+.btn-primary,
+.btn-secondary {
+  /* Estrutura obrigatória — corrige o "efeito marca-texto" */
+  display: inline-block;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: var(--fonte-principal);
+  font-size: 1rem;
+  font-weight: var(--peso-semibold);
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  line-height: 1.5;
+
+  /* Remove interferência do Bootstrap com gradiente */
+  -webkit-text-fill-color: white;
+  color: white !important;
+  background-clip: unset !important;
+  -webkit-background-clip: unset !important;
+
+  /* Transição suave */
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #D4AF37, #C97458) !important;
+}
+
+.btn-secondary {
+  background: transparent !important;
+  border: 2px solid #D4AF37 !important;
+  color: #D4AF37 !important;
+  -webkit-text-fill-color: #D4AF37;
+  box-shadow: none;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.45);
+  background: linear-gradient(135deg, #C9A227, #B86448) !important;
+}
+
+.btn-secondary:hover {
+  background: rgba(212, 175, 55, 0.1) !important;
+  border-color: #C9A227 !important;
+  transform: translateY(-2px);
+}
+
+/* ========== HERO BUTTONS ========== */
+.hero-buttons {
+  display: flex;
+  gap: var(--espacamento-md);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.hero-buttons .btn-primary,
+.hero-buttons .btn-secondary {
+  padding: 1.125rem 2.5rem;
+  font-size: 1.0625rem;
 }
 
 /* ========== SEÇÕES ========== */
@@ -230,7 +304,8 @@ section>h2 {
 .item-destaque-card {
   background: var(--branco-puro);
   border-radius: var(--raio-xl);
-  padding: var(--espacamento-xl);
+  padding: 0; /* padding zerado para imagem colar nas bordas */
+  overflow: hidden; /* para o border-radius cortar a imagem */
   box-shadow: var(--sombra-sm);
   border: 1px solid var(--cinza-platina);
   transition: all var(--transicao-normal);
@@ -246,11 +321,38 @@ section>h2 {
   height: 3px;
   background: var(--gradiente-luxo);
   border-radius: var(--raio-xl) var(--raio-xl) 0 0;
+  z-index: 1; /* pra ficar sobre a imagem */
 }
 
 .item-destaque-card:hover {
   box-shadow: var(--sombra-lg);
   border-color: var(--dourado-claro);
+}
+
+/* ========== IMAGEM NOS CARDS DE DESTAQUE ========== */
+.item-destaque-imagem-wrapper {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  border-radius: var(--raio-xl) var(--raio-xl) 0 0;
+}
+
+.item-destaque-imagem {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform var(--transicao-normal);
+}
+
+/* Zoom suave na imagem ao passar o mouse no card */
+.item-destaque-card:hover .item-destaque-imagem {
+  transform: scale(1.05);
+}
+
+/* Corpo do card (badge + nome + descrição + preço) */
+.item-destaque-corpo {
+  padding: var(--espacamento-xl);
 }
 
 .item-badge {
@@ -369,7 +471,77 @@ section>h2 {
 }
 
 .sugestao-section .btn-primary {
-  background: var(--gradiente-luxo);
+  /* Mantém a especificidade caso necessário, mas o principal já está no global */
+}
+
+/* ── SUGESTÃO DO CHEF: MINI CARDS ── */
+.sugestao-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--espacamento-lg);
+  margin-top: var(--espacamento-xl);
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.sugestao-mini-card {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: var(--raio-xl);
+  overflow: hidden;
+  transition: transform 0.2s ease;
+}
+
+.sugestao-mini-card:hover {
+  transform: translateY(-4px);
+}
+
+.sugestao-mini-imagem {
+  height: 150px;
+  overflow: hidden;
+}
+
+.sugestao-mini-imagem img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sugestao-mini-corpo {
+  padding: var(--espacamento-md);
+  text-align: left;
+}
+
+.sugestao-mini-periodo {
+  font-size: 0.8rem;
+  font-weight: var(--peso-bold);
+  color: var(--dourado-champagne);
+}
+
+.sugestao-mini-corpo h4 {
+  font-family: var(--fonte-display);
+  color: var(--creme-premium);
+  font-size: 1.1rem;
+  margin: 4px 0 8px;
+}
+
+.sugestao-mini-precos {
+  display: flex;
+  align-items: center;
+  gap: var(--espacamento-sm);
+}
+
+.sugestao-preco-riscado {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: line-through;
+}
+
+.sugestao-preco-final {
+  font-size: 1.25rem;
+  font-weight: var(--peso-extrabold);
+  color: #D4AF37;
 }
 
 /* ========== SOBRE ========== */
@@ -684,88 +856,7 @@ section>h2 {
   text-decoration: underline;
 }
 
-/* ========== RESPONSIVO ========== */
-@media (max-width: 1024px) {
-  .hero-content h1 {
-    font-size: 3rem;
-  }
-
-  .sobre-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 768px) {
-  .header-content {
-    flex-wrap: wrap;
-  }
-
-  .main-nav {
-    order: 3;
-    width: 100%;
-    justify-content: center;
-  }
-
-  .hero-content h1 {
-    font-size: 2.5rem;
-  }
-
-  .hero-subtitle {
-    font-size: 1.125rem;
-  }
-
-  .hero-buttons {
-    flex-direction: column;
-  }
-
-  .circulo-dourado {
-    width: 250px;
-    height: 250px;
-  }
-
-  .itens-destaque,
-  .atendimento-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ========== IMAGEM NOS CARDS DE DESTAQUE ========== */
-
-/* Remove o padding-top do card para a imagem encostar na borda */
-.item-destaque-card {
-  padding: 0;
-  /* sobrescreve o padding geral do card */
-  overflow: hidden;
-  /* garante que a imagem respeite o border-radius */
-}
-
-.item-destaque-imagem-wrapper {
-  width: 100%;
-  height: 180px;
-  overflow: hidden;
-  border-radius: var(--raio-xl) var(--raio-xl) 0 0;
-}
-
-.item-destaque-imagem {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: transform var(--transicao-normal);
-}
-
-/* Zoom suave na imagem ao passar o mouse no card */
-.item-destaque-card:hover .item-destaque-imagem {
-  transform: scale(1.05);
-}
-
-/* Corpo do card (badge + nome + descrição + preço) */
-.item-destaque-corpo {
-  padding: var(--espacamento-xl);
-}
-
 /* ========== NAVBAR: USUÁRIO LOGADO ========== */
-
 .usuario-logado-area {
   display: flex;
   align-items: center;
@@ -850,76 +941,6 @@ section>h2 {
   color: var(--branco-puro);
 }
 
-/* ── SUGESTÃO DO CHEF: MINI CARDS ── */
-.sugestao-cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: var(--espacamento-lg);
-  margin-top: var(--espacamento-xl);
-  max-width: 700px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.sugestao-mini-card {
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(212, 175, 55, 0.4);
-  border-radius: var(--raio-xl);
-  overflow: hidden;
-  transition: transform 0.2s ease;
-}
-
-.sugestao-mini-card:hover {
-  transform: translateY(-4px);
-}
-
-.sugestao-mini-imagem {
-  height: 150px;
-  overflow: hidden;
-}
-
-.sugestao-mini-imagem img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.sugestao-mini-corpo {
-  padding: var(--espacamento-md);
-  text-align: left;
-}
-
-.sugestao-mini-periodo {
-  font-size: 0.8rem;
-  font-weight: var(--peso-bold);
-  color: var(--dourado-champagne);
-}
-
-.sugestao-mini-corpo h4 {
-  font-family: var(--fonte-display);
-  color: var(--creme-premium);
-  font-size: 1.1rem;
-  margin: 4px 0 8px;
-}
-
-.sugestao-mini-precos {
-  display: flex;
-  align-items: center;
-  gap: var(--espacamento-sm);
-}
-
-.sugestao-preco-riscado {
-  font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.5);
-  text-decoration: line-through;
-}
-
-.sugestao-preco-final {
-  font-size: 1.25rem;
-  font-weight: var(--peso-extrabold);
-  color: #D4AF37;
-}
-
 /* ── TOAST DE BOAS-VINDAS ── */
 .toast-sucesso {
   position: fixed;
@@ -959,4 +980,49 @@ section>h2 {
 .btn-adicionar-carrinho:hover {
   opacity: 0.88;
   transform: translateY(-1px);
+}
+
+/* ========== RESPONSIVO ========== */
+@media (max-width: 1024px) {
+  .hero-content h1 {
+    font-size: 3rem;
+  }
+
+  .sobre-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-content {
+    flex-wrap: wrap;
+  }
+
+  .main-nav {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hero-content h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.125rem;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+  }
+
+  .circulo-dourado {
+    width: 250px;
+    height: 250px;
+  }
+
+  .itens-destaque,
+  .atendimento-grid {
+    grid-template-columns: 1fr;
+  }
 }

@@ -19,6 +19,21 @@ const LandingPage = () => {
   const [loginSucesso, setLoginSucesso] = useState(''); // ← NOVO
   const [showReservaModal, setShowReservaModal] = useState(false); // ← NOVO
 
+  // ========== CARROSSEL ==========
+  const imagensCarrossel = [
+    '/img/restaurante-1.jpg',
+    '/img/restaurante-2.jpg',
+    '/img/restaurante-3.jpg',
+  ];
+  const [imagemAtual, setImagemAtual] = useState(0);
+
+  useEffect(() => {
+    const intervalo = setInterval(() => {
+      setImagemAtual((anterior) => (anterior + 1) % imagensCarrossel.length);
+    }, 3000);
+    return () => clearInterval(intervalo); // limpa ao desmontar o componente
+  }, []);
+  // ================================
 
   // Adicione estas duas linhas junto aos outros estados
   const [usuarioLogado, setUsuarioLogado] = useState(() => authService.getUsuarioLogado()); // ← NOVO
@@ -281,7 +296,10 @@ const LandingPage = () => {
       </motion.header>
 
       {/* HERO SECTION */}
-      <section className="hero-section">
+      <section
+        className="hero-section"
+        style={{ backgroundImage: `url(${imagensCarrossel[imagemAtual]})` }}
+      >
         <motion.div
           className="hero-content"
           initial={{ opacity: 0, y: 50 }}
