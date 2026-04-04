@@ -8,13 +8,13 @@ import './ReservaModal.css';
 const ReservaModal = ({ visivel, onFechar }) => {
   const usuario = authService.getUsuarioLogado();
 
-  const [data, setData]           = useState('');
-  const [pessoas, setPessoas]     = useState(2);
-  const [mesas, setMesas]         = useState([]);
-  const [mesaId, setMesaId]       = useState('');
-  const [enviando, setEnviando]   = useState(false);
-  const [erro, setErro]           = useState('');
-  const [sucesso, setSucesso]     = useState(null); // { id, codigo }
+  const [data, setData] = useState('');
+  const [pessoas, setPessoas] = useState(2);
+  const [mesas, setMesas] = useState([]);
+  const [mesaId, setMesaId] = useState('');
+  const [enviando, setEnviando] = useState(false);
+  const [erro, setErro] = useState('');
+  const [sucesso, setSucesso] = useState(null); // { id, codigo }
 
   // Data mínima = amanhã
   const amanha = new Date();
@@ -59,15 +59,16 @@ const ReservaModal = ({ visivel, onFechar }) => {
     setEnviando(true);
 
     // Horário fixo: almoço às 12h00
-    const dataHora = new Date(`${data}T12:00:00`);
+    // Monta a string direto sem converter para UTC, evitando problema de fuso
+    const dataHora = `${data}T12:00:00`;
 
     try {
       const res = await apiFetch('/Reserva', {
         method: 'POST',
         body: JSON.stringify({
-          mesaId:   Number(mesaId),
+          mesaId: Number(mesaId),
           usuarioId: usuario.id,
-          dataHora:  dataHora.toISOString(),
+          dataHora: dataHora,   // já é string no formato correto
         }),
       });
 
