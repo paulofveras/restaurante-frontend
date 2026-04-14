@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import { cardapioService } from '../services/cardapioService';
-import { authService } from '../services/authService'; // ← NOVO
-import { formatCurrency } from '../utils/formatters';
-import logoSolDoCerrado from '../assets/logo-sol-cerrado.png';
-import './LandingPage.css';
-import { useCarrinho } from '../contexts/CarrinhoContext';
-import ReservaModal from '../components/ReservaModal';
-
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { cardapioService } from "../services/cardapioService";
+import { authService } from "../services/authService"; // ← NOVO
+import { formatCurrency } from "../utils/formatters";
+import logoSolDoCerrado from "../assets/logo-sol-cerrado.png";
+import "./LandingPage.css";
+import { useCarrinho } from "../contexts/CarrinhoContext";
+import ReservaModal from "../components/ReservaModal";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -16,14 +15,14 @@ const LandingPage = () => {
   const [itensDestaque, setItensDestaque] = useState([]);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
-  const [loginSucesso, setLoginSucesso] = useState(''); // ← NOVO
+  const [loginSucesso, setLoginSucesso] = useState(""); // ← NOVO
   const [showReservaModal, setShowReservaModal] = useState(false); // ← NOVO
 
   // ========== CARROSSEL ==========
   const imagensCarrossel = [
-    '/img/restaurante-1.jpg',
-    '/img/restaurante-2.jpg',
-    '/img/restaurante-3.jpg',
+    "/img/restaurante-1.jpg",
+    "/img/restaurante-2.jpg",
+    "/img/restaurante-3.jpg",
   ];
   const [imagemAtual, setImagemAtual] = useState(0);
 
@@ -36,21 +35,23 @@ const LandingPage = () => {
   // ================================
 
   // Adicione estas duas linhas junto aos outros estados
-  const [usuarioLogado, setUsuarioLogado] = useState(() => authService.getUsuarioLogado()); // ← NOVO
+  const [usuarioLogado, setUsuarioLogado] = useState(() =>
+    authService.getUsuarioLogado(),
+  ); // ← NOVO
 
   // ← NOVO: estados do formulário de login
-  const [loginEmail, setLoginEmail] = useState('');
-  const [loginSenha, setLoginSenha] = useState('');
-  const [loginErro, setLoginErro] = useState('');
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginSenha, setLoginSenha] = useState("");
+  const [loginErro, setLoginErro] = useState("");
   const [loginCarregando, setLoginCarregando] = useState(false);
 
   // ← NOVO: estados do formulário de cadastro
-  const [cadNome, setCadNome] = useState('');
-  const [cadEmail, setCadEmail] = useState('');
-  const [cadSenha, setCadSenha] = useState('');
-  const [cadConfirmar, setCadConfirmar] = useState('');
-  const [cadErro, setCadErro] = useState('');
-  const [cadSucesso, setCadSucesso] = useState('');
+  const [cadNome, setCadNome] = useState("");
+  const [cadEmail, setCadEmail] = useState("");
+  const [cadSenha, setCadSenha] = useState("");
+  const [cadConfirmar, setCadConfirmar] = useState("");
+  const [cadErro, setCadErro] = useState("");
+  const [cadSucesso, setCadSucesso] = useState("");
   const [cadCarregando, setCadCarregando] = useState(false);
 
   const [sugestoesChef, setSugestoesChef] = useState([]);
@@ -62,12 +63,14 @@ const LandingPage = () => {
   const carregarSugestoesChef = async () => {
     try {
       // Tenta buscar as sugestões do dia
-      const resposta = await fetch('http://localhost:5203/api/SugestaoDoChef/hoje');
+      const resposta = await fetch(
+        "http://localhost:5203/api/SugestaoDoChef/hoje",
+      );
       if (resposta.ok) {
         const dados = await resposta.json();
         // Para cada sugestão, busca o prato completo
         const pratos = await Promise.all(
-          dados.map(s => cardapioService.buscarPorId(s.itemCardapioId))
+          dados.map((s) => cardapioService.buscarPorId(s.itemCardapioId)),
         );
         setSugestoesChef(pratos.filter(Boolean));
       } else {
@@ -91,20 +94,20 @@ const LandingPage = () => {
       const embaralhados = todosItens.sort(() => Math.random() - 0.5);
       setItensDestaque(embaralhados.slice(0, 6));
     } catch (error) {
-      console.error('Erro ao carregar destaques:', error);
+      console.error("Erro ao carregar destaques:", error);
     }
   };
 
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
-    element?.scrollIntoView({ behavior: 'smooth' });
+    element?.scrollIntoView({ behavior: "smooth" });
   };
 
   // ← NOVO: função de login
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoginErro('');
-    setLoginSucesso('');
+    setLoginErro("");
+    setLoginSucesso("");
     setLoginCarregando(true);
 
     try {
@@ -114,9 +117,9 @@ const LandingPage = () => {
       // Atualiza o estado do usuário logado na navbar imediatamente
       setUsuarioLogado(usuario);
 
-      if (usuario.perfil === 'Administrador') {
+      if (usuario.perfil === "Administrador") {
         // Admin vai para o painel de gestão
-        navigate('/dashboard');
+        navigate("/dashboard");
       } else {
         // Cliente permanece na Landing Page
         // Fecha o modal e exibe mensagem de boas-vindas
@@ -124,14 +127,14 @@ const LandingPage = () => {
         setLoginSucesso(`Bem-vindo, ${usuario.userName}! 🎉`);
 
         // Limpa o formulário
-        setLoginEmail('');
-        setLoginSenha('');
+        setLoginEmail("");
+        setLoginSenha("");
 
         // Remove a mensagem após 4 segundos
-        setTimeout(() => setLoginSucesso(''), 4000);
+        setTimeout(() => setLoginSucesso(""), 4000);
       }
     } catch (error) {
-      setLoginErro(error.message || 'Email ou senha incorretos.');
+      setLoginErro(error.message || "Email ou senha incorretos.");
     } finally {
       setLoginCarregando(false);
     }
@@ -145,58 +148,57 @@ const LandingPage = () => {
   // ← NOVO: função de cadastro
   const handleCadastro = async (e) => {
     e.preventDefault();
-    setCadErro('');
-    setCadSucesso('');
+    setCadErro("");
+    setCadSucesso("");
 
     if (cadSenha !== cadConfirmar) {
-      setCadErro('As senhas não coincidem.');
+      setCadErro("As senhas não coincidem.");
       return;
     }
 
     if (cadSenha.length < 6) {
-      setCadErro('A senha deve ter pelo menos 6 caracteres.');
+      setCadErro("A senha deve ter pelo menos 6 caracteres.");
       return;
     }
 
     setCadCarregando(true);
 
     try {
-      const resposta = await fetch('http://localhost:5203/api/usuario/cadastrar', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userName: cadNome,
-          email: cadEmail,
-          passwordHasher: cadSenha,
-        }),
-      });
+      const resposta = await fetch(
+        "http://localhost:5203/api/usuario/cadastrar",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userName: cadNome,
+            email: cadEmail,
+            passwordHasher: cadSenha,
+          }),
+        },
+      );
 
       if (!resposta.ok) {
         const msg = await resposta.text();
         throw new Error(msg);
       }
 
-      setCadSucesso('Conta criada! Faça login para continuar.');
-      setCadNome(''); setCadEmail(''); setCadSenha(''); setCadConfirmar('');
+      setCadSucesso("Conta criada! Faça login para continuar.");
+      setCadNome("");
+      setCadEmail("");
+      setCadSenha("");
+      setCadConfirmar("");
       setTimeout(() => setIsLogin(true), 1500); // vai para aba de login
     } catch (error) {
-      setCadErro(error.message || 'Erro ao cadastrar. Tente novamente.');
+      setCadErro(error.message || "Erro ao cadastrar. Tente novamente.");
     } finally {
       setCadCarregando(false);
     }
   };
 
-
-
   return (
     <div className="landing-page">
-
       {/* Toast de boas-vindas para cliente recém-logado */}
-      {loginSucesso && (
-        <div className="toast-sucesso">
-          {loginSucesso}
-        </div>
-      )}
+      {loginSucesso && <div className="toast-sucesso">{loginSucesso}</div>}
 
       {/* HEADER */}
       <motion.header
@@ -207,16 +209,29 @@ const LandingPage = () => {
       >
         <div className="header-content">
           <div className="logo-container">
-            <img src={logoSolDoCerrado} alt="Sol do Cerrado" className="logo"
+            <img
+              src={logoSolDoCerrado}
+              alt="Sol do Cerrado"
+              className="logo"
               onError={(e) => {
-                e.target.style.display = 'none';
-                e.target.nextSibling.style.display = 'flex';
+                e.target.style.display = "none";
+                e.target.nextSibling.style.display = "flex";
               }}
             />
-            <div className="logo-fallback" style={{ display: 'none' }}>
-              <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <div className="logo-fallback" style={{ display: "none" }}>
+              <svg
+                viewBox="0 0 100 100"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <defs>
-                  <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <linearGradient
+                    id="logoGradient"
+                    x1="0%"
+                    y1="0%"
+                    x2="100%"
+                    y2="100%"
+                  >
                     <stop offset="0%" stopColor="#D4AF37" />
                     <stop offset="50%" stopColor="#C97458" />
                     <stop offset="100%" stopColor="#6B4E3D" />
@@ -232,7 +247,10 @@ const LandingPage = () => {
                   return (
                     <line
                       key={i}
-                      x1={x1} y1={y1} x2={x2} y2={y2}
+                      x1={x1}
+                      y1={y1}
+                      x2={x2}
+                      y2={y2}
                       stroke="url(#logoGradient)"
                       strokeWidth="4"
                       strokeLinecap="round"
@@ -248,10 +266,14 @@ const LandingPage = () => {
           </div>
 
           <nav className="main-nav">
-            <button onClick={() => scrollToSection('cardapio')}>Cardápio</button>
-            <button onClick={() => scrollToSection('sobre')}>Sobre</button>
-            <button onClick={() => scrollToSection('reservas')}>Reservas</button>
-            <button onClick={() => scrollToSection('contato')}>Contato</button>
+            <button onClick={() => scrollToSection("cardapio")}>
+              Cardápio
+            </button>
+            <button onClick={() => scrollToSection("sobre")}>Sobre</button>
+            <button onClick={() => scrollToSection("reservas")}>
+              Reservas
+            </button>
+            <button onClick={() => scrollToSection("contato")}>Contato</button>
           </nav>
 
           {/* ── ÁREA DE AUTENTICAÇÃO DO HEADER ── */}
@@ -260,13 +282,13 @@ const LandingPage = () => {
               {/* Bolinha + nome → clica para ir ao dashboard */}
               <div
                 className="usuario-card"
-                style={{ cursor: 'pointer' }}
+                style={{ cursor: "pointer" }}
                 title="Ir para minha área"
                 onClick={() => {
-                  if (usuarioLogado.perfil === 'Administrador') {
-                    navigate('/dashboard');
+                  if (usuarioLogado.perfil === "Administrador") {
+                    navigate("/dashboard");
                   } else {
-                    navigate('/minha-conta');
+                    navigate("/minha-conta");
                   }
                 }}
               >
@@ -275,10 +297,14 @@ const LandingPage = () => {
                 </div>
                 <div className="usuario-info">
                   <span className="usuario-saudacao">
-                    Olá, <strong>{usuarioLogado.userName.split(' ')[0]}</strong>
+                    Olá, <strong>{usuarioLogado.userName.split(" ")[0]}</strong>
                   </span>
-                  <span className={`usuario-perfil-tag ${usuarioLogado.perfil === 'Administrador' ? 'tag-admin' : 'tag-cliente'}`}>
-                    {usuarioLogado.perfil === 'Administrador' ? '⚙️ Gerente/Admin' : '🍽️ Cliente'}
+                  <span
+                    className={`usuario-perfil-tag ${usuarioLogado.perfil === "Administrador" ? "tag-admin" : "tag-cliente"}`}
+                  >
+                    {usuarioLogado.perfil === "Administrador"
+                      ? "⚙️ Gerente/Admin"
+                      : "🍽️ Cliente"}
                   </span>
                 </div>
               </div>
@@ -288,7 +314,10 @@ const LandingPage = () => {
               </button>
             </div>
           ) : (
-            <button className="btn-entrar" onClick={() => setShowLoginModal(true)}>
+            <button
+              className="btn-entrar"
+              onClick={() => setShowLoginModal(true)}
+            >
               Entrar / Cadastrar
             </button>
           )}
@@ -308,13 +337,20 @@ const LandingPage = () => {
         >
           <h1>Sabores Autênticos do Cerrado</h1>
           <p className="hero-subtitle">
-            Uma experiência gastronômica única que celebra os ingredientes e tradições do Tocantins
+            Uma experiência gastronômica única que celebra os ingredientes e
+            tradições do Tocantins
           </p>
           <div className="hero-buttons">
-            <button className="btn-primary" onClick={() => scrollToSection('cardapio')}>
+            <button
+              className="btn-primary"
+              onClick={() => scrollToSection("cardapio")}
+            >
               Ver Cardápio Completo
             </button>
-            <button className="btn-secondary" onClick={() => scrollToSection('reservas')}>
+            <button
+              className="btn-secondary"
+              onClick={() => scrollToSection("reservas")}
+            >
               Reservar Mesa
             </button>
           </div>
@@ -325,7 +361,7 @@ const LandingPage = () => {
             className="circulo-dourado"
             animate={{
               scale: [1, 1.1, 1],
-              rotate: [0, 5, 0]
+              rotate: [0, 5, 0],
             }}
             transition={{ duration: 4, repeat: Infinity }}
           />
@@ -341,7 +377,9 @@ const LandingPage = () => {
           viewport={{ once: true }}
         >
           <h2>Destaques do Cardápio</h2>
-          <p>40 pratos exclusivos que celebram a culinária regional modernizada</p>
+          <p>
+            40 pratos exclusivos que celebram a culinária regional modernizada
+          </p>
         </motion.div>
 
         <div className="itens-destaque">
@@ -357,20 +395,22 @@ const LandingPage = () => {
               {/* ── IMAGEM DO PRATO ── */}
               <div className="item-destaque-imagem-wrapper">
                 <img
-                  src={item.imagemUrl || '/img/prato-padrao.jpg'}
+                  src={item.imagemUrl || "/img/prato-padrao.jpg"}
                   alt={item.nome}
                   className="item-destaque-imagem"
                   onError={(e) => {
                     e.target.onerror = null;
-                    e.target.src = '/img/prato-padrao.jpg';
+                    e.target.src = "/img/prato-padrao.jpg";
                   }}
                 />
               </div>
 
               {/* ── CONTEÚDO DO CARD ── */}
               <div className="item-destaque-corpo">
-                <div className="item-badge">
-                  {item.periodo === 'Almoco' ? '☀️ Almoço' : '🌙 Jantar'}
+                <div
+                  className={`item-badge ${item.periodo === "Jantar" ? "badge-jantar" : ""}`}
+                >
+                  {item.periodo === "Jantar" ? "🌙 Jantar" : "☀️ Almoço"}
                 </div>
                 <h3>{item.nome}</h3>
                 <p>{item.descricao}</p>
@@ -388,7 +428,7 @@ const LandingPage = () => {
           ))}
         </div>
 
-        <button className="btn-ver-mais" onClick={() => navigate('/cardapio')}>
+        <button className="btn-ver-mais" onClick={() => navigate("/cardapio")}>
           Ver Cardápio Completo →
         </button>
       </section>
@@ -402,21 +442,28 @@ const LandingPage = () => {
               <span>Sugestão do Chef</span>
             </div>
             <h2>Pratos em Destaque</h2>
-            <p>Seleção especial com <strong style={{ color: '#D4AF37' }}>20% de desconto</strong> — válido hoje</p>
+            <p>
+              Seleção especial com{" "}
+              <strong style={{ color: "#D4AF37" }}>20% de desconto</strong> —
+              válido hoje
+            </p>
 
             <div className="sugestao-cards-grid">
               {sugestoesChef.map((prato, index) => (
                 <div key={prato.id ?? index} className="sugestao-mini-card">
                   <div className="sugestao-mini-imagem">
                     <img
-                      src={prato.imagemUrl || '/img/prato-padrao.jpg'}
+                      src={prato.imagemUrl || "/img/prato-padrao.jpg"}
                       alt={prato.nome}
-                      onError={(e) => { e.target.onerror = null; e.target.src = '/img/prato-padrao.jpg'; }}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "/img/prato-padrao.jpg";
+                      }}
                     />
                   </div>
                   <div className="sugestao-mini-corpo">
                     <span className="sugestao-mini-periodo">
-                      {prato.periodo === 'Almoco' ? '☀️ Almoço' : '🌙 Jantar'}
+                      {prato.periodo === "Almoco" ? "☀️ Almoço" : "🌙 Jantar"}
                     </span>
                     <h4>{prato.nome}</h4>
                     <div className="sugestao-mini-precos">
@@ -438,8 +485,11 @@ const LandingPage = () => {
               ))}
             </div>
 
-            <button className="btn-primary" onClick={() => navigate('/sugestao-chef')}
-              style={{ marginTop: '2rem' }}>
+            <button
+              className="btn-primary"
+              onClick={() => navigate("/sugestao-chef")}
+              style={{ marginTop: "2rem" }}
+            >
               Ver Sugestão Completa ✨
             </button>
           </div>
@@ -457,11 +507,14 @@ const LandingPage = () => {
           >
             <h2>Nossa História</h2>
             <p>
-              O <strong>Sol do Cerrado</strong> nasceu da paixão por valorizar os ingredientes e sabores únicos do Tocantins.
-              Nossa cozinha celebra a riqueza do cerrado brasileiro, combinando técnicas contemporâneas com tradições ancestrais.
+              O <strong>Sol do Cerrado</strong> nasceu da paixão por valorizar
+              os ingredientes e sabores únicos do Tocantins. Nossa cozinha
+              celebra a riqueza do cerrado brasileiro, combinando técnicas
+              contemporâneas com tradições ancestrais.
             </p>
             <p>
-              Cada prato é uma homenagem à biodiversidade do nosso bioma, criado com ingredientes locais, frescos e sustentáveis.
+              Cada prato é uma homenagem à biodiversidade do nosso bioma, criado
+              com ingredientes locais, frescos e sustentáveis.
             </p>
           </motion.div>
 
@@ -496,7 +549,9 @@ const LandingPage = () => {
           viewport={{ once: true }}
         >
           <h2>Reserve sua Mesa</h2>
-          <p className="reservas-subtitle">Experiência exclusiva no jantar - Reserve com 1 dia de antecedência</p>
+          <p className="reservas-subtitle">
+            Experiência exclusiva no jantar - Reserve com 1 dia de antecedência
+          </p>
 
           <div className="reservas-info">
             <div className="info-item">
@@ -526,7 +581,7 @@ const LandingPage = () => {
             className="btn-primary"
             onClick={() => {
               if (usuarioLogado) {
-                setShowReservaModal(true);  // abre o modal
+                setShowReservaModal(true); // abre o modal
               } else {
                 setShowLoginModal(true);
               }
@@ -540,7 +595,9 @@ const LandingPage = () => {
       {/* FORMAS DE ATENDIMENTO */}
       <section className="atendimento-section">
         <h2>Como Você Prefere?</h2>
-        <p className="section-subtitle">Escolha a melhor forma de aproveitar nossos pratos</p>
+        <p className="section-subtitle">
+          Escolha a melhor forma de aproveitar nossos pratos
+        </p>
 
         <div className="atendimento-grid">
           <motion.div
@@ -552,7 +609,10 @@ const LandingPage = () => {
           >
             <div className="atendimento-icon">🏪</div>
             <h3>Presencial</h3>
-            <p>Venha nos visitar e desfrute de uma experiência completa em nosso ambiente aconchegante</p>
+            <p>
+              Venha nos visitar e desfrute de uma experiência completa em nosso
+              ambiente aconchegante
+            </p>
           </motion.div>
 
           <motion.div
@@ -626,18 +686,30 @@ const LandingPage = () => {
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
           >
-            <button className="modal-close" onClick={() => setShowLoginModal(false)}>×</button>
+            <button
+              className="modal-close"
+              onClick={() => setShowLoginModal(false)}
+            >
+              ×
+            </button>
 
             <div className="modal-tabs">
               <button
-                className={isLogin ? 'active' : ''}
-                onClick={() => { setIsLogin(true); setLoginErro(''); }}
+                className={isLogin ? "active" : ""}
+                onClick={() => {
+                  setIsLogin(true);
+                  setLoginErro("");
+                }}
               >
                 Entrar
               </button>
               <button
-                className={!isLogin ? 'active' : ''}
-                onClick={() => { setIsLogin(false); setCadErro(''); setCadSucesso(''); }}
+                className={!isLogin ? "active" : ""}
+                onClick={() => {
+                  setIsLogin(false);
+                  setCadErro("");
+                  setCadSucesso("");
+                }}
               >
                 Cadastrar
               </button>
@@ -649,7 +721,15 @@ const LandingPage = () => {
                 <h3>Bem-vindo de volta!</h3>
 
                 {loginErro && (
-                  <p style={{ color: '#e53e3e', background: '#fff5f5', padding: '10px', borderRadius: '8px', fontSize: '0.9rem' }}>
+                  <p
+                    style={{
+                      color: "#e53e3e",
+                      background: "#fff5f5",
+                      padding: "10px",
+                      borderRadius: "8px",
+                      fontSize: "0.9rem",
+                    }}
+                  >
                     ⚠️ {loginErro}
                   </p>
                 )}
@@ -670,12 +750,22 @@ const LandingPage = () => {
                   autoComplete="current-password"
                 />
 
-                <button type="submit" className="btn-primary" disabled={loginCarregando}>
-                  {loginCarregando ? 'Entrando...' : 'Entrar'}
+                <button
+                  type="submit"
+                  className="btn-primary"
+                  disabled={loginCarregando}
+                >
+                  {loginCarregando ? "Entrando..." : "Entrar"}
                 </button>
 
                 {/* Dica para teste */}
-                <p style={{ fontSize: '0.8rem', color: '#888', textAlign: 'center' }}>
+                <p
+                  style={{
+                    fontSize: "0.8rem",
+                    color: "#888",
+                    textAlign: "center",
+                  }}
+                >
                   Admin: admin@restaurante.com / admin123
                 </p>
               </form>
@@ -685,12 +775,28 @@ const LandingPage = () => {
                 <h3>Criar sua conta</h3>
 
                 {cadErro && (
-                  <p style={{ color: '#e53e3e', background: '#fff5f5', padding: '10px', borderRadius: '8px', fontSize: '0.9rem' }}>
+                  <p
+                    style={{
+                      color: "#e53e3e",
+                      background: "#fff5f5",
+                      padding: "10px",
+                      borderRadius: "8px",
+                      fontSize: "0.9rem",
+                    }}
+                  >
                     ⚠️ {cadErro}
                   </p>
                 )}
                 {cadSucesso && (
-                  <p style={{ color: '#2f855a', background: '#f0fff4', padding: '10px', borderRadius: '8px', fontSize: '0.9rem' }}>
+                  <p
+                    style={{
+                      color: "#2f855a",
+                      background: "#f0fff4",
+                      padding: "10px",
+                      borderRadius: "8px",
+                      fontSize: "0.9rem",
+                    }}
+                  >
                     ✅ {cadSucesso}
                   </p>
                 )}
@@ -726,8 +832,12 @@ const LandingPage = () => {
                   autoComplete="current-password"
                 />
 
-                <button type="submit" className="btn-primary" disabled={cadCarregando}>
-                  {cadCarregando ? 'Cadastrando...' : 'Cadastrar'}
+                <button
+                  type="submit"
+                  className="btn-primary"
+                  disabled={cadCarregando}
+                >
+                  {cadCarregando ? "Cadastrando..." : "Cadastrar"}
                 </button>
               </form>
             )}

@@ -80,7 +80,7 @@
 }
 
 .main-nav button::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
@@ -123,7 +123,8 @@
   justify-content: center;
   position: relative;
   overflow: hidden;
-  padding: var(--espacamento-3xl) var(--espacamento-xl);
+  max-width: 100%;
+  padding: var(--espacamento-3xl) 0;
   /* Carrossel: imagem de fundo com transição suave */
   background-size: cover;
   background-position: center;
@@ -133,7 +134,7 @@
 
 /* Overlay escuro sobre a imagem — garante legibilidade do texto */
 .hero-section::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0; /* equivale a top/right/bottom/left: 0 */
   background-color: rgba(0, 0, 0, 0.58);
@@ -161,7 +162,9 @@
   line-height: 1.1;
   letter-spacing: -0.02em;
   /* Sombra no texto para máxima legibilidade */
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 0, 0, 0.4);
+  text-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.6),
+    0 0 40px rgba(0, 0, 0, 0.4);
 }
 
 .hero-subtitle {
@@ -184,10 +187,12 @@
   width: 400px;
   height: 400px;
   border-radius: 50%;
-  background: radial-gradient(circle,
-      rgba(212, 175, 55, 0.15) 0%,
-      rgba(201, 116, 88, 0.05) 50%,
-      transparent 100%);
+  background: radial-gradient(
+    circle,
+    rgba(212, 175, 55, 0.15) 0%,
+    rgba(201, 116, 88, 0.05) 50%,
+    transparent 100%
+  );
 }
 
 /* ========== BOTÕES GLOBAIS DO TEMA ========== */
@@ -220,26 +225,26 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #D4AF37, #C97458) !important;
+  background: linear-gradient(135deg, #d4af37, #c97458) !important;
 }
 
 .btn-secondary {
   background: transparent !important;
-  border: 2px solid #D4AF37 !important;
-  color: #D4AF37 !important;
-  -webkit-text-fill-color: #D4AF37;
+  border: 2px solid #d4af37 !important;
+  color: #d4af37 !important;
+  -webkit-text-fill-color: #d4af37;
   box-shadow: none;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(212, 175, 55, 0.45);
-  background: linear-gradient(135deg, #C9A227, #B86448) !important;
+  background: linear-gradient(135deg, #c9a227, #b86448) !important;
 }
 
 .btn-secondary:hover {
   background: rgba(212, 175, 55, 0.1) !important;
-  border-color: #C9A227 !important;
+  border-color: #c9a227 !important;
   transform: translateY(-2px);
 }
 
@@ -270,7 +275,7 @@ section {
 }
 
 .section-header h2,
-section>h2 {
+section > h2 {
   font-family: var(--fonte-display);
   font-size: 2.75rem;
   font-weight: var(--peso-extrabold);
@@ -288,10 +293,12 @@ section>h2 {
 
 /* ========== CARDÁPIO DESTAQUE ========== */
 .cardapio-section {
-  background: linear-gradient(to bottom,
-      transparent 0%,
-      rgba(255, 255, 255, 0.5) 50%,
-      transparent 100%);
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(255, 255, 255, 0.5) 50%,
+    transparent 100%
+  );
 }
 
 .itens-destaque {
@@ -310,10 +317,12 @@ section>h2 {
   border: 1px solid var(--cinza-platina);
   transition: all var(--transicao-normal);
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .item-destaque-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -353,12 +362,20 @@ section>h2 {
 /* Corpo do card (badge + nome + descrição + preço) */
 .item-destaque-corpo {
   padding: var(--espacamento-xl);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .item-badge {
-  display: inline-block;
+  display: inline-block; /* ← garante que encolhe ao tamanho do texto */
+  width: fit-content;
   padding: 0.375rem 0.875rem;
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(201, 116, 88, 0.1));
+  background: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.15),
+    rgba(201, 116, 88, 0.1)
+  );
   border: 1px solid var(--dourado-claro);
   border-radius: var(--raio-md);
   font-size: 0.8125rem;
@@ -375,11 +392,18 @@ section>h2 {
   margin-bottom: var(--espacamento-sm);
 }
 
+.item-badge.badge-jantar {
+  background: linear-gradient(135deg, #4b3b6b 0%, #3a4f7a 50%, #2c2f5a 100%);
+  border: 1px solid #6b5a9a;
+  color: #c8b8e8;
+}
+
 .item-destaque-card p {
   color: var(--marrom-cafe);
   font-size: 0.9375rem;
   line-height: 1.6;
   margin-bottom: var(--espacamento-md);
+  flex: 1;
 }
 
 .item-destaque-card .item-preco {
@@ -416,7 +440,11 @@ section>h2 {
 
 /* ========== SUGESTÃO DO CHEFE ========== */
 .sugestao-section {
-  background: linear-gradient(135deg, var(--azul-noite) 0%, var(--azul-crepusculo) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--azul-noite) 0%,
+    var(--azul-crepusculo) 100%
+  );
   border-radius: var(--raio-xl);
   padding: var(--espacamento-3xl);
   text-align: center;
@@ -425,12 +453,14 @@ section>h2 {
 }
 
 .sugestao-section::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at top right,
-      rgba(212, 175, 55, 0.1) 0%,
-      transparent 60%);
+  background: radial-gradient(
+    circle at top right,
+    rgba(212, 175, 55, 0.1) 0%,
+    transparent 60%
+  );
 }
 
 .sugestao-content {
@@ -541,7 +571,7 @@ section>h2 {
 .sugestao-preco-final {
   font-size: 1.25rem;
   font-weight: var(--peso-extrabold);
-  color: #D4AF37;
+  color: #d4af37;
 }
 
 /* ========== SOBRE ========== */
@@ -601,7 +631,11 @@ section>h2 {
 
 /* ========== RESERVAS ========== */
 .reservas-section {
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(201, 116, 88, 0.05));
+  background: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.08),
+    rgba(201, 116, 88, 0.05)
+  );
   border-radius: var(--raio-xl);
   text-align: center;
 }
@@ -803,7 +837,7 @@ section>h2 {
 }
 
 .modal-tabs button.active::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -2px;
   left: 0;
@@ -960,8 +994,14 @@ section>h2 {
 }
 
 @keyframes toast-entrar {
-  from { opacity: 0; transform: translateX(-50%) translateY(-12px); }
-  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 
 .btn-adicionar-carrinho {
@@ -975,7 +1015,9 @@ section>h2 {
   font-weight: 700;
   font-size: 0.9375rem;
   cursor: pointer;
-  transition: opacity 0.2s, transform 0.2s;
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
 }
 .btn-adicionar-carrinho:hover {
   opacity: 0.88;
