@@ -8,6 +8,14 @@ import logoSolDoCerrado from "../assets/logo-sol-cerrado.png";
 import "./LandingPage.css";
 import { useCarrinho } from "../contexts/CarrinhoContext";
 import ReservaModal from "../components/ReservaModal";
+import SkeletonImage from "../components/SkeletonImage";
+
+// ========== CARROSSEL ==========
+const imagensCarrossel = [
+  "/img/restaurante-1.jpg",
+  "/img/restaurante-2.jpg",
+  "/img/restaurante-3.jpg",
+];
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -18,12 +26,6 @@ const LandingPage = () => {
   const [loginSucesso, setLoginSucesso] = useState(""); // ← NOVO
   const [showReservaModal, setShowReservaModal] = useState(false); // ← NOVO
 
-  // ========== CARROSSEL ==========
-  const imagensCarrossel = [
-    "/img/restaurante-1.jpg",
-    "/img/restaurante-2.jpg",
-    "/img/restaurante-3.jpg",
-  ];
   const [imagemAtual, setImagemAtual] = useState(0);
 
   useEffect(() => {
@@ -394,13 +396,12 @@ const LandingPage = () => {
             >
               {/* ── IMAGEM DO PRATO ── */}
               <div className="item-destaque-imagem-wrapper">
-                <img
-                  src={item.imagemUrl || "/img/prato-padrao.jpg"}
+                <SkeletonImage
+                  src={item.imagemUrl || "/img/prato-padrao.webp"}
                   alt={item.nome}
                   className="item-destaque-imagem"
                   onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = "/img/prato-padrao.jpg";
+                    e.target.src = "/img/prato-padrao.webp";
                   }}
                 />
               </div>
