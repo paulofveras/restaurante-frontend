@@ -8,16 +8,17 @@
   position: sticky;
   top: 0;
   z-index: var(--z-header);
-  background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--cinza-platina);
-  box-shadow: var(--sombra-sm);
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.04);
 }
 
 .header-content {
   max-width: 1400px;
   margin: 0 auto;
-  padding: var(--espacamento-lg) var(--espacamento-xl);
+  padding: 0.625rem var(--espacamento-xl);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -27,7 +28,8 @@
 .logo-container {
   display: flex;
   align-items: center;
-  gap: var(--espacamento-md);
+  flex-shrink: 0;
+  min-width: fit-content;
 }
 
 .logo,
@@ -62,6 +64,47 @@
   margin: 0;
 }
 
+/* ZOOM MÁGICO NA NAVBAR */
+.logo-navbar {
+  height: 60px; /* Mantemos uma altura âncora */
+  width: auto;
+  object-fit: contain;
+
+  /* O HACK: Dá um zoom na imagem ignorando a borda transparente */
+  transform: scale(2.5); /* ⬅️ Se ainda ficar pequena, mude para 2.5 ou 3 */
+
+  /* Garante que o zoom cresça para a direita, sem invadir a margem esquerda */
+  transform-origin: left center;
+
+  transition:
+    transform 0.3s ease,
+    filter 0.3s ease;
+  filter: drop-shadow(0px 2px 6px rgba(0, 0, 0, 0.06));
+}
+
+.logo-navbar:hover {
+  transform: scale(2.3); /* Um pouquinho a mais no hover para dar efeito */
+}
+
+.logo-footer {
+  height: 100px; /* Um pouco maior pra dar presença */
+  width: auto;
+  object-fit: contain;
+  margin: 0 auto var(--espacamento-lg);
+
+  /* MUITO IMPORTANTE: Opacidade em 1 (100%). 
+     Se ficar 0.85, a cor do JPG não vai bater com o fundo da tela! */
+  opacity: 1;
+
+  transform: scale(1.8);
+  transform-origin: center center;
+  transition: transform 0.3s ease;
+}
+
+.logo-footer:hover {
+  transform: scale(1.9) translateY(-2px);
+}
+
 .main-nav {
   display: flex;
   gap: var(--espacamento-lg);
@@ -70,13 +113,15 @@
 .main-nav button {
   background: none;
   border: none;
-  font-size: 1rem;
+  font-size: 0.8125rem;
   font-weight: var(--peso-semibold);
-  color: var(--azul-noite);
+  color: var(--marrom-cafe);
   cursor: pointer;
   transition: all var(--transicao-normal);
   position: relative;
   padding: var(--espacamento-sm) 0;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .main-nav button::after {
@@ -99,20 +144,25 @@
 }
 
 .btn-entrar {
-  padding: 0.75rem 1.5rem;
-  background: var(--gradiente-luxo);
-  color: var(--branco-puro);
-  border: none;
-  border-radius: var(--raio-lg);
+  padding: 0.5rem 1.5rem;
+  background: transparent;
+  color: var(--dourado-champagne);
+  border: 1.5px solid var(--dourado-champagne);
+  border-radius: var(--raio-full);
   font-weight: var(--peso-semibold);
+  font-size: 0.8125rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   cursor: pointer;
   transition: all var(--transicao-normal);
-  box-shadow: var(--sombra-dourada);
 }
 
 .btn-entrar:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(212, 175, 55, 0.4);
+  background: var(--gradiente-luxo);
+  color: var(--branco-puro);
+  border-color: transparent;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3);
 }
 
 /* ========== HERO ========== */
@@ -756,7 +806,8 @@ section > h2 {
 
 /* ========== FOOTER ========== */
 .landing-footer {
-  background: var(--azul-noite);
+  /* Substituímos o var(--azul-noite) pela cor exata do fundo do seu JPG */
+  background: #3e281b; /* Tonalidade marrom café da sua imagem */
   color: var(--creme-premium);
   text-align: center;
   padding: var(--espacamento-2xl);

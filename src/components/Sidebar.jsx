@@ -1,9 +1,9 @@
-import React from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { authService } from '../services/authService';
-import logoSolDoCerrado from '../assets/logo-sol-cerrado.png';
-import './Sidebar.css';
+import React from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { authService } from "../services/authService";
+import logoSolDoCerrado from "../assets/logo-sidebar.png";
+import "./Sidebar.css";
 
 const Sidebar = () => {
   const location = useLocation();
@@ -11,18 +11,18 @@ const Sidebar = () => {
   const usuario = authService.getUsuarioLogado();
 
   const menuItems = [
-    { path: '/dashboard', label: 'Dashboard', icon: '📊' },
-    { path: '/pedidos', label: 'Pedidos', icon: '📝' },
-    { path: '/cardapio', label: 'Cardápio', icon: '🍽️' },
-    { path: '/mesas', label: 'Mesas', icon: '🪑' },
-    { path: '/reservas', label: 'Reservas', icon: '📅' },
-    { path: '/relatorios', label: 'Relatórios', icon: '📈' },
-    { path: '/sugestao-chef', label: 'Sugestão do Chef', icon: '⭐' },
+    { path: "/dashboard", label: "Dashboard", icon: "📊" },
+    { path: "/pedidos", label: "Pedidos", icon: "📝" },
+    { path: "/cardapio", label: "Cardápio", icon: "🍽️" },
+    { path: "/mesas", label: "Mesas", icon: "🪑" },
+    { path: "/reservas", label: "Reservas", icon: "📅" },
+    { path: "/relatorios", label: "Relatórios", icon: "📈" },
+    { path: "/sugestao-chef", label: "Sugestão do Chef", icon: "⭐" },
   ];
 
   const handleLogout = () => {
     authService.logout();
-    navigate('/');
+    navigate("/");
   };
 
   return (
@@ -30,24 +30,38 @@ const Sidebar = () => {
       className="sidebar"
       initial={{ x: -280 }}
       animate={{ x: 0 }}
-      transition={{ type: 'spring', stiffness: 100, damping: 20 }}
+      transition={{ type: "spring", stiffness: 100, damping: 20 }}
     >
       {/* ── LOGO → redireciona para Landing Page ── */}
       <div className="sidebar-header">
-        <div className="logo" onClick={() => navigate('/')} title="Ir para o site">
+        <div
+          className="logo"
+          onClick={() => navigate("/")}
+          title="Ir para o site"
+        >
           <div className="logo-imagem">
             <img
               src={logoSolDoCerrado}
               alt="Sol do Cerrado"
               onError={(e) => {
-                e.target.style.display = 'none';
-                e.target.nextSibling.style.display = 'block';
+                e.target.style.display = "none";
+                e.target.nextSibling.style.display = "block";
               }}
             />
-            <div className="logo-fallback" style={{ display: 'none' }}>
-              <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <div className="logo-fallback" style={{ display: "none" }}>
+              <svg
+                viewBox="0 0 100 100"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <defs>
-                  <linearGradient id="sunGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <linearGradient
+                    id="sunGradient"
+                    x1="0%"
+                    y1="0%"
+                    x2="100%"
+                    y2="100%"
+                  >
                     <stop offset="0%" stopColor="#FACC15" />
                     <stop offset="100%" stopColor="#FB923C" />
                   </linearGradient>
@@ -56,10 +70,15 @@ const Sidebar = () => {
                 {[...Array(8)].map((_, i) => {
                   const angle = (i * 45 * Math.PI) / 180;
                   return (
-                    <line key={i}
-                      x1={50 + Math.cos(angle) * 25} y1={50 + Math.sin(angle) * 25}
-                      x2={50 + Math.cos(angle) * 38} y2={50 + Math.sin(angle) * 38}
-                      stroke="url(#sunGradient)" strokeWidth="3" strokeLinecap="round"
+                    <line
+                      key={i}
+                      x1={50 + Math.cos(angle) * 25}
+                      y1={50 + Math.sin(angle) * 25}
+                      x2={50 + Math.cos(angle) * 38}
+                      y2={50 + Math.sin(angle) * 38}
+                      stroke="url(#sunGradient)"
+                      strokeWidth="3"
+                      strokeLinecap="round"
                     />
                   );
                 })}
@@ -81,7 +100,7 @@ const Sidebar = () => {
             <Link
               key={item.path}
               to={item.path}
-              className={`nav-item ${ativo ? 'active' : ''}`}
+              className={`nav-item ${ativo ? "active" : ""}`}
             >
               <span className="nav-icon">{item.icon}</span>
               <span className="nav-label">{item.label}</span>
@@ -89,7 +108,7 @@ const Sidebar = () => {
                 <motion.div
                   className="active-indicator"
                   layoutId="activeIndicator"
-                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 />
               )}
             </Link>
@@ -103,22 +122,24 @@ const Sidebar = () => {
         <div
           className="user-profile"
           title="Ir para minha área"
-          style={{ cursor: 'pointer' }}
+          style={{ cursor: "pointer" }}
           onClick={() => {
-            if (usuario?.perfil === 'Administrador') {
-              navigate('/dashboard');
+            if (usuario?.perfil === "Administrador") {
+              navigate("/dashboard");
             } else {
-              navigate('/minha-conta');
+              navigate("/minha-conta");
             }
           }}
         >
           <div className="user-avatar">
-            <span>{usuario?.userName?.charAt(0).toUpperCase() ?? '👤'}</span>
+            <span>{usuario?.userName?.charAt(0).toUpperCase() ?? "👤"}</span>
           </div>
           <div className="user-info">
-            <p className="user-name">{usuario?.userName ?? 'Usuário'}</p>
+            <p className="user-name">{usuario?.userName ?? "Usuário"}</p>
             <p className="user-role">
-              {usuario?.perfil === 'Administrador' ? '⚙️ Administrador' : '🍽️ Cliente'}
+              {usuario?.perfil === "Administrador"
+                ? "⚙️ Administrador"
+                : "🍽️ Cliente"}
             </p>
           </div>
         </div>

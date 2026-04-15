@@ -4,11 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { cardapioService } from "../services/cardapioService";
 import { authService } from "../services/authService"; // ← NOVO
 import { formatCurrency } from "../utils/formatters";
-import logoSolDoCerrado from "../assets/logo-sol-cerrado.png";
+import logoSolDoCerrado from "../assets/logo-navbar.png";
 import "./LandingPage.css";
 import { useCarrinho } from "../contexts/CarrinhoContext";
 import ReservaModal from "../components/ReservaModal";
 import SkeletonImage from "../components/SkeletonImage";
+import logoFooter from "../assets/logo-footer.png";
 
 // ========== CARROSSEL ==========
 const imagensCarrossel = [
@@ -214,57 +215,8 @@ const LandingPage = () => {
             <img
               src={logoSolDoCerrado}
               alt="Sol do Cerrado"
-              className="logo"
-              onError={(e) => {
-                e.target.style.display = "none";
-                e.target.nextSibling.style.display = "flex";
-              }}
+              className="logo-navbar"
             />
-            <div className="logo-fallback" style={{ display: "none" }}>
-              <svg
-                viewBox="0 0 100 100"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <defs>
-                  <linearGradient
-                    id="logoGradient"
-                    x1="0%"
-                    y1="0%"
-                    x2="100%"
-                    y2="100%"
-                  >
-                    <stop offset="0%" stopColor="#D4AF37" />
-                    <stop offset="50%" stopColor="#C97458" />
-                    <stop offset="100%" stopColor="#6B4E3D" />
-                  </linearGradient>
-                </defs>
-                <circle cx="50" cy="50" r="25" fill="url(#logoGradient)" />
-                {[...Array(8)].map((_, i) => {
-                  const angle = (i * 45 * Math.PI) / 180;
-                  const x1 = 50 + Math.cos(angle) * 30;
-                  const y1 = 50 + Math.sin(angle) * 30;
-                  const x2 = 50 + Math.cos(angle) * 42;
-                  const y2 = 50 + Math.sin(angle) * 42;
-                  return (
-                    <line
-                      key={i}
-                      x1={x1}
-                      y1={y1}
-                      x2={x2}
-                      y2={y2}
-                      stroke="url(#logoGradient)"
-                      strokeWidth="4"
-                      strokeLinecap="round"
-                    />
-                  );
-                })}
-              </svg>
-            </div>
-            <div className="logo-text">
-              <h2>Sol do Cerrado</h2>
-              <p>Gastronomia Regional</p>
-            </div>
           </div>
 
           <nav className="main-nav">
@@ -277,7 +229,6 @@ const LandingPage = () => {
             </button>
             <button onClick={() => scrollToSection("contato")}>Contato</button>
           </nav>
-
           {/* ── ÁREA DE AUTENTICAÇÃO DO HEADER ── */}
           {usuarioLogado ? (
             <div className="usuario-logado-area">
@@ -454,11 +405,11 @@ const LandingPage = () => {
                 <div key={prato.id ?? index} className="sugestao-mini-card">
                   <div className="sugestao-mini-imagem">
                     <img
-                      src={prato.imagemUrl || "/img/prato-padrao.jpg"}
+                      src={prato.imagemUrl || "/img/prato-padrao.webp"}
                       alt={prato.nome}
                       onError={(e) => {
                         e.target.onerror = null;
-                        e.target.src = "/img/prato-padrao.jpg";
+                        e.target.src = "/img/prato-padrao.webp";
                       }}
                     />
                   </div>
@@ -551,15 +502,15 @@ const LandingPage = () => {
         >
           <h2>Reserve sua Mesa</h2>
           <p className="reservas-subtitle">
-            Experiência exclusiva no jantar - Reserve com 1 dia de antecedência
+            Agende seu almoço especial — Reserve com 1 dia de antecedência
           </p>
 
           <div className="reservas-info">
             <div className="info-item">
-              <span className="info-icon">🌙</span>
+              <span className="info-icon">☀️</span>
               <div>
-                <strong>Jantar</strong>
-                <p>19h - 22h</p>
+                <strong>Almoço</strong>
+                <p>11h - 14h</p>
               </div>
             </div>
             <div className="info-item">
@@ -674,7 +625,8 @@ const LandingPage = () => {
 
       {/* FOOTER */}
       <footer className="landing-footer">
-        <p>&copy; 2026 Sol do Cerrado - Gastronomia Regional Modernizada</p>
+        <img src={logoFooter} alt="Sol do Cerrado" className="logo-footer" />
+        <p>&copy; 2026 Sol do Cerrado — Gastronomia Regional Modernizada</p>
         <p>Palmas, Tocantins</p>
       </footer>
 
