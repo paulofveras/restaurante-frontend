@@ -1,41 +1,48 @@
 // src/pages/GestaoReservas.jsx
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { apiFetch } from '../api/api';
-import './GestaoReservas.css';
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { apiFetch } from "../api/api";
+import "./GestaoReservas.css";
 
 const GestaoReservas = () => {
-  const [reservas, setReservas]   = useState([]);
-  const [loading, setLoading]     = useState(true);
-  const [erro, setErro]           = useState('');
-  const [filtro, setFiltro]       = useState('futuras'); // 'futuras' | 'todas'
+  const [reservas, setReservas] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [erro, setErro] = useState("");
+  const [filtro, setFiltro] = useState("futuras"); // 'futuras' | 'todas'
 
-  useEffect(() => { carregarReservas(); }, []);
+  useEffect(() => {
+    carregarReservas();
+  }, []);
 
   const carregarReservas = async () => {
     setLoading(true);
     try {
-      const res = await apiFetch('/Reserva');
+      const res = await apiFetch("/Reserva");
       if (res.ok) {
         const dados = await res.json();
         setReservas(dados);
       } else throw new Error();
     } catch {
-      setErro('Erro ao carregar reservas.');
+      setErro("Erro ao carregar reservas.");
     } finally {
       setLoading(false);
     }
   };
 
-  const formatarData = (d) => new Date(d).toLocaleDateString('pt-BR', {
-    weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric',
-    hour: '2-digit', minute: '2-digit',
-  });
+  const formatarData = (d) =>
+    new Date(d).toLocaleDateString("pt-BR", {
+      weekday: "short",
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
   const agora = new Date();
-  const reservasFiltradas = reservas.filter(r =>
-    filtro === 'todas' ? true : new Date(r.dataHora) >= agora
-  ).sort((a, b) => new Date(a.dataHora) - new Date(b.dataHora));
+  const reservasFiltradas = reservas
+    .filter((r) => (filtro === "todas" ? true : new Date(r.dataHora) >= agora))
+    .sort((a, b) => new Date(a.dataHora) - new Date(b.dataHora));
 
   return (
     <div className="gr-pagina">
@@ -47,14 +54,14 @@ const GestaoReservas = () => {
       {/* Filtro */}
       <div className="gr-filtros">
         <button
-          className={`gr-filtro-btn ${filtro === 'futuras' ? 'ativo' : ''}`}
-          onClick={() => setFiltro('futuras')}
+          className={`gr-filtro-btn ${filtro === "futuras" ? "ativo" : ""}`}
+          onClick={() => setFiltro("futuras")}
         >
           📅 Próximas
         </button>
         <button
-          className={`gr-filtro-btn ${filtro === 'todas' ? 'ativo' : ''}`}
-          onClick={() => setFiltro('todas')}
+          className={`gr-filtro-btn ${filtro === "todas" ? "ativo" : ""}`}
+          onClick={() => setFiltro("todas")}
         >
           📋 Todas
         </button>
@@ -69,14 +76,18 @@ const GestaoReservas = () => {
       {!loading && !erro && (
         <>
           <p className="gr-contagem">
-            {reservasFiltradas.length} reserva{reservasFiltradas.length !== 1 ? 's' : ''}
-            {filtro === 'futuras' ? ' futuras' : ' no total'}
+            {reservasFiltradas.length} reserva
+            {reservasFiltradas.length !== 1 ? "s" : ""}
+            {filtro === "futuras" ? " futuras" : " no total"}
           </p>
 
           {reservasFiltradas.length === 0 ? (
             <div className="gr-vazio">
               <span>🪑</span>
-              <p>Nenhuma reserva {filtro === 'futuras' ? 'futura ' : ''}encontrada.</p>
+              <p>
+                Nenhuma reserva {filtro === "futuras" ? "futura " : ""}
+                encontrada.
+              </p>
             </div>
           ) : (
             <div className="gr-tabela-wrapper">
@@ -104,11 +115,15 @@ const GestaoReservas = () => {
                         <td>{formatarData(r.dataHora)}</td>
                         <td>Mesa {r.mesaId}</td>
                         <td>
-                          <code className="gr-codigo">{r.codigoConfirmacao}</code>
+                          <code className="gr-codigo">
+                            {r.codigoConfirmacao}
+                          </code>
                         </td>
                         <td>
-                          <span className={`gr-status ${isFutura ? 'futura' : 'passada'}`}>
-                            {isFutura ? '✅ Confirmada' : '🕐 Encerrada'}
+                          <span
+                            className={`gr-status ${isFutura ? "futura" : "passada"}`}
+                          >
+                            {isFutura ? "✅ Confirmada" : "🕐 Encerrada"}
                           </span>
                         </td>
                       </motion.tr>
