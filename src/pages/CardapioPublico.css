@@ -1,0 +1,648 @@
+/* ═══════════════════════════════════════════════════════════════
+   CARDÁPIO PÚBLICO - REVISTA GASTRONÔMICA
+   ═══════════════════════════════════════════════════════════════
+   Design: Grid de cards premium
+   Paleta: Dourado #D4AF37, Terracota #C97458, Marrom #6B4E3D,
+           Azul Noite #1A2332, Creme #FAF8F5
+*/
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   CONTAINER PRINCIPAL
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.cardapio-revista {
+  min-height: 100vh;
+  position: relative;
+  transition: background 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Gradiente DIURNO (Almoço) - Amanhecer do Cerrado */
+.cardapio-revista.periodo-diurno {
+  background: linear-gradient(
+    180deg,
+    #fffbf0 0%,
+    #fef6e8 15%,
+    #fdf1dc 30%,
+    #fcecd0 45%,
+    #f9e5c4 60%,
+    #f5ddb8 75%,
+    #f0d4ab 90%,
+    #e8c89d 100%
+  );
+}
+
+/* Gradiente NOTURNO (Jantar) - Crepúsculo do Cerrado */
+.cardapio-revista.periodo-noturno {
+  background: linear-gradient(
+    180deg,
+    #2d3142 0%,
+    #3a3f54 15%,
+    #474d66 30%,
+    #545b78 45%,
+    #61698a 60%,
+    #6e779c 75%,
+    #7b85ae 90%,
+    #8893c0 100%
+  );
+}
+
+/* Textura do Cerrado (sutil) */
+.cardapio-revista::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(212, 175, 55, 0.08) 0%,
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(201, 116, 88, 0.06) 0%,
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(255, 251, 240, 0.4) 0%,
+      transparent 60%
+    );
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.8s ease;
+}
+
+.cardapio-revista.periodo-noturno::before {
+  opacity: 0.3;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   HEADER STICKY
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.cardapio-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 3rem;
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+}
+
+.btn-voltar {
+  padding: 0.75rem 1.75rem;
+  background: transparent;
+  border: 2px solid #d4af37;
+  border-radius: 50px;
+  color: #d4af37;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: var(--fonte-principal, "Inter"), sans-serif;
+}
+
+.btn-voltar:hover {
+  background: linear-gradient(135deg, #d4af37, #c97458);
+  color: white;
+  border-color: transparent;
+  transform: translateX(-4px);
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
+}
+
+.header-centro {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex: 1;
+  justify-content: center;
+}
+
+.logo-header {
+  height: 50px;
+  width: auto;
+  object-fit: contain;
+  transform: scale(1.8);
+  filter: drop-shadow(0px 2px 8px rgba(212, 175, 55, 0.25));
+  flex-shrink: 0;
+  margin-right: 0.5rem;
+}
+
+.header-texto h1 {
+  font-family: var(--fonte-display, "Playfair Display"), serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #d4af37, #c97458);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.header-texto p {
+  font-size: 0.8125rem;
+  color: #6b4e3d;
+  font-weight: 600;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+
+.header-spacer {
+  width: 140px; /* Mesmo tamanho do botão voltar */
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   INTRO
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.cardapio-intro {
+  text-align: center;
+  padding: 3rem 2rem 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.cardapio-intro h2 {
+  font-family: var(--fonte-display, "Playfair Display"), serif;
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: #1a2332;
+  margin-bottom: 1rem;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  transition: color 0.5s ease;
+}
+
+.cardapio-intro p {
+  font-size: 1.25rem;
+  color: #6b4e3d;
+  font-weight: 500;
+  font-style: italic;
+  font-family: var(--fonte-display, "Playfair Display"), serif;
+  transition: color 0.5s ease;
+}
+
+/* Texto mais claro no período noturno */
+.periodo-noturno .cardapio-intro h2 {
+  color: #faf8f5;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+.periodo-noturno .cardapio-intro p {
+  color: rgba(250, 248, 245, 0.85);
+}
+
+.periodo-noturno .categoria-header h3 {
+  color: #faf8f5;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SWITCH ALMOÇO/JANTAR
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.periodo-switch {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem 2rem 3rem;
+  position: relative;
+  z-index: 1;
+}
+
+.periodo-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 1rem 2.5rem;
+  background: white;
+  border: 2px solid rgba(212, 175, 55, 0.2);
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  font-family: var(--fonte-display, "Playfair Display"), serif;
+}
+
+.periodo-btn:hover {
+  border-color: rgba(212, 175, 55, 0.5);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.2);
+}
+
+.periodo-btn.ativo {
+  border-color: transparent;
+  color: white;
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.35);
+  transform: translateY(-2px);
+}
+
+/* Gradiente específico para almoço */
+.periodo-btn.ativo:first-child {
+  background: linear-gradient(135deg, #d4af37 0%, #f4c542 100%);
+}
+
+/* Gradiente específico para jantar (crepuscular) */
+.periodo-btn.ativo:last-child {
+  background: linear-gradient(135deg, #4a5568 0%, #2d3748 50%, #1a202c 100%);
+}
+
+.periodo-icone {
+  font-size: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.periodo-btn.ativo .periodo-icone {
+  transform: scale(1.1);
+}
+
+.periodo-label {
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   CONTEÚDO DO CARDÁPIO
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.cardapio-conteudo {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 3rem 4rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   CATEGORIA
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.categoria-section {
+  margin-bottom: 4rem;
+}
+
+.categoria-header {
+  margin-bottom: 2rem;
+}
+
+.categoria-header h3 {
+  font-family: var(--fonte-display, "Playfair Display"), serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a2332;
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+.categoria-divisor {
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(212, 175, 55, 0.15) 10%,
+    rgba(212, 175, 55, 0.4) 50%,
+    rgba(212, 175, 55, 0.15) 90%,
+    transparent 100%
+  );
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   GRID DE CARDS
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.pratos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   CARD DE PRATO
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.prato-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(212, 175, 55, 0.1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.prato-card:hover {
+  transform: translateY(-8px);
+  box-shadow:
+    0 12px 32px rgba(212, 175, 55, 0.2),
+    0 0 0 2px rgba(212, 175, 55, 0.3);
+  border-color: rgba(212, 175, 55, 0.4);
+}
+
+/* Imagem */
+.card-imagem-wrapper {
+  position: relative;
+  width: 100%;
+  height: 240px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f5f3f0, #faf8f5);
+}
+
+.card-imagem {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.prato-card:hover .card-imagem {
+  transform: scale(1.08);
+}
+
+/* Badge período */
+.card-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.375rem;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.prato-card:hover .card-badge {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.badge-almoco {
+  background: linear-gradient(
+    135deg,
+    rgba(244, 197, 66, 0.95),
+    rgba(212, 175, 55, 0.95)
+  );
+}
+
+.badge-jantar {
+  background: linear-gradient(
+    135deg,
+    rgba(74, 85, 104, 0.95),
+    rgba(45, 55, 72, 0.95)
+  );
+}
+
+/* Conteúdo */
+.card-conteudo {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.card-conteudo h4 {
+  font-family: var(--fonte-display, "Playfair Display"), serif;
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: #1a2332;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.card-conteudo p {
+  font-size: 0.9375rem;
+  color: #6b4e3d;
+  line-height: 1.7;
+  margin-bottom: 1.25rem;
+  flex: 1;
+  opacity: 0.9;
+}
+
+/* Footer do card */
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-top: auto;
+}
+
+.card-preco {
+  font-family: var(--fonte-numeros, "Lora"), serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #6b4e3d;
+  opacity: 0.8;
+}
+
+.btn-adicionar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #d4af37, #c97458);
+  border: none;
+  border-radius: 50px;
+  color: white;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+  font-family: var(--fonte-principal, "Inter"), sans-serif;
+  opacity: 0;
+  transform: translateX(-8px);
+}
+
+.prato-card:hover .btn-adicionar {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.btn-adicionar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.45);
+}
+
+.btn-icone {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.btn-texto {
+  letter-spacing: 0.02em;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ESTADOS DE LOADING E ERRO
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.cardapio-loading,
+.cardapio-erro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+  padding: 2rem;
+}
+
+.loading-logo img {
+  height: 80px;
+  width: auto;
+  margin-bottom: 2rem;
+  animation: pulse 2s ease-in-out infinite;
+  transform: scale(2);
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(2);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.9);
+  }
+}
+
+.cardapio-loading p {
+  font-size: 1.125rem;
+  color: #6b4e3d;
+  font-weight: 500;
+  font-family: var(--fonte-principal, "Inter"), sans-serif;
+}
+
+.cardapio-erro h2 {
+  font-family: var(--fonte-display, "Playfair Display"), serif;
+  font-size: 2.5rem;
+  color: #1a2332;
+  margin-bottom: 1rem;
+}
+
+.cardapio-erro p {
+  font-size: 1.125rem;
+  color: #6b4e3d;
+  margin-bottom: 2rem;
+}
+
+.btn-voltar-erro {
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #d4af37, #c97458);
+  border: none;
+  border-radius: 50px;
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
+}
+
+.btn-voltar-erro:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.4);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   RESPONSIVIDADE
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+@media (max-width: 1024px) {
+  .pratos-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .cardapio-header {
+    padding: 1.25rem 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .logo-header {
+    height: 40px;
+    transform: scale(1.8);
+  }
+
+  .header-texto h1 {
+    font-size: 1.125rem;
+  }
+
+  .header-spacer {
+    display: none;
+  }
+
+  .cardapio-intro h2 {
+    font-size: 2.5rem;
+  }
+
+  .cardapio-intro p {
+    font-size: 1.125rem;
+  }
+
+  .periodo-switch {
+    flex-direction: column;
+    padding: 1.5rem;
+    gap: 0.75rem;
+  }
+
+  .periodo-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .cardapio-conteudo {
+    padding: 0 1.5rem 3rem;
+  }
+
+  .pratos-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .btn-adicionar {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .card-badge {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 375px) {
+  .cardapio-intro h2 {
+    font-size: 2rem;
+  }
+
+  .card-conteudo h4 {
+    font-size: 1.25rem;
+  }
+
+  .card-conteudo p {
+    font-size: 0.875rem;
+  }
+}

@@ -20,11 +20,13 @@
 .header-content {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0.625rem 2.5rem; /* Aumentamos o padding horizontal de xl para 2.5rem */
+  padding: 0.625rem 2.5rem;
+  /* Aumentamos o padding horizontal de xl para 2.5rem */
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 3rem; /* Gap maior entre os elementos principais */
+  gap: 3rem;
+  /* Gap maior entre os elementos principais */
 
   /* TRANSIÇÃO SUAVE */
   transition: padding 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -78,9 +80,11 @@
   transform-origin: left center;
   transition:
     transform 0.4s ease,
-    filter 0.3s ease; /* Transição mais suave */
+    filter 0.3s ease;
+  /* Transição mais suave */
   filter: drop-shadow(0px 2px 6px rgba(0, 0, 0, 0.06));
-  margin-right: 1rem; /* Empurra a nav um pouco pra direita */
+  margin-right: 1rem;
+  /* Empurra a nav um pouco pra direita */
 }
 
 .logo-navbar:hover {
@@ -487,138 +491,312 @@ section > h2 {
   box-shadow: var(--sombra-dourada);
 }
 
-/* ========== SUGESTÃO DO CHEFE ========== */
+/* ========== SUGESTÃO DO CHEFE - SPLIT-SCREEN ========== */
 .sugestao-section {
-  background: linear-gradient(
-    135deg,
-    var(--azul-noite) 0%,
-    var(--azul-crepusculo) 100%
-  );
-  border-radius: var(--raio-xl);
-  padding: var(--espacamento-3xl);
+  position: relative;
+  margin: var(--espacamento-2xl) 0 0 0; /* Remove margem inferior */
+  overflow: hidden;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   HEADER GLOBAL (acima do split)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.sugestao-header-global {
   text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.sugestao-section::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    circle at top right,
-    rgba(212, 175, 55, 0.1) 0%,
-    transparent 60%
+  padding: var(--espacamento-2xl) var(--espacamento-xl);
+  background: linear-gradient(
+    to bottom,
+    rgba(250, 248, 245, 0) 0%,
+    rgba(250, 248, 245, 0.6) 100%
   );
 }
 
-.sugestao-content {
-  position: relative;
-  z-index: 1;
-}
-
-.sugestao-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--espacamento-xs);
-  padding: 0.75rem 1.5rem;
-  background: rgba(212, 175, 55, 0.2);
-  border: 2px solid var(--dourado-champagne);
-  border-radius: var(--raio-full);
-  color: var(--dourado-claro);
-  font-weight: var(--peso-bold);
-  margin-bottom: var(--espacamento-lg);
-  font-size: 0.9375rem;
-}
-
-.estrela {
-  font-size: 1.25rem;
-}
-
-.sugestao-section h2 {
-  color: var(--creme-premium);
-  margin-bottom: var(--espacamento-md);
-}
-
-.sugestao-section p {
-  color: var(--creme-escuro);
-  font-size: 1.125rem;
-  margin-bottom: var(--espacamento-xl);
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* ── SUGESTÃO DO CHEF: MINI CARDS ── */
-.sugestao-cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: var(--espacamento-lg);
-  margin-top: var(--espacamento-xl);
-  max-width: 700px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.sugestao-mini-card {
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(212, 175, 55, 0.4);
-  border-radius: var(--raio-xl);
-  overflow: hidden;
-  transition: transform 0.2s ease;
-}
-
-.sugestao-mini-card:hover {
-  transform: translateY(-4px);
-}
-
-.sugestao-mini-imagem {
-  height: 150px;
-  overflow: hidden;
-}
-
-.sugestao-mini-imagem img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.sugestao-mini-corpo {
-  padding: var(--espacamento-md);
-  text-align: left;
-}
-
-.sugestao-mini-periodo {
-  font-size: 0.8rem;
-  font-weight: var(--peso-bold);
-  color: var(--dourado-champagne);
-}
-
-.sugestao-mini-corpo h4 {
+.sugestao-header-global h2 {
   font-family: var(--fonte-display);
-  color: var(--creme-premium);
-  font-size: 1.1rem;
-  margin: 4px 0 8px;
+  font-size: 3rem;
+  font-weight: var(--peso-extrabold);
+  color: var(--azul-noite);
+  margin-bottom: var(--espacamento-md);
+  letter-spacing: -0.02em;
 }
 
-.sugestao-mini-precos {
+.sugestao-header-global p {
+  font-size: 1.25rem;
+  color: var(--marrom-cafe);
+  font-weight: var(--peso-medium);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.sugestao-header-global strong {
+  color: #d4af37;
+  font-weight: var(--peso-bold);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SPLIT CONTAINER (2 colunas lado a lado)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.sugestao-split-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 500px;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   CADA LADO DO SPLIT (foto de fundo + conteúdo)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.sugestao-split-side {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: var(--espacamento-sm);
+  justify-content: center;
+  padding: var(--espacamento-3xl) var(--espacamento-xl);
+
+  /* Foto do prato como fundo */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  transition: transform 0.5s ease;
 }
 
-.sugestao-preco-riscado {
-  font-size: 0.875rem;
+.sugestao-split-side:hover {
+  transform: scale(1.02);
+  z-index: 2;
+}
+
+/* Overlay escuro (legibilidade) */
+.sugestao-side-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(26, 35, 50, 0.85) 0%,
+    rgba(107, 78, 61, 0.75) 50%,
+    rgba(26, 35, 50, 0.88) 100%
+  );
+  transition: opacity 0.3s ease;
+}
+
+.sugestao-split-side:hover .sugestao-side-overlay {
+  opacity: 0.95;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   CONTEÚDO DO CARD (glassmorphism)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.sugestao-card-content {
+  position: relative;
+  z-index: 1;
+  max-width: 400px;
+  width: 100%;
+  padding: var(--espacamento-2xl);
+
+  /* Glassmorphism */
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--raio-xl);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sugestao-split-side:hover .sugestao-card-content {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(212, 175, 55, 0.4);
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.4),
+    0 0 24px rgba(212, 175, 55, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transform: translateY(-8px);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   HEADER DO CARD (badges)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.sugestao-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--espacamento-lg);
+}
+
+.sugestao-badge-periodo {
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border-radius: var(--raio-full);
+  font-size: 0.8125rem;
+  font-weight: var(--peso-bold);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.sugestao-badge-periodo.almoco {
+  color: #d4af37;
+}
+
+.sugestao-badge-periodo.jantar {
+  color: #4a5568;
+}
+
+.sugestao-badge-desconto {
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #2e7d32, #4caf50);
+  color: white;
+  border-radius: var(--raio-full);
+  font-size: 0.8125rem;
+  font-weight: var(--peso-bold);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   NOME DO PRATO
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.sugestao-prato-nome {
+  font-family: var(--fonte-display);
+  font-size: 2rem;
+  font-weight: var(--peso-bold);
+  color: #ffffff;
+  margin-bottom: var(--espacamento-lg);
+  line-height: 1.2;
+  text-shadow:
+    0 2px 12px rgba(0, 0, 0, 0.6),
+    0 0 24px rgba(0, 0, 0, 0.4);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   PREÇOS
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.sugestao-precos {
+  display: flex;
+  align-items: baseline;
+  gap: var(--espacamento-md);
+  margin-bottom: var(--espacamento-xl);
+}
+
+.sugestao-preco-original {
+  font-family: var(--fonte-numeros);
+  font-size: 1.125rem;
   color: rgba(255, 255, 255, 0.5);
   text-decoration: line-through;
 }
 
 .sugestao-preco-final {
-  font-size: 1.25rem;
+  font-family: var(--fonte-numeros);
+  font-size: 2rem;
   font-weight: var(--peso-extrabold);
-  color: #d4af37;
+  color: #f4c542;
+  text-shadow:
+    0 2px 8px rgba(244, 197, 66, 0.5),
+    0 0 16px rgba(244, 197, 66, 0.3);
 }
 
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   BOTÃO ADICIONAR
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.sugestao-btn-adicionar {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, #d4af37, #c97458);
+  border: none;
+  border-radius: var(--raio-md);
+  color: white;
+  font-weight: var(--peso-bold);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.4);
+}
+
+.sugestao-btn-adicionar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(212, 175, 55, 0.6);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   CTA FINAL
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.sugestao-cta {
+  text-align: center;
+  padding: var(--espacamento-xl) var(--espacamento-xl) var(--espacamento-lg)
+    var(--espacamento-xl); /* Reduz padding bottom */
+  background: linear-gradient(
+    to bottom,
+    rgba(250, 248, 245, 0.6) 0%,
+    rgba(250, 248, 245, 0) 100%
+  );
+}
+
+.sugestao-btn-completa {
+  padding: 1.125rem 3rem;
+  font-size: 1.125rem;
+  font-weight: var(--peso-bold);
+  letter-spacing: 0.05em;
+  box-shadow:
+    0 8px 24px rgba(212, 175, 55, 0.4),
+    0 0 32px rgba(212, 175, 55, 0.25);
+}
+
+.sugestao-btn-completa:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 12px 32px rgba(212, 175, 55, 0.5),
+    0 0 48px rgba(212, 175, 55, 0.35);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   RESPONSIVIDADE
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+@media (max-width: 1024px) {
+  .sugestao-split-container {
+    grid-template-columns: 1fr;
+  }
+
+  .sugestao-split-side {
+    min-height: 450px;
+  }
+
+  .sugestao-prato-nome {
+    font-size: 1.75rem;
+  }
+
+  .sugestao-preco-final {
+    font-size: 1.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .sugestao-header-global h2 {
+    font-size: 2rem;
+  }
+
+  .sugestao-header-global p {
+    font-size: 1rem;
+  }
+
+  .sugestao-split-side {
+    padding: var(--espacamento-xl);
+    min-height: 400px;
+  }
+
+  .sugestao-card-content {
+    padding: var(--espacamento-lg);
+  }
+
+  .sugestao-prato-nome {
+    font-size: 1.5rem;
+  }
+
+  .sugestao-btn-completa {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    width: 100%;
+  }
+}
 /* ========== SOBRE ========== */
 .sobre-grid {
   display: grid;
@@ -831,12 +1009,12 @@ section > h2 {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-
   /* Imagem de fundo fixa */
   background-image: url("/public/img/reserva-bg.jpg");
   background-size: cover;
   background-position: center;
-  background-attachment: fixed; /* Efeito parallax */
+  background-attachment: fixed;
+  /* Efeito parallax */
   background-repeat: no-repeat;
 }
 
@@ -1018,7 +1196,8 @@ section > h2 {
 /* Mobile (até 768px) */
 @media (max-width: 768px) {
   .reserva-section {
-    background-attachment: scroll; /* Remove parallax no mobile */
+    background-attachment: scroll;
+    /* Remove parallax no mobile */
     min-height: auto;
     padding: var(--espacamento-2xl) 0;
   }
@@ -1124,7 +1303,8 @@ section > h2 {
 
 .contato-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 4 colunas iguais em desktop */
+  grid-template-columns: repeat(4, 1fr);
+  /* 4 colunas iguais em desktop */
   gap: var(--espacamento-xl);
   margin-bottom: var(--espacamento-3xl);
   max-width: 1200px;
