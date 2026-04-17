@@ -1,0 +1,1404 @@
+This file is a merged representation of a subset of the codebase, containing specifically included files, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of a subset of the repository's contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: src/components/CheckoutModal.jsx, src/components/ReservaModal.jsx, src/pages/PainelCliente.jsx, src/contexts/CarrinhoContext.jsx
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+src/components/CheckoutModal.jsx
+src/components/ReservaModal.jsx
+src/contexts/CarrinhoContext.jsx
+src/pages/PainelCliente.jsx
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="src/contexts/CarrinhoContext.jsx">
+import React, { createContext, useContext, useState, useCallback } from "react";
+import { toast } from "react-toastify"; // ✅ Adicione este import
+
+// ─────────────────────────────────────────────────────────
+// O Context em si — exportamos o hook useCarrinho para
+// qualquer componente usar sem precisar importar o context
+// ─────────────────────────────────────────────────────────
+const CarrinhoContext = createContext(null);
+
+export const useCarrinho = () => {
+  const ctx = useContext(CarrinhoContext);
+  if (!ctx)
+    throw new Error("useCarrinho deve ser usado dentro de <CarrinhoProvider>");
+  return ctx;
+};
+
+// ─────────────────────────────────────────────────────────
+// Estrutura de um item no carrinho:
+// {
+//   id: number,           ← id do ItemCardapio
+//   nome: string,
+//   preco: number,        ← preço base
+//   precoComDesconto: number, ← preço aplicando 20% se for sugestão
+//   eSugestao: boolean,
+//   imagemUrl: string,
+//   periodo: 'Almoco' | 'Jantar',
+//   quantidade: number,
+//   observacao: string,
+// }
+// ─────────────────────────────────────────────────────────
+
+export const CarrinhoProvider = ({ children }) => {
+  const [itens, setItens] = useState([]);
+  const [aberto, setAberto] = useState(false); // controla o drawer lateral
+
+  // ── Adicionar ou incrementar item ──────────────────────
+  const adicionarItem = useCallback((prato, eSugestao = false) => {
+    setItens((prev) => {
+      // ✅ VALIDAÇÃO: Verificar se está misturando períodos
+      if (prev.length > 0) {
+        const periodoCarrinho = prev[0].periodo;
+        const periodoNovo = prato.periodo;
+
+        if (periodoCarrinho !== periodoNovo) {
+          const periodoTexto =
+            periodoCarrinho === "Almoco" ? "almoço" : "jantar";
+          const periodoNovoTexto =
+            periodoNovo === "Almoco" ? "almoço" : "jantar";
+
+          toast.error(
+            `Seu carrinho contém pratos de ${periodoTexto}. Não é possível adicionar pratos de ${periodoNovoTexto}!`,
+            {
+              position: "top-center",
+              autoClose: 4000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+            },
+          );
+
+          return prev; // ⚠️ Retorna o carrinho sem modificar
+        }
+      }
+
+      // ✅ Código original: verificar se já existe
+      const existe = prev.find((i) => i.id === prato.id);
+      if (existe) {
+        // Já está no carrinho: apenas incrementa
+        return prev.map((i) =>
+          i.id === prato.id ? { ...i, quantidade: i.quantidade + 1 } : i,
+        );
+      }
+
+      // Item novo: adiciona com quantidade 1
+      return [
+        ...prev,
+        {
+          id: prato.id,
+          nome: prato.nome,
+          preco: prato.preco,
+          precoComDesconto: eSugestao ? prato.preco * 0.8 : prato.preco,
+          eSugestao,
+          imagemUrl: prato.imagemUrl,
+          periodo: prato.periodo,
+          quantidade: 1,
+          observacao: "",
+        },
+      ];
+    });
+  }, []);
+
+  // ── Remover completamente um item ──────────────────────
+  const removerItem = useCallback((id) => {
+    setItens((prev) => prev.filter((i) => i.id !== id));
+  }, []);
+
+  // ── Alterar quantidade (mínimo 1) ──────────────────────
+  const alterarQuantidade = useCallback((id, delta) => {
+    setItens(
+      (prev) =>
+        prev
+          .map((i) =>
+            i.id === id ? { ...i, quantidade: i.quantidade + delta } : i,
+          )
+          .filter((i) => i.quantidade > 0), // remove se chegar a 0
+    );
+  }, []);
+
+  // ── Alterar observação de um item ──────────────────────
+  const alterarObservacao = useCallback((id, texto) => {
+    setItens((prev) =>
+      prev.map((i) => (i.id === id ? { ...i, observacao: texto } : i)),
+    );
+  }, []);
+
+  // ── Esvaziar o carrinho (após pedido confirmado) ───────
+  const limparCarrinho = useCallback(() => {
+    setItens([]);
+  }, []);
+
+  // ── Cálculos derivados ─────────────────────────────────
+  const totalItens = itens.reduce((acc, i) => acc + i.quantidade, 0);
+  const subtotal = itens.reduce(
+    (acc, i) => acc + i.precoComDesconto * i.quantidade,
+    0,
+  );
+  const periodoAtual = itens[0]?.periodo ?? null; // impede mistura almoço/jantar
+
+  return (
+    <CarrinhoContext.Provider
+      value={{
+        itens,
+        aberto,
+        setAberto,
+        adicionarItem,
+        removerItem,
+        alterarQuantidade,
+        alterarObservacao,
+        limparCarrinho,
+        totalItens,
+        subtotal,
+        periodoAtual,
+      }}
+    >
+      {children}
+    </CarrinhoContext.Provider>
+  );
+};
+</file>
+
+<file path="src/pages/PainelCliente.jsx">
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { authService } from '../services/authService';
+import { apiFetch } from '../api/api';
+import { formatCurrency } from '../utils/formatters';
+import './PainelCliente.css';
+import Badge from '../components/Badge';
+
+const PainelCliente = () => {
+  const navigate = useNavigate();
+  const usuario = authService.getUsuarioLogado();
+
+  const [abaAtiva, setAbaAtiva] = useState('pedidos');
+  const [pedidos, setPedidos] = useState([]);
+  const [reservas, setReservas] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState('');
+  const [pedidoSelecionado, setPedidoSelecionado] = useState(null);
+
+  useEffect(() => {
+    carregarDados();
+  }, []);
+
+  const carregarDados = async () => {
+    setCarregando(true);
+    setErro('');
+    try {
+      // Pedidos: busca todos e filtra pelo usuário logado
+      // (o backend ainda não tem GET /pedido/usuario/{id})
+      const resPedidos = await apiFetch(`/Pedido/usuario/${usuario.id}`);
+      if (resPedidos.ok) {
+        const todos = await resPedidos.json();
+        // Filtra pelo usuarioId que veio no token — ajuste se o DTO expor usuarioId
+        setPedidos(todos); // ← exibe todos por ora; atualize quando o backend tiver filtro
+      }
+
+      // Reservas: já tem endpoint por usuário ✅
+      const resReservas = await apiFetch(`/Reserva/usuario/${usuario.id}`);
+      if (resReservas.ok) {
+        const dados = await resReservas.json();
+        setReservas(dados);
+      }
+    } catch {
+      setErro('Não foi possível carregar seus dados. Tente novamente.');
+    } finally {
+      setCarregando(false);
+    }
+  };
+
+  const handleLogout = () => {
+    authService.logout();
+    navigate('/');
+  };
+
+  const formatarData = (dataString) => {
+    return new Date(dataString).toLocaleDateString('pt-BR', {
+      day: '2-digit', month: '2-digit', year: 'numeric',
+      hour: '2-digit', minute: '2-digit',
+    });
+  };
+
+  const badgeStatus = (status) => {
+    const mapa = {
+      Pendente:   { cor: '#f59e0b', bg: 'rgba(245,158,11,0.12)',  icone: '⏳' },
+      Preparando: { cor: '#3b82f6', bg: 'rgba(59,130,246,0.12)',  icone: '👨‍🍳' },
+      Pronto:     { cor: '#10b981', bg: 'rgba(16,185,129,0.12)',  icone: '✅' },
+      Entregue:   { cor: '#6b7280', bg: 'rgba(107,114,128,0.12)', icone: '📦' },
+      Cancelado:  { cor: '#ef4444', bg: 'rgba(239,68,68,0.12)',   icone: '❌' },
+    };
+    const s = mapa[status] ?? { cor: '#6b7280', bg: 'rgba(107,114,128,0.12)', icone: '❓' };
+    return (
+      <span style={{
+        background: s.bg, color: s.cor,
+        border: `1px solid ${s.cor}`,
+        borderRadius: '999px', padding: '0.2rem 0.75rem',
+        fontSize: '0.8rem', fontWeight: 700,
+      }}>
+        {s.icone} {status}
+      </span>
+    );
+  };
+
+  // ── Gera dados de pagamento mockados de forma determinística pelo ID ──
+  const gerarPagamentoMock = (pedidoId) => {
+    // Seed baseado no ID para sempre retornar o mesmo resultado
+    const seed = pedidoId * 9301 + 49297;
+    const metodos = ['CartaoCredito', 'CartaoDebito', 'Pix', 'PagarEntrega'];
+    const metodo  = metodos[seed % metodos.length];
+
+    // Gera 4 dígitos iniciais do cartão baseado no ID
+    const prefixos = ['4532', '5412', '3714', '6011'];
+    const prefixo  = prefixos[seed % prefixos.length];
+
+    // Gera ID de transação PIX baseado no ID
+    const txId = `E${String(seed * 137).padStart(11, '0')}${pedidoId}BR`;
+
+    return { metodo, prefixo, txId };
+  };
+
+  const renderDetalhesPagamento = (pedido) => {
+    const { metodo, prefixo, txId } = gerarPagamentoMock(pedido.id);
+
+    if (metodo === 'CartaoCredito' || metodo === 'CartaoDebito') {
+      return (
+        <div className="pd-pagamento">
+          <span className="pd-pagamento-icone">💳</span>
+          <div>
+            <p className="pd-pagamento-tipo">
+              {metodo === 'CartaoCredito' ? 'Cartão de Crédito' : 'Cartão de Débito'}
+            </p>
+            <p className="pd-pagamento-detalhe">{prefixo} **** **** ****</p>
+          </div>
+        </div>
+      );
+    }
+    if (metodo === 'Pix') {
+      return (
+        <div className="pd-pagamento">
+          <span className="pd-pagamento-icone">⚡</span>
+          <div>
+            <p className="pd-pagamento-tipo">PIX</p>
+            <p className="pd-pagamento-detalhe">ID: {txId}</p>
+          </div>
+        </div>
+      );
+    }
+    return (
+      <div className="pd-pagamento">
+        <span className="pd-pagamento-icone">🤝</span>
+        <div>
+          <p className="pd-pagamento-tipo">Pago na Entrega</p>
+          <p className="pd-pagamento-detalhe">Pago ao entregador/garçom</p>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="painel-cliente">
+
+      {/* ── HEADER ── */}
+      <motion.header
+        className="pc-header"
+        initial={{ y: -60, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="pc-header-esquerda">
+          <button className="pc-btn-voltar" onClick={() => navigate('/')}>
+            ← Voltar ao site
+          </button>
+          <div className="pc-titulo">
+            <h1>Minha Conta</h1>
+            <p>Olá, <strong>{usuario?.userName}</strong> 👋</p>
+          </div>
+        </div>
+        <button className="pc-btn-sair" onClick={handleLogout}>
+          Sair
+        </button>
+      </motion.header>
+
+      {/* ── ABAS ── */}
+      <div className="pc-abas">
+        <button
+          className={`pc-aba ${abaAtiva === 'pedidos' ? 'ativa' : ''}`}
+          onClick={() => setAbaAtiva('pedidos')}
+        >
+          📝 Meus Pedidos
+          {pedidos.length > 0 && (
+            <span className="pc-aba-badge">{pedidos.length}</span>
+          )}
+        </button>
+        <button
+          className={`pc-aba ${abaAtiva === 'reservas' ? 'ativa' : ''}`}
+          onClick={() => setAbaAtiva('reservas')}
+        >
+          🪑 Minhas Reservas
+          {reservas.length > 0 && (
+            <span className="pc-aba-badge">{reservas.length}</span>
+          )}
+        </button>
+      </div>
+
+      {/* ── CONTEÚDO ── */}
+      <div className="pc-conteudo">
+
+        {carregando && (
+          <div className="pc-loading">
+            <div className="pc-spinner">☀️</div>
+            <p>Carregando seus dados...</p>
+          </div>
+        )}
+
+        {erro && !carregando && (
+          <div className="pc-erro">
+            <span>⚠️</span> {erro}
+            <button onClick={carregarDados}>Tentar novamente</button>
+          </div>
+        )}
+
+        {/* PEDIDOS */}
+        {!carregando && !erro && abaAtiva === 'pedidos' && (
+          <motion.div
+            key="pedidos"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {pedidos.length === 0 ? (
+              <div className="pc-vazio">
+                <span>🍽️</span>
+                <h3>Nenhum pedido ainda</h3>
+                <p>Que tal dar uma olhada no nosso cardápio?</p>
+                <button className="pc-btn-acao" onClick={() => navigate('/')}>
+                  Ver Cardápio
+                </button>
+              </div>
+            ) : (
+              <div className="pc-lista">
+                {pedidos.map((pedido) => (
+                  <div
+                    key={pedido.id}
+                    className="pc-card pc-card-clicavel"
+                    onClick={() => setPedidoSelecionado(pedido)}
+                    title="Clique para ver detalhes"
+                  >
+                    <div className="pc-card-topo">
+                      <span className="pc-card-id">Pedido #{pedido.id}</span>
+                      <Badge status={pedido.status} />
+                    </div>
+                    <div className="pc-card-info">
+                      <span>📅 {formatarData(pedido.dataHoraPedido)}</span>
+                      <span>{pedido.periodo === 'Almoco' ? '☀️ Almoço' : '🌙 Jantar'}</span>
+                    </div>
+                    <div className="pc-card-rodape">
+                      <span className="pc-card-total">
+                        Total: <strong>{formatCurrency(pedido.totalFinal)}</strong>
+                      </span>
+                      <span className="pc-ver-detalhes">Ver detalhes →</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </motion.div>
+        )}
+
+        {/* RESERVAS */}
+        {!carregando && !erro && abaAtiva === 'reservas' && (
+          <motion.div
+            key="reservas"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {reservas.length === 0 ? (
+              <div className="pc-vazio">
+                <span>🪑</span>
+                <h3>Nenhuma reserva ainda</h3>
+                <p>Reserve uma mesa para uma experiência especial.</p>
+                <button className="pc-btn-acao" onClick={() => navigate('/reservas')}>
+                  Fazer Reserva
+                </button>
+              </div>
+            ) : (
+              <div className="pc-lista">
+                {reservas.map((reserva) => (
+                  <div key={reserva.id} className="pc-card">
+                    <div className="pc-card-topo">
+                      <span className="pc-card-id">Reserva #{reserva.id}</span>
+                      <span className="pc-badge-reserva">✅ Confirmada</span>
+                    </div>
+                    <div className="pc-card-info">
+                      <span>📅 {formatarData(reserva.dataHora)}</span>
+                      <span>🪑 Mesa {reserva.mesaId}</span>
+                    </div>
+                    <div className="pc-card-rodape">
+                      <span className="pc-codigo">
+                        Código: <strong>{reserva.codigoConfirmacao}</strong>
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </motion.div>
+        )}
+
+      </div>
+
+      {/* ── MODAL DE DETALHES DO PEDIDO ── */}
+      {pedidoSelecionado && (
+        <div className="pd-overlay" onClick={() => setPedidoSelecionado(null)}>
+          <div className="pd-modal" onClick={e => e.stopPropagation()}>
+            {/* Cabeçalho */}
+            <div className="pd-header">
+              <div>
+                <h3>Pedido #{pedidoSelecionado.id}</h3>
+                <p>{formatarData(pedidoSelecionado.dataHoraPedido)}</p>
+              </div>
+              <button className="pd-fechar" onClick={() => setPedidoSelecionado(null)}>✕</button>
+            </div>
+
+            {/* Status */}
+            <div className="pd-status-row">
+              <Badge status={pedidoSelecionado.status} />
+              <span className="pd-periodo">
+                {pedidoSelecionado.periodo === 'Almoco' ? '☀️ Almoço' : '🌙 Jantar'}
+              </span>
+            </div>
+
+            {/* Itens do pedido */}
+            <div className="pd-secao">
+              <p className="pd-secao-titulo">📋 Itens do Pedido</p>
+              {pedidoSelecionado.itens && pedidoSelecionado.itens.length > 0 ? (
+                <div className="pd-itens">
+                  {pedidoSelecionado.itens.map((item, i) => (
+                    <div key={i} className="pd-item">
+                      {item.imagemUrl && (
+                        <img
+                          src={item.imagemUrl}
+                          alt={item.nome}
+                          className="pd-item-img"
+                          onError={e => { e.target.style.display = 'none'; }}
+                        />
+                      )}
+                      <div className="pd-item-info">
+                        <span className="pd-item-nome">{item.nome || `Item #${item.itemCardapioId}`}</span>
+                        <span className="pd-item-qtd">× {item.quantidade}</span>
+                      </div>
+                      <span className="pd-item-preco">
+                        {item.precoMomento ? formatCurrency(item.precoMomento * item.quantidade) : '—'}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="pd-sem-itens">Detalhes dos itens não disponíveis.</p>
+              )}
+            </div>
+
+            {/* Pagamento */}
+            <div className="pd-secao">
+              <p className="pd-secao-titulo">💰 Forma de Pagamento</p>
+              {renderDetalhesPagamento(pedidoSelecionado)}
+            </div>
+
+            {/* Total */}
+            <div className="pd-total">
+              <span>Total pago</span>
+              <strong>{formatCurrency(pedidoSelecionado.totalFinal)}</strong>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default PainelCliente;
+</file>
+
+<file path="src/components/CheckoutModal.jsx">
+import React, { useState, useEffect } from 'react';
+import { useCarrinho } from '../contexts/CarrinhoContext';
+import { authService } from '../services/authService';
+import { apiFetch } from '../api/api';
+import { formatCurrency } from '../utils/formatters';
+import './CheckoutModal.css';
+
+// ── Espelha a lógica do backend (AtendimentoDeliveryApp.CalcularTaxa) ──
+const calcularTaxaLocal = (tipoAtendimento, subtotal) => {
+  switch (tipoAtendimento) {
+    case 'Presencial': return 0;
+    case 'DeliveryProprio': return 5.00;           // TaxaFixa do seed
+    case 'DeliveryApp':
+      const hora = new Date().getHours();
+      return subtotal * (hora < 18 ? 0.04 : 0.06); // 4% dia / 6% noite
+    default: return 0;
+  }
+};
+
+const TIPOS_ATENDIMENTO = [
+  {
+    valor: 'Presencial',
+    label: 'Presencial',
+    icone: '🏪',
+    descricao: 'Retire no balcão ou consuma no local. Sem taxa adicional.',
+  },
+  {
+    valor: 'DeliveryProprio',
+    label: 'Delivery Próprio',
+    icone: '🛵',
+    descricao: 'Entrega feita pelo restaurante. Taxa fixa de R$ 5,00.',
+  },
+  {
+    valor: 'DeliveryApp',
+    label: 'Delivery por App',
+    icone: '📱',
+    descricao: `Entregue via parceiro (iFood, etc.). Taxa: ${new Date().getHours() < 18 ? '4% (diurno)' : '6% (noturno)'
+      } sobre o subtotal.`,
+  },
+];
+
+const METODOS_PAGAMENTO = [
+  { valor: 'CartaoCredito',  label: 'Cartão de Crédito', icone: '💳', descricao: 'Crédito à vista ou parcelado' },
+  { valor: 'CartaoDebito',   label: 'Cartão de Débito',  icone: '💳', descricao: 'Débito em conta corrente'      },
+  { valor: 'Pix',            label: 'PIX',               icone: '⚡', descricao: 'Aprovação instantânea'         },
+  { valor: 'PagarEntrega',   label: 'Pagar na Entrega',  icone: '🤝', descricao: 'Pague ao garçom ou entregador' },
+];
+
+// ─────────────────────────────────────────────────────────
+// Modal de Checkout
+
+const CheckoutModal = ({ visivel, onFechar }) => {
+  const { itens, subtotal, periodoAtual, limparCarrinho } = useCarrinho();
+  const usuario = authService.getUsuarioLogado();
+
+  const [tipoAtendimento, setTipoAtendimento]   = useState('Presencial');
+  const [metodoPagamento, setMetodoPagamento]   = useState('CartaoCredito');
+
+  // Campos do cartão (fictícios)
+  const [numCartao, setNumCartao]   = useState('');
+  const [nomeCartao, setNomeCartao] = useState('');
+  const [validade, setValidade]     = useState('');
+  const [cvv, setCvv]               = useState('');
+  const [copiado, setCopiado]       = useState(false);
+
+  // Código PIX simulado (fixo para demonstração)
+  const CODIGO_PIX = '00020126580014BR.GOV.BCB.PIX0136sol-do-cerrado@restaurante.com.br5204000053039865802BR5925Sol do Cerrado Restaurante6009SAO PAULO62140510pagamento63041D3E';
+
+  const [etapa, setEtapa] = useState(1); // 1=atendimento, 2=pagamento, 3=confirmado
+  const [enviando, setEnviando] = useState(false);
+  const [erro, setErro] = useState('');
+  const [pedidoFinalizado, setPedidoFinalizado] = useState(null);
+
+  // Recalcula taxa ao vivo quando o tipo muda
+  const taxa = calcularTaxaLocal(tipoAtendimento, subtotal);
+  const totalFinal = subtotal + taxa;
+
+  // Escuta o evento disparado pelo botão "Finalizar Pedido" do CarrinhoDrawer
+  useEffect(() => {
+    const handler = () => onFechar && null; // o App.jsx controla a visibilidade
+    window.addEventListener('abrirCheckout', handler);
+    return () => window.removeEventListener('abrirCheckout', handler);
+  }, []);
+
+  // Reseta o modal ao fechar
+  useEffect(() => {
+    if (!visivel) {
+      setTimeout(() => {
+        setEtapa(1);
+        setErro('');
+        setPedidoFinalizado(null);
+        setTipoAtendimento('Presencial');
+        setMetodoPagamento('CartaoCredito');
+        setNumCartao('');
+        setNomeCartao('');
+        setValidade('');
+        setCvv('');
+      }, 300);
+    }
+  }, [visivel]);
+
+  if (!visivel) return null;
+
+  // ── Validações de negócio ──────────────────────────────────────
+  if (!usuario) {
+    return (
+      <div className="checkout-overlay" onClick={onFechar}>
+        <div className="checkout-modal" onClick={e => e.stopPropagation()}>
+          <div className="checkout-aviso-login">
+            <span>🔒</span>
+            <h3>Faça login para continuar</h3>
+            <p>Você precisa estar logado para finalizar o pedido.</p>
+            <button className="checkout-btn-primario" onClick={onFechar}>Entendido</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (itens.length === 0) {
+    return (
+      <div className="checkout-overlay" onClick={onFechar}>
+        <div className="checkout-modal" onClick={e => e.stopPropagation()}>
+          <div className="checkout-aviso-login">
+            <span>🛒</span>
+            <h3>Carrinho vazio</h3>
+            <p>Adicione itens ao carrinho antes de finalizar.</p>
+            <button className="checkout-btn-primario" onClick={onFechar}>Voltar</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Envio do pedido ────────────────────────────────────────────
+  const handleConfirmar = async () => {
+    setErro('');
+    setEnviando(true);
+
+    // Monta o body exatamente como o PedidoRequestDTO espera
+    const body = {
+      usuarioId: usuario.id,
+      periodo: periodoAtual,          // 'Almoco' ou 'Jantar'
+      tipoAtendimento: tipoAtendimento,        // 'Presencial' | 'DeliveryProprio' | 'DeliveryApp'
+      metodoPagamento: metodoPagamento,        // 'Pix' | 'CartaoCredito' | 'CartaoDebito' | 'PagarEntrega'
+      itens: itens.map(i => ({
+        itemCardapioId: i.id,
+        quantidade: i.quantidade,
+        observacao: i.observacao || '',
+      })),
+    };
+
+    try {
+      const resposta = await apiFetch('/Pedido', {
+        method: 'POST',
+        body: JSON.stringify(body),
+      });
+
+      if (!resposta.ok) {
+        const msg = await resposta.text();
+        throw new Error(msg || 'Erro ao criar pedido.');
+      }
+
+      const pedido = await resposta.json();
+      setPedidoFinalizado(pedido);
+      limparCarrinho();
+      setEtapa(3);
+
+    } catch (e) {
+      setErro(e.message);
+    } finally {
+      setEnviando(false);
+    }
+  };
+
+  // Formata número do cartão com espaços a cada 4 dígitos
+  const formatarCartao = (valor) =>
+    valor.replace(/\D/g, '').slice(0, 16).replace(/(.{4})/g, '$1 ').trim();
+
+  // Formata validade MM/AA
+  const formatarValidade = (valor) =>
+    valor.replace(/\D/g, '').slice(0, 4).replace(/^(\d{2})(\d)/, '$1/$2');
+
+  const copiarPix = () => {
+    navigator.clipboard.writeText(CODIGO_PIX);
+    setCopiado(true);
+    setTimeout(() => setCopiado(false), 2500);
+  };
+
+  // Renderização condicional do painel de pagamento
+  const renderPainelPagamento = () => {
+    if (metodoPagamento === 'CartaoCredito' || metodoPagamento === 'CartaoDebito') {
+      return (
+        <div className="checkout-painel-pagamento">
+          <p className="painel-titulo">
+            💳 Dados do {metodoPagamento === 'CartaoCredito' ? 'Crédito' : 'Débito'}
+          </p>
+          <div className="checkout-campo">
+            <label>Número do Cartão</label>
+            <input
+              type="text"
+              placeholder="0000 0000 0000 0000"
+              value={numCartao}
+              onChange={e => setNumCartao(formatarCartao(e.target.value))}
+              maxLength={19}
+            />
+          </div>
+          <div className="checkout-campo">
+            <label>Nome no Cartão</label>
+            <input
+              type="text"
+              placeholder="Como impresso no cartão"
+              value={nomeCartao}
+              onChange={e => setNomeCartao(e.target.value.toUpperCase())}
+              maxLength={26}
+            />
+          </div>
+          <div className="checkout-campo-linha">
+            <div className="checkout-campo">
+              <label>Validade</label>
+              <input
+                type="text"
+                placeholder="MM/AA"
+                value={validade}
+                onChange={e => setValidade(formatarValidade(e.target.value))}
+                maxLength={5}
+              />
+            </div>
+            <div className="checkout-campo">
+              <label>CVV</label>
+              <input
+                type="text"
+                placeholder="•••"
+                value={cvv}
+                onChange={e => setCvv(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                maxLength={4}
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (metodoPagamento === 'Pix') {
+      return (
+        <div className="checkout-painel-pagamento painel-pix">
+          <p className="painel-titulo">⚡ Pague via PIX</p>
+          {/* QR Code simulado com SVG */}
+          <div className="pix-qrcode">
+            <svg viewBox="0 0 100 100" width="120" height="120" xmlns="http://www.w3.org/2000/svg">
+              <rect width="100" height="100" fill="white"/>
+              {/* Bordas dos cantos */}
+              <rect x="5" y="5" width="25" height="25" rx="3" fill="none" stroke="#1a2332" strokeWidth="4"/>
+              <rect x="10" y="10" width="15" height="15" rx="1" fill="#1a2332"/>
+              <rect x="70" y="5" width="25" height="25" rx="3" fill="none" stroke="#1a2332" strokeWidth="4"/>
+              <rect x="75" y="10" width="15" height="15" rx="1" fill="#1a2332"/>
+              <rect x="5" y="70" width="25" height="25" rx="3" fill="none" stroke="#1a2332" strokeWidth="4"/>
+              <rect x="10" y="75" width="15" height="15" rx="1" fill="#1a2332"/>
+              {/* Padrão interno */}
+              {[20,25,30,35,40,45,50,55,60,65,70,75,80].map((x, i) =>
+                [20,30,40,50,60,70,80].map((y, j) =>
+                  (i + j) % 2 === 0 && !(x < 35 && y < 35) && !(x > 65 && y < 35) && !(x < 35 && y > 65)
+                    ? <rect key={`${x}-${y}`} x={x} y={y} width="5" height="5" fill="#1a2332"/>
+                    : null
+                )
+              )}
+              {/* Logo PIX no centro */}
+              <circle cx="50" cy="50" r="10" fill="#32BCAD"/>
+              <text x="50" y="54" textAnchor="middle" fill="white" fontSize="8" fontWeight="bold">PIX</text>
+            </svg>
+          </div>
+          <p className="pix-instrucao">Escaneie o QR Code ou copie o código abaixo:</p>
+          <div className="pix-copia-cola">
+            <input type="text" readOnly value={CODIGO_PIX} className="pix-input" />
+            <button className="pix-btn-copiar" onClick={copiarPix}>
+              {copiado ? '✔ Copiado!' : '📋 Copiar'}
+            </button>
+          </div>
+          <p className="pix-validade">⏱️ Código válido por <strong>15 minutos</strong></p>
+        </div>
+      );
+    }
+
+    if (metodoPagamento === 'PagarEntrega') {
+      return (
+        <div className="checkout-painel-pagamento painel-entrega">
+          <div className="entrega-icone">🤝</div>
+          <p className="painel-titulo">Pagar na Entrega</p>
+          <p className="entrega-msg">
+            Você pagará <strong>{formatCurrency(totalFinal)}</strong> diretamente ao
+            {tipoAtendimento === 'Presencial' ? ' garçom' : ' entregador'} no momento do
+            {tipoAtendimento === 'Presencial' ? ' atendimento' : ' recebimento'}.
+          </p>
+          <p className="entrega-aviso">
+            💡 Tenha o troco se for pagar em dinheiro.
+          </p>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
+  // ── Renderização por etapa ─────────────────────────────────────
+  return (
+    <div className="checkout-overlay" onClick={onFechar}>
+      <div className="checkout-modal" onClick={e => e.stopPropagation()}>
+
+        {/* Cabeçalho */}
+        {etapa < 3 && (
+          <div className="checkout-header">
+            <div className="checkout-steps">
+              <span className={etapa === 1 ? 'step ativo' : 'step concluido'}>1 Entrega</span>
+              <span className="step-divider">›</span>
+              <span className={etapa === 2 ? 'step ativo' : etapa > 2 ? 'step concluido' : 'step'}>
+                2 Pagamento
+              </span>
+              <span className="step-divider">›</span>
+              <span className="step">3 Confirmar</span>
+            </div>
+            <button className="checkout-fechar" onClick={onFechar}>✕</button>
+          </div>
+        )}
+
+        {/* ══ ETAPA 1: Tipo de Atendimento ══════════════════════ */}
+        {etapa === 1 && (
+          <div className="checkout-corpo">
+            <h2>Como deseja receber?</h2>
+            <p className="checkout-subtitulo">
+              Período do pedido: <strong>
+                {periodoAtual === 'Almoco' ? '☀️ Almoço' : '🌙 Jantar'}
+              </strong>
+            </p>
+
+            <div className="checkout-opcoes">
+              {TIPOS_ATENDIMENTO.map(tipo => (
+                <button
+                  key={tipo.valor}
+                  className={`checkout-opcao ${tipoAtendimento === tipo.valor ? 'selecionado' : ''}`}
+                  onClick={() => setTipoAtendimento(tipo.valor)}
+                >
+                  <span className="opcao-icone">{tipo.icone}</span>
+                  <div className="opcao-texto">
+                    <strong>{tipo.label}</strong>
+                    <small>{tipo.descricao}</small>
+                  </div>
+                  <span className="opcao-check">
+                    {tipoAtendimento === tipo.valor ? '✔' : ''}
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            {/* Resumo de valores */}
+            <div className="checkout-resumo">
+              <div className="checkout-linha">
+                <span>Subtotal</span>
+                <span>{formatCurrency(subtotal)}</span>
+              </div>
+              <div className="checkout-linha taxa">
+                <span>Taxa de entrega</span>
+                <span>{taxa === 0 ? 'Grátis' : formatCurrency(taxa)}</span>
+              </div>
+              <div className="checkout-linha total">
+                <span>Total</span>
+                <strong>{formatCurrency(totalFinal)}</strong>
+              </div>
+            </div>
+
+            <button
+              className="checkout-btn-primario"
+              onClick={() => setEtapa(2)}
+            >
+              Continuar →
+            </button>
+          </div>
+        )}
+
+        {/* ══ ETAPA 2: Método de Pagamento ══════════════════════ */}
+        {etapa === 2 && (
+          <div className="checkout-corpo">
+            <h2>Como vai pagar?</h2>
+
+            <div className="checkout-opcoes">
+              {METODOS_PAGAMENTO.map(mp => (
+                <button
+                  key={mp.valor}
+                  className={`checkout-opcao ${metodoPagamento === mp.valor ? 'selecionado' : ''}`}
+                  onClick={() => setMetodoPagamento(mp.valor)}
+                >
+                  <span className="opcao-icone">{mp.icone}</span>
+                  <div className="opcao-texto">
+                    <strong>{mp.label}</strong>
+                    <small>{mp.descricao}</small>
+                  </div>
+                  <span className="opcao-check">
+                    {metodoPagamento === mp.valor ? '✔' : ''}
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            {/* Painel dinâmico de acordo com o método selecionado */}
+            {renderPainelPagamento()}
+
+            {/* Resumo compacto */}
+            <div className="checkout-resumo">
+              <div className="checkout-linha">
+                <span>Subtotal dos itens</span>
+                <span>{formatCurrency(subtotal)}</span>
+              </div>
+              <div className="checkout-linha taxa">
+                <span>
+                  {tipoAtendimento === 'Presencial'      && '🏪 Presencial'}
+                  {tipoAtendimento === 'DeliveryProprio' && '🛵 Taxa de entrega'}
+                  {tipoAtendimento === 'DeliveryApp'     && `📱 Taxa app (${new Date().getHours() < 18 ? '4%' : '6%'})`}
+                </span>
+                <span>{taxa === 0 ? 'Grátis' : formatCurrency(taxa)}</span>
+              </div>
+              <div className="checkout-linha total">
+                <span>Total a pagar</span>
+                <strong>{formatCurrency(totalFinal)}</strong>
+              </div>
+            </div>
+
+            {erro && <div className="checkout-erro">⚠️ {erro}</div>}
+
+            <div className="checkout-acoes">
+              <button className="checkout-btn-voltar" onClick={() => setEtapa(1)}>
+                ← Voltar
+              </button>
+              <button
+                className="checkout-btn-primario"
+                onClick={handleConfirmar}
+                disabled={enviando}
+              >
+                {enviando ? '⏳ Enviando...' : '✔ Confirmar Pedido'}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ══ ETAPA 3: Pedido Confirmado ════════════════════════ */}
+        {etapa === 3 && pedidoFinalizado && (
+          <div className="checkout-sucesso">
+            <div className="sucesso-icone">🎉</div>
+            <h2>Pedido Confirmado!</h2>
+            <p>Seu pedido foi recebido e já está sendo preparado.</p>
+
+            <div className="sucesso-detalhes">
+              <div className="sucesso-linha">
+                <span>Nº do Pedido</span>
+                <strong>#{pedidoFinalizado.id}</strong>
+              </div>
+              <div className="sucesso-linha">
+                <span>Total pago</span>
+                <strong>{formatCurrency(pedidoFinalizado.totalFinal)}</strong>
+              </div>
+              <div className="sucesso-linha">
+                <span>Status</span>
+                <span className="sucesso-status">📋 Recebido</span>
+              </div>
+            </div>
+
+            <button className="checkout-btn-primario" onClick={onFechar}>
+              Fechar
+            </button>
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
+};
+
+export default CheckoutModal;
+</file>
+
+<file path="src/components/ReservaModal.jsx">
+// src/components/ReservaModal.jsx
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { authService } from "../services/authService";
+import { apiFetch } from "../api/api";
+import "./ReservaModal.css";
+
+const ReservaModal = ({ visivel, onFechar }) => {
+  const usuario = authService.getUsuarioLogado();
+
+  const [data, setData] = useState("");
+  const [pessoas, setPessoas] = useState(2);
+  const [mesas, setMesas] = useState([]);
+  const [mesaId, setMesaId] = useState("");
+  const [enviando, setEnviando] = useState(false);
+  const [erro, setErro] = useState("");
+  const [sucesso, setSucesso] = useState(null);
+
+  // Data mínima = amanhã
+  const amanha = new Date();
+  amanha.setDate(amanha.getDate() + 1);
+  const dataMinima = amanha.toISOString().split("T")[0];
+
+  useEffect(() => {
+    if (visivel) carregarMesas();
+  }, [visivel]);
+
+  useEffect(() => {
+    if (!visivel) {
+      setTimeout(() => {
+        setData("");
+        setPessoas(2);
+        setMesaId("");
+        setErro("");
+        setSucesso(null);
+        setEnviando(false);
+      }, 300);
+    }
+  }, [visivel]);
+
+  const carregarMesas = async () => {
+    try {
+      const res = await apiFetch("/Mesa");
+      if (res.ok) {
+        const dados = await res.json();
+        setMesas(dados);
+        if (dados.length > 0) setMesaId(dados[0].id);
+      }
+    } catch {
+      setErro("Não foi possível carregar as mesas disponíveis.");
+    }
+  };
+
+  const mesasDisponiveis = mesas.filter((m) => m.capacidade >= pessoas);
+
+  const handleReservar = async () => {
+    if (!data) {
+      setErro("Selecione uma data.");
+      return;
+    }
+    if (!mesaId) {
+      setErro("Selecione uma mesa.");
+      return;
+    }
+    if (!usuario) {
+      setErro("Você precisa estar logado.");
+      return;
+    }
+
+    setErro("");
+    setEnviando(true);
+
+    const dataHora = `${data}T12:00:00`;
+
+    try {
+      const res = await apiFetch("/Reserva", {
+        method: "POST",
+        body: JSON.stringify({
+          mesaId: Number(mesaId),
+          usuarioId: usuario.id,
+          dataHora: dataHora,
+        }),
+      });
+
+      if (!res.ok) {
+        const msg = await res.text();
+        throw new Error(msg || "Erro ao criar reserva.");
+      }
+
+      const reserva = await res.json();
+      setSucesso(reserva);
+    } catch (e) {
+      setErro(e.message);
+    } finally {
+      setEnviando(false);
+    }
+  };
+
+  if (!visivel) return null;
+
+  return (
+    <div className="rv-overlay" onClick={onFechar}>
+      <motion.div
+        className="rv-modal"
+        onClick={(e) => e.stopPropagation()}
+        initial={{ y: 30, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.25 }}
+      >
+        {/* Header */}
+        <div className="rv-header">
+          <div>
+            <h2 className="rv-titulo">
+              <svg
+                className="rv-icone-titulo"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M9 2v4M15 2v4M9 14l2 2 4-4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" />
+              </svg>
+              Reservar Mesa
+            </h2>
+            <p>Almoço — horário fixo: 12h00</p>
+          </div>
+          <button className="rv-fechar" onClick={onFechar}>
+            ✕
+          </button>
+        </div>
+
+        {!sucesso ? (
+          <>
+            {/* Data */}
+            <div className="rv-campo">
+              <label>
+                <svg
+                  className="rv-icone-label"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                Data da Reserva <small>(mínimo D+1)</small>
+              </label>
+              <input
+                type="date"
+                min={dataMinima}
+                value={data}
+                onChange={(e) => setData(e.target.value)}
+              />
+            </div>
+
+            {/* Número de pessoas */}
+            <div className="rv-campo">
+              <label>
+                <svg
+                  className="rv-icone-label"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+                Número de Pessoas
+              </label>
+              <div className="rv-contador">
+                <button onClick={() => setPessoas((p) => Math.max(1, p - 1))}>
+                  −
+                </button>
+                <span>{pessoas}</span>
+                <button onClick={() => setPessoas((p) => Math.min(20, p + 1))}>
+                  +
+                </button>
+              </div>
+            </div>
+
+            {/* Seleção de mesa */}
+            <div className="rv-campo">
+              <label>
+                <svg
+                  className="rv-icone-label"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M3 12h18M3 6h18M3 18h18" />
+                </svg>
+                Mesa
+              </label>
+              {mesasDisponiveis.length === 0 ? (
+                <p className="rv-aviso">
+                  Nenhuma mesa com capacidade para {pessoas}{" "}
+                  {pessoas === 1 ? "pessoa" : "pessoas"}. Reduza o número de
+                  pessoas.
+                </p>
+              ) : (
+                <div className="rv-mesas-grid">
+                  {mesasDisponiveis.map((m) => (
+                    <button
+                      key={m.id}
+                      className={`rv-mesa-btn ${mesaId === m.id ? "selecionada" : ""}`}
+                      onClick={() => setMesaId(m.id)}
+                    >
+                      <span className="rv-mesa-num">Mesa {m.numero}</span>
+                      <span className="rv-mesa-cap">
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                        >
+                          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                          <circle cx="9" cy="7" r="4" />
+                          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                        até {m.capacidade}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Info horário */}
+            <div className="rv-info-horario">
+              <svg
+                className="rv-icone-sol"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <circle cx="12" cy="12" r="5" />
+                <line x1="12" y1="1" x2="12" y2="3" />
+                <line x1="12" y1="21" x2="12" y2="23" />
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                <line x1="1" y1="12" x2="3" y2="12" />
+                <line x1="21" y1="12" x2="23" y2="12" />
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+              </svg>
+              <div>
+                <strong>Almoço — 11h às 14h</strong>
+                <p>Reservas com mínimo de 1 dia de antecedência</p>
+              </div>
+            </div>
+
+            {erro && <div className="rv-erro">⚠️ {erro}</div>}
+
+            <button
+              className="rv-btn-confirmar"
+              onClick={handleReservar}
+              disabled={enviando || mesasDisponiveis.length === 0}
+            >
+              {enviando ? (
+                <>
+                  <svg className="rv-loading" viewBox="0 0 24 24">
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      fill="none"
+                      opacity="0.25"
+                    />
+                    <path
+                      d="M12 2a10 10 0 0 1 10 10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      fill="none"
+                    />
+                  </svg>
+                  Reservando...
+                </>
+              ) : (
+                <>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  Confirmar Reserva
+                </>
+              )}
+            </button>
+          </>
+        ) : (
+          /* Sucesso */
+          <motion.div
+            className="rv-sucesso"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+          >
+            <div className="rv-sucesso-icone">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
+            </div>
+            <h3>Reserva Confirmada!</h3>
+            <div className="rv-sucesso-detalhes">
+              <div className="rv-detalhe-linha">
+                <span>Código</span>
+                <strong className="rv-codigo">
+                  {sucesso.codigoConfirmacao}
+                </strong>
+              </div>
+              <div className="rv-detalhe-linha">
+                <span>Data</span>
+                <strong>
+                  {new Date(sucesso.dataHora).toLocaleDateString("pt-BR")}
+                </strong>
+              </div>
+              <div className="rv-detalhe-linha">
+                <span>Horário</span>
+                <strong>12h00 (Almoço)</strong>
+              </div>
+            </div>
+            <p className="rv-sucesso-msg">
+              Apresente o código de confirmação ao chegar. Até logo!
+            </p>
+            <button className="rv-btn-confirmar" onClick={onFechar}>
+              Fechar
+            </button>
+          </motion.div>
+        )}
+      </motion.div>
+    </div>
+  );
+};
+
+export default ReservaModal;
+</file>
+
+</files>

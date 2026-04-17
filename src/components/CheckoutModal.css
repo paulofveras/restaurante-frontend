@@ -12,8 +12,12 @@
 }
 
 @keyframes co-fade {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* ── MODAL ─────────────────────────────────────── */
@@ -24,13 +28,19 @@
   max-width: 520px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 24px 80px rgba(0,0,0,0.25);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
   animation: co-slide 0.25s ease;
 }
 
 @keyframes co-slide {
-  from { transform: translateY(24px); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 /* ── CABEÇALHO ─────────────────────────────────── */
@@ -63,7 +73,9 @@
   font-weight: 700;
 }
 
-.step-divider { color: #ddd; }
+.step-divider {
+  color: #ddd;
+}
 
 .checkout-fechar {
   background: none;
@@ -75,7 +87,9 @@
   border-radius: 6px;
   transition: background 0.15s;
 }
-.checkout-fechar:hover { background: rgba(0,0,0,0.06); }
+.checkout-fechar:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
 
 /* ── CORPO ─────────────────────────────────────── */
 .checkout-corpo {
@@ -115,23 +129,28 @@
   border-radius: 12px;
   cursor: pointer;
   text-align: left;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
   font-family: inherit;
   width: 100%;
 }
 
 .checkout-opcao:hover {
   border-color: #d4af37;
-  box-shadow: 0 2px 12px rgba(212,175,55,0.15);
+  box-shadow: 0 2px 12px rgba(212, 175, 55, 0.15);
 }
 
 .checkout-opcao.selecionado {
   border-color: #d4af37;
-  background: rgba(212,175,55,0.06);
-  box-shadow: 0 2px 16px rgba(212,175,55,0.2);
+  background: rgba(212, 175, 55, 0.06);
+  box-shadow: 0 2px 16px rgba(212, 175, 55, 0.2);
 }
 
-.opcao-icone { font-size: 1.75rem; flex-shrink: 0; }
+.opcao-icone {
+  font-size: 1.75rem;
+  flex-shrink: 0;
+}
 
 .opcao-texto {
   flex: 1;
@@ -140,8 +159,15 @@
   gap: 0.15rem;
 }
 
-.opcao-texto strong { font-size: 1rem; color: #1a2332; }
-.opcao-texto small  { font-size: 0.8125rem; color: #888; line-height: 1.4; }
+.opcao-texto strong {
+  font-size: 1rem;
+  color: #1a2332;
+}
+.opcao-texto small {
+  font-size: 0.8125rem;
+  color: #888;
+  line-height: 1.4;
+}
 
 .opcao-check {
   width: 24px;
@@ -159,7 +185,9 @@
   transition: opacity 0.15s;
 }
 
-.checkout-opcao.selecionado .opcao-check { opacity: 1; }
+.checkout-opcao.selecionado .opcao-check {
+  opacity: 1;
+}
 
 /* ── RESUMO DE VALORES ─────────────────────────── */
 .checkout-resumo {
@@ -179,7 +207,10 @@
   color: #555;
 }
 
-.checkout-linha.taxa { color: #888; font-size: 0.875rem; }
+.checkout-linha.taxa {
+  color: #888;
+  font-size: 0.875rem;
+}
 
 .checkout-linha.total {
   padding-top: 0.5rem;
@@ -207,7 +238,7 @@
 .checkout-btn-primario {
   width: 100%;
   padding: 1rem;
-  background: linear-gradient(135deg, #D4AF37, #C97458);
+  background: linear-gradient(135deg, #d4af37, #c97458);
   border: none;
   border-radius: 12px;
   color: #fff;
@@ -215,7 +246,9 @@
   font-weight: 800;
   cursor: pointer;
   font-family: inherit;
-  transition: opacity 0.2s, transform 0.2s;
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
 }
 
 .checkout-btn-primario:hover:not(:disabled) {
@@ -247,7 +280,10 @@
   white-space: nowrap;
 }
 
-.checkout-btn-voltar:hover { border-color: #d4af37; color: #d4af37; }
+.checkout-btn-voltar:hover {
+  border-color: #d4af37;
+  color: #d4af37;
+}
 
 /* ── AVISO LOGIN / CARRINHO VAZIO ──────────────── */
 .checkout-aviso-login {
@@ -259,9 +295,18 @@
   gap: 0.75rem;
 }
 
-.checkout-aviso-login span { font-size: 3rem; }
-.checkout-aviso-login h3   { font-size: 1.25rem; color: #1a2332; margin: 0; }
-.checkout-aviso-login p    { color: #888; margin: 0; }
+.checkout-aviso-login span {
+  font-size: 3rem;
+}
+.checkout-aviso-login h3 {
+  font-size: 1.25rem;
+  color: #1a2332;
+  margin: 0;
+}
+.checkout-aviso-login p {
+  color: #888;
+  margin: 0;
+}
 
 /* ── ETAPA 3: SUCESSO ──────────────────────────── */
 .checkout-sucesso {
@@ -273,12 +318,23 @@
   gap: 1rem;
 }
 
-.sucesso-icone { font-size: 4rem; animation: sucesso-pop 0.4s ease; }
+.sucesso-icone {
+  font-size: 4rem;
+  animation: sucesso-pop 0.4s ease;
+}
 
 @keyframes sucesso-pop {
-  0%   { transform: scale(0.5); opacity: 0; }
-  70%  { transform: scale(1.15); }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .checkout-sucesso h2 {
@@ -288,7 +344,10 @@
   margin: 0;
 }
 
-.checkout-sucesso p { color: #666; margin: 0; }
+.checkout-sucesso p {
+  color: #666;
+  margin: 0;
+}
 
 .sucesso-detalhes {
   width: 100%;
@@ -364,7 +423,7 @@
 
 .checkout-campo input:focus {
   border-color: #d4af37;
-  box-shadow: 0 0 0 3px rgba(212,175,55,0.15);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
 }
 
 .checkout-campo-linha {
@@ -418,7 +477,7 @@
 
 .pix-btn-copiar {
   padding: 0.6rem 1rem;
-  background: #32BCAD;
+  background: #32bcad;
   color: white;
   border: none;
   border-radius: 10px;
@@ -428,7 +487,9 @@
   white-space: nowrap;
   transition: opacity 0.15s;
 }
-.pix-btn-copiar:hover { opacity: 0.85; }
+.pix-btn-copiar:hover {
+  opacity: 0.85;
+}
 
 .pix-validade {
   font-size: 0.8125rem;
@@ -443,7 +504,9 @@
   gap: 0.625rem;
 }
 
-.entrega-icone { font-size: 2.5rem; }
+.entrega-icone {
+  font-size: 2.5rem;
+}
 
 .entrega-msg {
   font-size: 0.9375rem;
@@ -460,4 +523,286 @@
   border-radius: 8px;
   padding: 0.6rem 1rem;
   margin: 0;
+}
+
+/* ── Seleção de Endereço ── */
+.checkout-aviso-endereco {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.checkout-aviso-endereco p {
+  margin: 0.5rem 0;
+  color: var(--marrom-cafe);
+}
+
+.checkout-enderecos-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.checkout-endereco-card {
+  display: flex;
+  gap: 1rem;
+  padding: 1.25rem;
+  border: 2px solid rgba(212, 175, 55, 0.2);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: white;
+}
+
+.checkout-endereco-card:hover {
+  border-color: var(--dourado);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.15);
+}
+
+.checkout-endereco-card.selecionado {
+  border-color: var(--dourado);
+  background: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.08) 0%,
+    rgba(201, 116, 88, 0.05) 100%
+  );
+}
+
+.checkout-endereco-card input[type="radio"] {
+  margin-top: 0.25rem;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  accent-color: var(--dourado);
+}
+
+.checkout-endereco-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.checkout-endereco-info strong {
+  color: var(--marrom-cafe);
+  font-size: 1.05rem;
+}
+
+.checkout-endereco-info span {
+  color: var(--cor-texto-secundario);
+  font-size: 0.9rem;
+}
+
+.checkout-endereco-info .complemento {
+  font-style: italic;
+}
+
+.checkout-endereco-info .cep {
+  font-family: monospace;
+  font-size: 0.85rem;
+}
+
+/* ===== CORREÇÃO: Seleção de Endereço ===== */
+
+.checkout-enderecos-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.checkout-endereco-card {
+  background: white;
+  border: 2px solid #e8e0d0;
+  border-radius: 12px;
+  padding: 1.2rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  cursor: pointer !important;
+  transition: all 0.3s ease;
+}
+
+.checkout-endereco-card:hover {
+  border-color: #d4af37;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+}
+
+.checkout-endereco-selecionado {
+  border-color: #d4af37 !important;
+  background: linear-gradient(135deg, #fff9e6 0%, #ffefc6 50%, #fff9e6 100%);
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
+}
+
+.checkout-endereco-card input[type="radio"] {
+  margin-top: 0.2rem;
+  width: 20px;
+  height: 20px;
+  cursor: pointer !important;
+  accent-color: #d4af37;
+}
+
+.checkout-endereco-info {
+  flex: 1;
+}
+
+.checkout-endereco-principal {
+  color: #1a2332;
+  font-weight: 700;
+  font-size: 1rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.checkout-endereco-complemento {
+  color: #6b4e3d;
+  font-size: 0.9rem;
+  font-style: italic;
+  margin: 0 0 0.5rem 0;
+}
+
+.checkout-endereco-local {
+  color: #6b4e3d;
+  font-size: 0.9rem;
+  margin: 0 0 0.3rem 0;
+}
+
+.checkout-endereco-cep {
+  color: #c97458;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* ── Cards de Endereço no Checkout ────────────────────────── */
+.checkout-secao {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f0ece6;
+}
+
+.checkout-secao h3 {
+  font-family: "Playfair Display", serif;
+  font-size: 1rem;
+  color: #1a2332;
+  margin: 0 0 0.85rem;
+  font-weight: 600;
+}
+
+.checkout-enderecos-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.checkout-endereco-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border: 2px solid #f0ece6;
+  border-radius: 12px;
+  cursor: pointer;
+  background: #fff;
+  transition: all 0.2s ease;
+}
+
+.checkout-endereco-card:hover {
+  border-color: rgba(212, 175, 55, 0.35);
+  background: rgba(212, 175, 55, 0.02);
+}
+
+.checkout-endereco-selecionado {
+  border-color: #d4af37 !important;
+  background: rgba(212, 175, 55, 0.05) !important;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+}
+
+/* Radio button customizado */
+.checkout-endereco-card input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  margin-top: 2px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.checkout-endereco-card input[type="radio"]:checked {
+  border-color: #d4af37;
+  background: #d4af37;
+}
+
+.checkout-endereco-card input[type="radio"]:checked::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  border-radius: 50%;
+}
+
+/* Info do endereço */
+.checkout-endereco-info {
+  flex: 1;
+}
+
+.checkout-endereco-principal {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #1a2332;
+  margin: 0 0 0.1rem;
+}
+
+.checkout-endereco-complemento {
+  font-size: 0.82rem;
+  color: #999;
+  font-style: italic;
+  margin: 0 0 0.1rem;
+}
+
+.checkout-endereco-local {
+  font-size: 0.82rem;
+  color: #999;
+  margin: 0 0 0.1rem;
+}
+
+.checkout-endereco-cep {
+  display: inline-block;
+  margin-top: 0.25rem;
+  padding: 0.12rem 0.5rem;
+  background: #fdf8eb;
+  border: 1px solid #f0e4c0;
+  border-radius: 4px;
+  color: #b8960e;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.checkout-aviso {
+  font-size: 0.88rem;
+  color: #999;
+  line-height: 1.5;
+}
+
+.checkout-aviso a {
+  color: #d4af37;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.checkout-aviso a:hover {
+  text-decoration: underline;
 }

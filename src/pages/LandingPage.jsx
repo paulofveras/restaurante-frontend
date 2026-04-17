@@ -24,7 +24,6 @@ const LandingPage = () => {
 
   const [itensDestaque, setItensDestaque] = useState([]);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [mostrarReservaModal, setMostrarReservaModal] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
 
   const [loginSucesso, setLoginSucesso] = useState("");
@@ -62,7 +61,7 @@ const LandingPage = () => {
     if (!usuarioLogado) {
       setShowLoginModal(true);
     } else {
-      setMostrarReservaModal(true);
+      setShowReservaModal(true);
     }
   };
 

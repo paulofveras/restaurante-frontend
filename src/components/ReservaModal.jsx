@@ -129,7 +129,7 @@ const ReservaModal = ({ visivel, onFechar }) => {
           </button>
         </div>
 
-        {!sucesso ? (
+        {!sucesso && (
           <>
             {/* Data */}
             <div className="rv-campo">
@@ -301,13 +301,11 @@ const ReservaModal = ({ visivel, onFechar }) => {
               )}
             </button>
           </>
-        ) : (
-          /* Sucesso */
-          <motion.div
-            className="rv-sucesso"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-          >
+        )}
+
+        {/* PASSO 1: Atualizar a tela de sucesso */}
+        {sucesso && (
+          <div className="rv-sucesso">
             <div className="rv-sucesso-icone">
               <svg
                 viewBox="0 0 24 24"
@@ -319,32 +317,64 @@ const ReservaModal = ({ visivel, onFechar }) => {
                 <polyline points="22 4 12 14.01 9 11.01" />
               </svg>
             </div>
-            <h3>Reserva Confirmada!</h3>
+
+            <h3 className="rv-sucesso-titulo">🎉 Reserva Confirmada!</h3>
+
+            {/* ✨ CÓDIGO DE CONFIRMAÇÃO - NOVO ✨ */}
+            <div className="rv-codigo-confirmacao">
+              <p className="rv-codigo-label">Código de Confirmação:</p>
+              <div className="rv-codigo-valor">{sucesso.codigoConfirmacao}</div>
+              <p className="rv-codigo-instrucao">
+                Apresente este código ao chegar no restaurante
+              </p>
+            </div>
+
             <div className="rv-sucesso-detalhes">
-              <div className="rv-detalhe-linha">
-                <span>Código</span>
-                <strong className="rv-codigo">
-                  {sucesso.codigoConfirmacao}
-                </strong>
+              <div className="rv-sucesso-item">
+                <span className="rv-sucesso-icone">📅</span>
+                <div>
+                  <small>Data da Reserva</small>
+                  <strong>
+                    {new Date(sucesso.dataHora).toLocaleDateString("pt-BR", {
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </strong>
+                </div>
               </div>
-              <div className="rv-detalhe-linha">
-                <span>Data</span>
-                <strong>
-                  {new Date(sucesso.dataHora).toLocaleDateString("pt-BR")}
-                </strong>
+
+              <div className="rv-sucesso-item">
+                <span className="rv-sucesso-icone">⏰</span>
+                <div>
+                  <small>Horário</small>
+                  <strong>12:00 (Almoço)</strong>
+                </div>
               </div>
-              <div className="rv-detalhe-linha">
-                <span>Horário</span>
-                <strong>12h00 (Almoço)</strong>
+
+              <div className="rv-sucesso-item">
+                <span className="rv-sucesso-icone">🪑</span>
+                <div>
+                  <small>Mesa</small>
+                  <strong>Mesa #{sucesso.mesaId}</strong>
+                </div>
               </div>
             </div>
-            <p className="rv-sucesso-msg">
-              Apresente o código de confirmação ao chegar. Até logo!
-            </p>
-            <button className="rv-btn-confirmar" onClick={onFechar}>
+
+            <div className="rv-sucesso-aviso">
+              <p>
+                ✅ Enviamos a confirmação para o seu e-mail
+                <br />
+                💡 Chegue com 10 minutos de antecedência
+                <br />
+                📱 Consulte suas reservas em "Minha Conta"
+              </p>
+            </div>
+
+            <button className="rv-btn-fechar" onClick={onFechar}>
               Fechar
             </button>
-          </motion.div>
+          </div>
         )}
       </motion.div>
     </div>
